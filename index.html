@@ -10,20 +10,20 @@
         
         .slot { border: 4px solid #A2BA9C; padding: 20px; background-color: #eadfc1; border-radius: 12px; position: relative; margin-top: 15px; }
         
-        /* Specific Tab Colors */
-        .tab-slot { background: #d8bc6a; border-color: #342420; }
-        .tab-moveset { background: #4b689f; border-color: #342420; color: white; }
-        .tab-stats { background: #DE9996; border-color: #342420; }
-        .tab-passives { background: #874185; border-color: #342420; color: white; }
-
+        /* Segment Title Tabs */
         .segment-title {
             position: absolute; top: -12px; left: 10px; padding: 2px 8px; 
             border: 2px solid; font-weight: bold; border-radius: 4px; font-size: 11px;
         }
+        .tab-slot { background: #d8bc6a; border-color: #342420; top: -15px; left: 15px; }
+        .tab-moveset { background: #4b689f; border-color: #342420; color: white; }
+        .tab-stats { background: #DE9996; border-color: #342420; }
+        .tab-passives { background: #874185; border-color: #342420; color: white; }
 
-        .moveset-box { border: 3px solid #4b689f; background-color: #4b689f; color: white; padding: 15px 10px 10px 10px; margin-bottom: 15px; position: relative; margin-top: 15px; }
-        .stats-panel { border: 3px solid #DE9996; background-color: #DE9996; padding: 15px 10px 10px 10px; flex: 1; position: relative; margin-top: 15px; }
-        .passives-panel { border: 3px solid #874185; background-color: #874185; color: white; padding: 15px 10px 10px 10px; flex: 1; position: relative; margin-top: 15px; }
+        /* Segment Borders (backgrounds set back to default) */
+        .moveset-box { border: 3px solid #4b689f; background-color: transparent; padding: 15px 10px 10px 10px; margin-bottom: 15px; position: relative; margin-top: 15px; }
+        .stats-panel { border: 3px solid #DE9996; background-color: transparent; padding: 15px 10px 10px 10px; flex: 1; position: relative; margin-top: 15px; }
+        .passives-panel { border: 3px solid #874185; background-color: transparent; padding: 15px 10px 10px 10px; flex: 1; position: relative; margin-top: 15px; }
         
         .sprite-box { border: 3px solid #342420; width: 140px; height: 140px; background: #eadfc1; }
         .bottom-info { display: flex; gap: 15px; }
@@ -43,7 +43,7 @@
             function createSlot(num) {
                 document.write(`
                     <div class="slot">
-                        <div class="segment-title tab-slot" style="top: -15px; left: 15px;">SLOT ${num}</div>
+                        <div class="segment-title tab-slot">SLOT ${num}</div>
                         
                         <div style="display: flex; gap: 10px; margin-top: 10px; margin-bottom: 15px;">
                             <input type="text" placeholder="NICKNAME" style="flex:1;">
@@ -74,7 +74,7 @@
                                     <div class="stat-row">
                                         <span style="width:30px; font-weight:bold;">${s}</span> 
                                         <select><option>C</option></select>
-                                        <div style="height:10px; width:40px; background:#eadfc1;"></div>
+                                        <div style="height:10px; width:40px; background:#d8bc6a;"></div>
                                         <span>40</span>
                                     </div>
                                 `).join('')}
@@ -82,10 +82,10 @@
                             
                             <div class="passives-panel">
                                 <div class="segment-title tab-passives">PASSIVES</div>
-                                <input type="text" placeholder="Passive 1" style="width:90%; display:block; margin:6px 0; background:#eadfc1;">
-                                <input type="text" placeholder="Passive 2" style="width:90%; display:block; margin:6px 0; background:#eadfc1;">
-                                <input type="text" placeholder="Passive 3" style="width:90%; display:block; margin:6px 0; background:#eadfc1;">
-                                <input type="text" placeholder="Passive 4" style="width:90%; display:block; margin:6px 0; background:#eadfc1;">
+                                <input type="text" placeholder="Passive 1" style="width:90%; display:block; margin:6px 0;">
+                                <input type="text" placeholder="Passive 2" style="width:90%; display:block; margin:6px 0;">
+                                <input type="text" placeholder="Passive 3" style="width:90%; display:block; margin:6px 0;">
+                                <input type="text" placeholder="Passive 4" style="width:90%; display:block; margin:6px 0;">
                             </div>
                         </div>
                     </div>
