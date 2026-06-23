@@ -35,8 +35,7 @@
 
         .slot-grid { display: grid; grid-template-columns: 484px 484px; gap: 22px; justify-content: center; }
         
-        /* Slot made longer with min-height */
-        .slot { border: 4px solid var(--grey); padding: 22px; background-color: var(--white); border-radius: 12px; position: relative; margin-top: 17px; min-height: 600px; }
+        .slot { border: 4px solid var(--grey); padding: 22px; background-color: var(--white); border-radius: 12px; position: relative; margin-top: 17px; min-height: 650px; }
         
         .segment-title {
             position: absolute; top: -13px; left: 11px; padding: 2px 9px; 
@@ -47,17 +46,15 @@
         .tab-stats { background: var(--red); color: white; }
         .tab-passives { background: var(--purple); color: white; }
 
-        .moveset-box { border: 3px solid var(--blue); padding: 17px 11px 11px 11px; margin-bottom: 17px; position: relative; margin-top: 17px; }
+        .section-box { border: 3px solid var(--blue); padding: 17px 11px 11px 11px; margin-bottom: 17px; position: relative; margin-top: 17px; }
+        .passives-box { border: 3px solid var(--purple); }
         
         .sprite-section { display: flex; gap: 11px; margin-bottom: 10px; }
         .sprite-box { border: 3px solid var(--black); width: 220px; height: 154px; background: var(--white); }
         .info-col { flex: 1; display: flex; flex-direction: column; gap: 6px; }
 
-        .bottom-info { display: flex; gap: 10px; }
-        .stats-panel { border: 3px solid var(--red); padding: 17px 8px 11px 8px; flex: 0 0 45%; position: relative; margin-top: 17px; }
-        .passives-panel { border: 3px solid var(--purple); padding: 17px 8px 11px 8px; flex: 1; position: relative; margin-top: 17px; }
-        
-        .stat-row { display: flex; align-items: center; gap: 5px; margin: 4px 0; }
+        .stats-panel { border: 3px solid var(--red); padding: 17px 11px 11px 11px; position: relative; margin-top: 17px; }
+        .stat-row { display: flex; align-items: center; gap: 8px; margin: 5px 0; }
         
         input, select { background: var(--white); border: 1px solid var(--black); padding: 4px; font-family: inherit; font-size: 12px; }
     </style>
@@ -90,11 +87,18 @@
                                 Lv <input type="number" value="50" style="width: 44px;">
                                 <label style="display:flex; align-items:center; gap:4px;"><input type="checkbox"> SPARKLE</label>
                             </div>
-                            <div class="moveset-box">
+                            <div class="section-box">
                                 <div class="segment-title tab-moveset">MOVESET</div>
                                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
                                     <input type="text" placeholder="Move 1"> <input type="text" placeholder="Move 2">
                                     <input type="text" placeholder="Move 3"> <input type="text" placeholder="Move 4">
+                                </div>
+                            </div>
+                            <div class="section-box passives-box">
+                                <div class="segment-title tab-passives">PASSIVES</div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
+                                    <input type="text" placeholder="Passive 1"> <input type="text" placeholder="Passive 2">
+                                    <input type="text" placeholder="Passive 3"> <input type="text" placeholder="Passive 4">
                                 </div>
                             </div>
                             <div class="sprite-section">
@@ -106,34 +110,24 @@
                                     </div>
                                 </div>
                                 <div class="info-col">
-                                    <select style="width: 100%;">
-                                        <option>Select MoN</option>${options}
-                                    </select>
+                                    <select style="width: 100%;">${options}</select>
                                     <input type="text" placeholder="Held Item" style="width: 100%;">
                                 </div>
                             </div>
-                            <div class="bottom-info">
-                                <div class="stats-panel">
-                                    <div class="segment-title tab-stats">STATS</div>
+                            <div class="stats-panel">
+                                <div class="segment-title tab-stats">STATS</div>
+                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
                                     ${['HP','ATK','MAG','DEF','RES','SPD'].map(s => `
                                         <div class="stat-row">
                                             <span style="width:30px; font-weight:bold; font-size:11px;">${s}</span> 
                                             <select style="width:40px;"><option>S</option><option>A</option><option>B</option><option selected>C</option><option>D</option></select>
-                                            <select style="width:40px; font-size:10px;"><option>0</option><option>1</option><option>2</option><option>3</option></select>
-                                            <div style="height:11px; flex:1; background:var(--yellow);"></div>
-                                            <span style="width:20px; text-align:right;">40</span>
+                                            <select style="width:35px;"><option>0</option><option>1</option><option>2</option><option>3</option></select>
+                                            <span style="width:25px; text-align:right;">40</span>
                                         </div>
                                     `).join('')}
-                                    <div style="margin-top:15px; border-top:1px solid var(--grey); pt:5px;">
-                                        <label style="font-weight:bold;">VIBE:</label> <input type="text" style="width:60%;">
-                                    </div>
                                 </div>
-                                <div class="passives-panel">
-                                    <div class="segment-title tab-passives">PASSIVES</div>
-                                    <input type="text" placeholder="Passive 1" style="width:90%; display:block; margin:5px 0;">
-                                    <input type="text" placeholder="Passive 2" style="width:90%; display:block; margin:5px 0;">
-                                    <input type="text" placeholder="Passive 3" style="width:90%; display:block; margin:5px 0;">
-                                    <input type="text" placeholder="Passive 4" style="width:90%; display:block; margin:5px 0;">
+                                <div style="margin-top:15px; border-top:1px solid var(--grey); padding-top:10px;">
+                                    <label style="font-weight:bold;">VIBE:</label> <input type="text" style="width:80%;">
                                 </div>
                             </div>
                         </div>
