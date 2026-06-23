@@ -2,11 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monsterpatch Squad Builder</title>
     <style>
-        body { background-color: #3b302c; color: #f4e1c1; font-family: sans-serif; text-align: center; }
-        .container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px; }
-        .slot { border: 2px solid #f4e1c1; padding: 15px; border-radius: 8px; }
+        body { 
+            background-color: #3b302c; 
+            color: #f4e1c1; 
+            font-family: sans-serif; 
+            text-align: center; 
+            margin: 0;
+            padding: 20px;
+        }
+        .container { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; /* Forces two equal columns */
+            gap: 20px; 
+            max-width: 800px; /* Keeps the grid from getting too wide */
+            margin: 0 auto;   /* Centers the container */
+        }
+        .slot { 
+            border: 2px solid #f4e1c1; 
+            padding: 20px; 
+            border-radius: 8px; 
+            background-color: #4a3f3a;
+        }
     </style>
 </head>
 <body>
@@ -18,7 +37,6 @@
         <div class="slot"><h3>SLOT 2</h3></div>
         <div class="slot"><h3>SLOT 3</h3></div>
         <div class="slot"><h3>SLOT 4</h3></div>
-        <div class="slot"><h3>SLOT 5</h3></div>
     </div>
 </body>
 </html>
