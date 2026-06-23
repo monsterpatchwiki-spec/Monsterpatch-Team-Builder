@@ -2,38 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monsterpatch Squad Builder</title>
     <style>
-        body { background-color: #3b302c; color: #eadfc1; font-family: sans-serif; margin: 0; padding: 20px; }
-        .container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1200px; margin: 0 auto; }
+        body { background-color: #3b302c; color: #f4e1c1; font-family: sans-serif; padding: 20px; }
         
-        .slot { border: 2px solid #d8bc6a; padding: 15px; border-radius: 4px; background-color: #342420; }
+        /* The 2x2 Grid Layout from your screenshot */
+        .container { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 20px; 
+            max-width: 1000px; 
+            margin: 0 auto; 
+        }
+
+        .slot { border: 2px solid #f4e1c1; padding: 15px; background-color: #4a3f3a; border-radius: 4px; }
         
         /* Headers & Sections */
-        .slot-header { background-color: #d15c62; padding: 5px; margin-bottom: 10px; color: white; }
-        .moveset-container { background-color: #89514e; padding: 5px; margin-bottom: 10px; }
-        .sprite-area { background-color: #eadfc1; color: #342420; padding: 5px; margin-bottom: 10px; text-align: center;}
+        .slot-header, .moveset-container { margin-bottom: 10px; padding: 5px; border: 1px solid #7a6a5e; }
+        .sprite-area { display: flex; gap: 10px; margin-bottom: 10px; }
         
-        /* Stats & Passives */
-        .stats-container { background-color: #4b689f; padding: 5px; margin: 5px; color: white; }
-        .passives-container { background-color: #874185; padding: 5px; margin: 5px; color: white; }
+        /* Stats & Passives Row */
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .stats-panel, .passives-panel { border: 1px solid #7a6a5e; padding: 5px; }
         
-        .stat-row { display: flex; align-items: center; gap: 10px; margin: 3px 0; font-size: 13px; }
-        input, select { background: #eadfc1; border: 1px solid #342420; padding: 2px; }
+        .stat-row { display: flex; align-items: center; gap: 5px; font-size: 12px; margin: 4px 0; }
+        input, select { background: #dcd0b5; border: none; padding: 2px; }
     </style>
 </head>
 <body>
 
-    <h1 style="text-align: center; color: #d8bc6a;">MONSTERPATCH SQUAD BUILDER</h1>
+    <h1 style="text-align: center;">MONSTERPATCH SQUAD BUILDER</h1>
+    <p style="text-align: center;">ALPHA v1.0.0</p>
     
     <div class="container">
         <script>
-            function createSlot() {
+            function createSlot(num) {
                 document.write(`
                     <div class="slot">
+                        <div style="font-weight:bold; margin-bottom:5px;">SLOT ${num}</div>
                         <div class="slot-header">
-                            <input type="text" placeholder="NICKNAME"> Lv <input type="number" value="50" style="width: 40px;">
+                            <input type="text" placeholder="NICKNAME"> Lv <input type="number" value="50" style="width: 30px;">
                             <input type="checkbox"> SPARKLE
                         </div>
                         <div class="moveset-container">
@@ -41,29 +49,34 @@
                             <input type="text" placeholder="Move 3"> <input type="text" placeholder="Move 4">
                         </div>
                         <div class="sprite-area">
-                            <img src="placeholder.png" width="80" height="80"><br>
-                            <select><option>Select Monster</option></select>
-                            <input type="text" placeholder="Held Item" style="width: 80px;">
+                            <div style="width: 80px; height: 80px; background: #eadfc1;"></div>
+                            <div>
+                                <input type="text" placeholder="003 Hawkamere" style="width: 100%;"><br>
+                                <input type="text" placeholder="Held Item" style="width: 100%;">
+                            </div>
                         </div>
-                        <div style="display: flex;">
-                            <div class="stats-container" style="flex: 1;">
-                                ${['HP', 'ATK', 'MAG', 'DEF', 'RES', 'SPD'].map(s => `
-                                    <div class="stat-row"><span>${s}</span><select><option>C</option></select><input type="range" style="width: 50px;"></div>
+                        <div class="info-grid">
+                            <div class="stats-panel">
+                                ${['HP','ATK','MAG','DEF','RES','SPD'].map(s => `
+                                    <div class="stat-row">
+                                        <span>${s}</span> <select><option>C</option></select>
+                                        <div style="height:8px; width:40px; background:#dcd0b5;"></div> 40
+                                    </div>
                                 `).join('')}
                             </div>
-                            <div class="passives-container" style="flex: 1;">
-                                <h4 style="margin:0; font-size: 12px;">PASSIVES</h4>
-                                <input type="text" placeholder="P1" style="width: 90%"><br>
-                                <input type="text" placeholder="P2" style="width: 90%"><br>
-                                <input type="text" placeholder="P3" style="width: 90%"><br>
-                                <input type="text" placeholder="P4" style="width: 90%">
+                            <div class="passives-panel">
+                                <strong>PASSIVES</strong>
+                                <input type="text" placeholder="Passive 1" style="width:90%; margin:2px 0;">
+                                <input type="text" placeholder="Passive 2" style="width:90%; margin:2px 0;">
+                                <input type="text" placeholder="Passive 3" style="width:90%; margin:2px 0;">
+                                <input type="text" placeholder="Passive 4" style="width:90%; margin:2px 0;">
                             </div>
                         </div>
                     </div>
                 `);
             }
         </script>
-        <script>for(let i=0; i<4; i++) createSlot();</script>
+        <script>for(let i=1; i<=4; i++) createSlot(i);</script>
     </div>
 </body>
 </html>
