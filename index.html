@@ -8,27 +8,21 @@
         .page-header { color: #eadfc1; text-align: center; margin-bottom: 20px; }
         .container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 900px; margin: 0 auto; }
         
-        /* Slot: Green Border (#A2BA9C) */
-        .slot { border: 3px solid #A2BA9C; padding: 15px; background-color: #eadfc1; border-radius: 8px; position: relative; margin-top: 15px; }
+        /* 1. Thicker borders, 4. Taller slots */
+        .slot { border: 4px solid #A2BA9C; padding: 20px; background-color: #eadfc1; border-radius: 12px; position: relative; margin-top: 15px; }
+        .slot-title { position: absolute; top: -15px; left: 15px; background: #d8bc6a; color: #342420; padding: 4px 12px; border: 2px solid #342420; font-weight: bold; border-radius: 4px; }
         
-        /* Slot Tab: Yellow (#d8bc6a) */
-        .slot-title { position: absolute; top: -12px; left: 10px; background: #d8bc6a; color: #342420; padding: 2px 10px; border: 1px solid #342420; font-weight: bold; border-radius: 4px; }
+        .moveset-box { border: 3px solid #4b689f; padding: 10px; margin-bottom: 15px; }
         
-        /* Moveset: Blue Border (#4b689f) */
-        .moveset-box { border: 2px solid #4b689f; padding: 5px; margin-bottom: 10px; }
+        /* 4. Bigger image spot */
+        .sprite-box { border: 3px solid #342420; width: 140px; height: 140px; background: #eadfc1; }
         
-        /* Stats: Pink Border (#DE9996) */
-        .stats-panel { border: 2px solid #DE9996; padding: 5px; }
+        .stats-panel { border: 3px solid #DE9996; padding: 10px; flex: 1; }
+        /* 2. Passives moved left (via margin-right) */
+        .passives-panel { border: 3px solid #874185; padding: 10px; flex: 1; margin-left: -5px; }
         
-        /* Passives: Purple Border (#874185) */
-        .passives-panel { border: 2px solid #874185; padding: 5px; }
-        
-        .header-row { display: flex; gap: 10px; margin-top: 10px; margin-bottom: 10px; }
-        .main-info { display: flex; gap: 10px; margin-bottom: 10px; }
-        .sprite-box { border: 2px solid #342420; width: 100px; height: 100px; background: #eadfc1; }
-        .bottom-info { display: flex; gap: 10px; }
-        .stat-row { display: flex; align-items: center; gap: 5px; margin: 3px 0; }
-        input, select { background: #eadfc1; border: 1px solid #342420; padding: 2px; }
+        .stat-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+        input, select { background: #eadfc1; border: 1px solid #342420; padding: 4px; }
     </style>
 </head>
 <body>
@@ -44,9 +38,9 @@
                 document.write(`
                     <div class="slot">
                         <div class="slot-title">SLOT ${num}</div>
-                        <div class="header-row">
+                        <div style="display: flex; gap: 10px; margin-top: 10px; margin-bottom: 15px;">
                             <input type="text" placeholder="NICKNAME" style="flex:1;">
-                            Lv <input type="number" value="50" style="width: 30px;">
+                            Lv <input type="number" value="50" style="width: 40px;">
                             <input type="checkbox"> SPARKLE
                         </div>
                         <div class="moveset-box">
@@ -54,30 +48,31 @@
                             <input type="text" placeholder="Move 1"> <input type="text" placeholder="Move 2"><br>
                             <input type="text" placeholder="Move 3"> <input type="text" placeholder="Move 4">
                         </div>
-                        <div class="main-info">
+                        <div style="display: flex; gap: 15px; margin-bottom: 15px;">
                             <div class="sprite-box"></div>
                             <div style="flex:1;">
                                 <input type="text" placeholder="003 Hawkamere" style="width: 100%; margin-bottom: 5px;"><br>
                                 <input type="text" placeholder="Held Item" style="width: 100%;">
                             </div>
                         </div>
-                        <div class="bottom-info">
+                        <div style="display: flex;">
                             <div class="stats-panel">
                                 <strong>STATS</strong>
                                 ${['HP','ATK','MAG','DEF','RES','SPD'].map(s => `
                                     <div class="stat-row">
                                         <span style="width:30px;">${s}</span> 
                                         <select><option>C</option></select>
-                                        <div style="height:8px; width:40px; background:#d8bc6a;"></div>
+                                        <div style="height:10px; width:40px; background:#d8bc6a;"></div>
+                                        <span>40</span>
                                     </div>
                                 `).join('')}
                             </div>
                             <div class="passives-panel">
                                 <strong>PASSIVES</strong>
-                                <input type="text" placeholder="Passive 1" style="width:90%; display:block; margin:4px 0;">
-                                <input type="text" placeholder="Passive 2" style="width:90%; display:block; margin:4px 0;">
-                                <input type="text" placeholder="Passive 3" style="width:90%; display:block; margin:4px 0;">
-                                <input type="text" placeholder="Passive 4" style="width:90%; display:block; margin:4px 0;">
+                                <input type="text" placeholder="Passive 1" style="width:90%; display:block; margin:6px 0;">
+                                <input type="text" placeholder="Passive 2" style="width:90%; display:block; margin:6px 0;">
+                                <input type="text" placeholder="Passive 3" style="width:90%; display:block; margin:6px 0;">
+                                <input type="text" placeholder="Passive 4" style="width:90%; display:block; margin:6px 0;">
                             </div>
                         </div>
                     </div>
