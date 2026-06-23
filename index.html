@@ -20,16 +20,17 @@
 
         .page-wrapper { width: 100%; max-width: 1020px; margin: 0 auto; }
         
+        /* Forced 2-column layout */
         .slot-grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            grid-template-columns: repeat(2, 1fr); 
             gap: 15px; 
             margin-bottom: 20px; 
         }
         
         .matchup-container { 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            grid-template-columns: repeat(2, 1fr); 
             gap: 15px; 
             width: 100%; 
         }
@@ -48,16 +49,20 @@
         
         .section-box { border: 3px solid var(--blue); padding: 15px; margin-top: 20px; position: relative; }
         .passives-box { border: 3px solid var(--purple); }
-        .sprite-section { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
-        .sprite-box { border: 3px solid var(--black); width: 120px; height: 120px; background: var(--white); }
+        .sprite-section { display: flex; gap: 8px; margin-bottom: 10px; }
+        .sprite-box { border: 3px solid var(--black); width: 120px; height: 120px; background: var(--white); flex-shrink: 0; }
         .stats-panel { border: 3px solid var(--red); padding: 15px; margin-top: 20px; position: relative; }
         
-        /* Compact Header Line */
         .top-row { display: flex; gap: 8px; align-items: center; margin-top: 10px; font-size: 12px; }
-        .sparkle-label { display: flex; align-items: center; gap: 4px; white-space: nowrap; cursor: pointer; }
+        .sparkle-label { display: flex; align-items: center; gap: 4px; white-space: nowrap; }
         
         input, select { background: var(--white); border: 1px solid var(--black); color: var(--black); padding: 6px; font-family: 'MyConsolas', monospace; font-weight: bold; font-size: 12px; width: 100%; box-sizing: border-box; }
         .btn { background: var(--pink); border: 2px solid var(--black); color: var(--black); padding: 8px 12px; font-weight: bold; cursor: pointer; }
+
+        /* Responsive Breakpoint for Mobile to keep layout sane */
+        @media (max-width: 600px) {
+            .slot-grid, .matchup-container { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
