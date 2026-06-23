@@ -10,26 +10,26 @@
         }
 
         :root {
-            --red: #d15c62;
-            --blue: #4b689f;
-            --purple: #874185;
-            --pink: #DE9996;
-            --black: #342420;
-            --grey: #808a91;
-            --green: #A2BA9C;
-            --brown: #89514E;
-            --yellow: #d8bc6a;
-            --white: #eadfc1;
+            --red: #d15c62; --blue: #4b689f; --purple: #874185; --pink: #DE9996;
+            --black: #342420; --grey: #808a91; --green: #A2BA9C; --brown: #89514E;
+            --yellow: #d8bc6a; --white: #eadfc1;
         }
 
         body { 
             background-color: var(--black); 
-            font-family: 'MyConsolas', 'Consolas', 'Courier New', monospace; 
-            padding: 20px; 
-            font-size: 14px; 
+            font-family: 'MyConsolas', 'Consolas', monospace; 
+            padding: 20px; font-size: 14px; 
         }
-        .page-header { color: var(--white); text-align: center; margin-bottom: 20px; }
-        .container { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; max-width: 990px; margin: 0 auto; }
+
+        /* Centering the UI */
+        .page-wrapper { max-width: 1050px; margin: 0 auto; }
+
+        /* Header Area */
+        .top-header { display: flex; justify-content: space-between; align-items: center; color: var(--white); margin-bottom: 20px; }
+        .header-buttons { display: flex; gap: 10px; }
+        .btn { background: var(--pink); border: 2px solid var(--black); padding: 8px 16px; font-weight: bold; cursor: pointer; font-family: inherit; }
+
+        .container { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
         
         .slot { border: 4px solid var(--grey); padding: 22px; background-color: var(--white); border-radius: 12px; position: relative; margin-top: 17px; }
         
@@ -50,77 +50,78 @@
         .bottom-info { display: flex; gap: 17px; }
         .stat-row { display: flex; align-items: center; gap: 9px; margin: 7px 0; }
         
-        input, select { background: var(--white); border: 1px solid var(--black); padding: 4px; font-family: 'MyConsolas', 'Consolas', monospace; font-size: 14px; }
+        input, select { background: var(--white); border: 1px solid var(--black); padding: 4px; font-family: inherit; font-size: 14px; }
     </style>
 </head>
 <body>
 
-    <div class="page-header">
-        <h1>MONSTERPATCH SQUAD BUILDER</h1>
-        <p>ALPHA v1.0.0</p>
-    </div>
-    
-    <div class="container">
-        <script>
-            function createSlot(num) {
-                document.write(`
-                    <div class="slot">
-                        <div class="segment-title tab-slot">SLOT ${num}</div>
-                        
-                        <div style="display: flex; gap: 11px; margin-top: 11px; margin-bottom: 17px; align-items: center;">
-                            <input type="text" placeholder="NICKNAME" style="flex:1;">
-                            Lv <input type="number" value="50" style="width: 44px;">
-                            <label style="display:flex; align-items:center; gap:4px;">
-                                <input type="checkbox"> SPARKLE
-                            </label>
-                        </div>
-                        
-                        <div class="moveset-box">
-                            <div class="segment-title tab-moveset">MOVESET</div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
-                                <input type="text" placeholder="Move 1"> <input type="text" placeholder="Move 2">
-                                <input type="text" placeholder="Move 3"> <input type="text" placeholder="Move 4">
+    <div class="page-wrapper">
+        <div class="top-header">
+            <div>
+                <h1>MONSTERPATCH SQUAD BUILDER</h1>
+                <p>ALPHA v1.0.0</p>
+            </div>
+            <div class="header-buttons">
+                <button class="btn">IMPORT SQUAD</button>
+                <button class="btn">EXPORT SQUAD</button>
+            </div>
+        </div>
+        
+        <div class="container">
+            <script>
+                function createSlot(num) {
+                    document.write(`
+                        <div class="slot">
+                            <div class="segment-title tab-slot">SLOT ${num}</div>
+                            <div style="display: flex; gap: 11px; margin-top: 11px; margin-bottom: 17px; align-items: center;">
+                                <input type="text" placeholder="NICKNAME" style="flex:1;">
+                                Lv <input type="number" value="50" style="width: 44px;">
+                                <label style="display:flex; align-items:center; gap:4px;"><input type="checkbox"> SPARKLE</label>
                             </div>
-                        </div>
-                        
-                        <div style="display: flex; gap: 17px; margin-bottom: 10px;">
-                            <div class="sprite-box"></div>
-                            <div style="flex:1;">
-                                <input type="text" placeholder="003 Hawkamere" style="width: 100%; margin-bottom: 6px;"><br>
-                                <input type="text" placeholder="Held Item" style="width: 100%; margin-bottom: 6px;">
-                                <div style="display: flex; gap: 6px;">
-                                    <input type="text" placeholder="Type 1" style="flex:1;">
-                                    <input type="text" placeholder="Type 2" style="flex:1;">
+                            <div class="moveset-box">
+                                <div class="segment-title tab-moveset">MOVESET</div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
+                                    <input type="text" placeholder="Move 1"> <input type="text" placeholder="Move 2">
+                                    <input type="text" placeholder="Move 3"> <input type="text" placeholder="Move 4">
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 17px; margin-bottom: 10px;">
+                                <div class="sprite-box"></div>
+                                <div style="flex:1;">
+                                    <input type="text" placeholder="003 Hawkamere" style="width: 100%; margin-bottom: 6px;"><br>
+                                    <input type="text" placeholder="Held Item" style="width: 100%; margin-bottom: 6px;">
+                                    <div style="display: flex; gap: 6px;">
+                                        <input type="text" placeholder="Type 1" style="flex:1;">
+                                        <input type="text" placeholder="Type 2" style="flex:1;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bottom-info">
+                                <div class="stats-panel">
+                                    <div class="segment-title tab-stats">STATS</div>
+                                    ${['HP','ATK','MAG','DEF','RES','SPD'].map(s => `
+                                        <div class="stat-row">
+                                            <span style="width:33px; font-weight:bold;">${s}</span> 
+                                            <select><option>C</option></select>
+                                            <div style="height:11px; width:44px; background:var(--yellow);"></div>
+                                            <span>40</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                <div class="passives-panel">
+                                    <div class="segment-title tab-passives">PASSIVES</div>
+                                    <input type="text" placeholder="Passive 1" style="width:90%; display:block; margin:7px 0;">
+                                    <input type="text" placeholder="Passive 2" style="width:90%; display:block; margin:7px 0;">
+                                    <input type="text" placeholder="Passive 3" style="width:90%; display:block; margin:7px 0;">
+                                    <input type="text" placeholder="Passive 4" style="width:90%; display:block; margin:7px 0;">
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="bottom-info">
-                            <div class="stats-panel">
-                                <div class="segment-title tab-stats">STATS</div>
-                                ${['HP','ATK','MAG','DEF','RES','SPD'].map(s => `
-                                    <div class="stat-row">
-                                        <span style="width:33px; font-weight:bold;">${s}</span> 
-                                        <select><option>C</option></select>
-                                        <div style="height:11px; width:44px; background:var(--yellow);"></div>
-                                        <span>40</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                            
-                            <div class="passives-panel">
-                                <div class="segment-title tab-passives">PASSIVES</div>
-                                <input type="text" placeholder="Passive 1" style="width:90%; display:block; margin:7px 0;">
-                                <input type="text" placeholder="Passive 2" style="width:90%; display:block; margin:7px 0;">
-                                <input type="text" placeholder="Passive 3" style="width:90%; display:block; margin:7px 0;">
-                                <input type="text" placeholder="Passive 4" style="width:90%; display:block; margin:7px 0;">
-                            </div>
-                        </div>
-                    </div>
-                `);
-            }
-        </script>
-        <script>for(let i=1; i<=4; i++) createSlot(i);</script>
+                    `);
+                }
+            </script>
+            <script>for(let i=1; i<=4; i++) createSlot(i);</script>
+        </div>
     </div>
 </body>
 </html>
