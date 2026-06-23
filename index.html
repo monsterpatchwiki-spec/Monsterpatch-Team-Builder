@@ -15,90 +15,78 @@
         }
 
         body { 
-            background-color: var(--black); 
-            font-family: 'MyConsolas', 'Consolas', monospace; 
-            font-weight: bold; padding: 10px; font-size: 12px; margin: 0;
+            background-color: var(--black); font-family: 'MyConsolas', 'Consolas', monospace; 
+            font-weight: bold; padding: 5px; font-size: 10px; margin: 0;
             display: flex; flex-direction: column; align-items: center;
         }
 
-        .page-wrapper { width: 1000px; }
+        .page-wrapper { width: 950px; }
 
         .top-header { 
-            display: flex; justify-content: space-between; align-items: flex-end; 
-            color: var(--white); margin-bottom: 15px; border-bottom: 2px solid var(--white); padding-bottom: 5px;
+            display: flex; justify-content: space-between; align-items: center; 
+            color: var(--white); margin-bottom: 5px; border-bottom: 2px solid var(--white); 
         }
-        .header-text h1 { margin: 0; font-size: 24px; }
         
-        .btn { 
-            background: var(--pink); border: 2px solid var(--black); padding: 5px 12px; 
-            font-weight: bold; cursor: pointer; font-family: 'MyConsolas', 'Consolas', monospace;
-        }
-
-        /* 2x2 Grid Layout */
-        .slot-grid { display: grid; grid-template-columns: 490px 490px; gap: 20px; justify-content: center; }
+        .slot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; justify-items: center; }
         
         .slot { 
-            border: 4px solid var(--grey); padding: 15px; background-color: var(--white); 
-            border-radius: 10px; position: relative; margin-top: 15px;
+            border: 3px solid var(--grey); padding: 8px; background-color: var(--white); 
+            border-radius: 6px; position: relative; width: 460px;
         }
         
         .segment-title {
-            position: absolute; top: -10px; left: 10px; padding: 1px 8px; 
-            border: 2px solid var(--black); font-weight: bold; border-radius: 4px; font-size: 11px;
+            position: absolute; top: -8px; left: 6px; padding: 0px 4px; 
+            border: 2px solid var(--black); font-weight: bold; border-radius: 3px; font-size: 9px;
         }
-        .tab-slot { background: var(--yellow); top: -14px; left: 15px; }
+        
+        .tab-slot { background: var(--yellow); }
         .tab-moveset { background: var(--blue); color: white; }
         .tab-passives { background: var(--purple); color: white; }
         .tab-stats { background: var(--red); color: white; }
 
-        .section-box { border: 2px solid var(--blue); padding: 12px 8px 8px 8px; margin-top: 15px; position: relative; }
+        .section-box { border: 2px solid var(--blue); padding: 6px; margin-top: 10px; position: relative; }
         .passives-box { border: 2px solid var(--purple); }
         
-        .sprite-row { display: flex; gap: 10px; margin-top: 12px; }
-        .sprite-box { border: 2px solid var(--black); width: 150px; height: 100px; background: var(--white); }
-        .info-col { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        .sprite-row { display: flex; gap: 5px; margin-top: 8px; }
+        .sprite-box { border: 2px solid var(--black); width: 100px; height: 60px; background: var(--white); }
+        .info-col { flex: 1; display: flex; flex-direction: column; gap: 2px; }
 
-        .stats-panel { border: 2px solid var(--red); padding: 12px 8px 8px 8px; position: relative; margin-top: 15px; }
-        .stat-row { display: flex; align-items: center; gap: 4px; margin: 3px 0; }
-        .stat-bar { height: 6px; flex-grow: 1; background: #ddd; border: 1px solid #999; }
+        .stats-panel { border: 2px solid var(--red); padding: 8px 6px; position: relative; margin-top: 10px; }
+        .stat-row { display: flex; align-items: center; gap: 3px; margin: 1px 0; }
+        .stat-bar { height: 5px; flex-grow: 1; background: #ddd; border: 1px solid #999; }
         
-        input, select { background: var(--white); border: 1px solid var(--black); padding: 2px; font-family: 'MyConsolas', 'Consolas', monospace; font-weight: bold; font-size: 11px; }
+        input, select, button { font-family: 'MyConsolas', 'Consolas', monospace; font-weight: bold; font-size: 10px; padding: 1px; }
+        .btn { padding: 2px 8px; background: var(--pink); border: 2px solid var(--black); }
     </style>
 </head>
 <body>
 
     <div class="page-wrapper">
         <div class="top-header">
-            <div class="header-text"><h1>MONSTERPATCH SQUAD BUILDER</h1><p>ALPHA v1.0.0</p></div>
-            <div><button class="btn">IMPORT SQUAD</button> <button class="btn">EXPORT SQUAD</button></div>
+            <div><h1 style="font-size: 16px; margin:0;">MONSTERPATCH SQUAD BUILDER</h1></div>
+            <div><button class="btn">IMPORT</button> <button class="btn">EXPORT</button></div>
         </div>
         
         <div class="slot-grid">
             <script>
-                const monList = ["001 Birb", "003 Hawkamere"]; // Add full list here
-                const vibes = ["Playful (MAG+/ATK-)", "Lazy (DEF+/ATK-)", "Humble (RES+/ATK-)", "Suave (SPD+/ATK-)", "Spicy (ATK+/MAG-)", "Somber (DEF+/MAG-)", "Mellow (RES+/MAG-)", "Bouncy (SPD+/MAG-)", "Reckless (ATK+/DEF-)", "Dramatic (MAG+/DEF-)", "Sweet (RES+/DEF-)", "Daring (SPD+/DEF-)", "Wild (ATK+/RES-)", "Goofy (MAG+/RES-)", "Clumsy (DEF+/RES-)", "Anxious (SPD+/RES-)", "Fierce (ATK+/SPD-)", "Zesty (MAG+/SPD-)", "Stalwart (DEF+/SPD-)", "Shy (RES+/SPD-)"];
-
                 function createSlot(num) {
                     document.write(`
                         <div class="slot">
                             <div class="segment-title tab-slot">SLOT ${num}</div>
-                            <div style="display: flex; gap: 8px; align-items: center; margin-top: 5px;">
+                            <div style="display: flex; gap: 4px; margin-top: 2px;">
                                 <input type="text" placeholder="NICKNAME" style="flex:1;">
-                                Lv <input type="number" value="50" style="width: 35px;">
-                                <label><input type="checkbox"> SPARKLE</label>
+                                Lv <input type="number" value="50" style="width: 30px;">
                             </div>
                             <div class="section-box">
                                 <div class="segment-title tab-moveset">MOVESET</div>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
-                                    <input type="text" placeholder="Move 1"><input type="text" placeholder="Move 2">
-                                    <input type="text" placeholder="Move 3"><input type="text" placeholder="Move 4">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3px;">
+                                    <input type="text" placeholder="M1"><input type="text" placeholder="M2"><input type="text" placeholder="M3"><input type="text" placeholder="M4">
                                 </div>
                             </div>
                             <div class="section-box passives-box">
                                 <div class="segment-title tab-passives">PASSIVES</div>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
-                                    <input type="text" placeholder="Pass 1"><input type="text" placeholder="Pass 2">
-                                    <input type="text" placeholder="Pass 3"><input type="text" placeholder="Pass 4">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3px;">
+                                    <input type="text" placeholder="P1"><input type="text" placeholder="P2"><input type="text" placeholder="P3"><input type="text" placeholder="P4">
                                 </div>
                             </div>
                             <div class="sprite-row">
@@ -106,25 +94,22 @@
                                 <div class="info-col">
                                     <select><option>Select Mon</option></select>
                                     <input type="text" placeholder="Held Item">
-                                    <div style="display:flex; gap:2px;"><input type="text" placeholder="Type 1" style="width:50%"><input type="text" placeholder="Type 2" style="width:50%"></div>
+                                    <div style="display:flex; gap:1px;"><input type="text" placeholder="Type 1"><input type="text" placeholder="Type 2"></div>
                                 </div>
                             </div>
                             <div class="stats-panel">
                                 <div class="segment-title tab-stats">STATS</div>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
                                     ${['HP','ATK','MAG','DEF','RES','SPD'].map(s => `
                                         <div class="stat-row">
-                                            <span style="width:25px;">${s}</span>
-                                            <select style="width:30px;"><option>C</option></select>
-                                            <select style="width:30px;"><option>0</option></select>
+                                            <span style="width:20px;">${s}</span>
+                                            <select style="width:25px;"><option>C</option></select>
                                             <div class="stat-bar"></div>
-                                            <span style="width:20px; text-align:right;">40</span>
+                                            <span style="width:15px; text-align:right;">40</span>
                                         </div>
                                     `).join('')}
                                 </div>
-                                <div style="margin-top:10px; border-top:1px solid var(--grey); padding-top:8px;">
-                                    VIBE: <select style="width:75%;">${vibes.map(v => `<option>${v}</option>`).join('')}</select>
-                                </div>
+                                <div style="margin-top:5px; font-size: 9px;">VIBE: <select style="width:80%;"></select></div>
                             </div>
                         </div>
                     `);
