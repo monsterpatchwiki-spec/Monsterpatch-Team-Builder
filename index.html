@@ -9,38 +9,48 @@
             src: url('https://raw.githubusercontent.com/monsterpatchwiki-spec/font/main/consolas.ttf') format('truetype');
         }
 
+        :root {
+            --red: #d15c62;
+            --blue: #4b689f;
+            --purple: #874185;
+            --pink: #DE9996;
+            --black: #342420;
+            --grey: #808a91;
+            --green: #A2BA9C;
+            --brown: #89514E;
+            --yellow: #d8bc6a;
+            --white: #eadfc1;
+        }
+
         body { 
-            background-color: #342420; 
+            background-color: var(--black); 
             font-family: 'MyConsolas', 'Consolas', 'Courier New', monospace; 
             padding: 20px; 
             font-size: 14px; 
         }
-        .page-header { color: #eadfc1; text-align: center; margin-bottom: 20px; }
+        .page-header { color: var(--white); text-align: center; margin-bottom: 20px; }
         .container { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; max-width: 990px; margin: 0 auto; }
         
-        /* Updated border: Grey (#8D8D8D) */
-        .slot { border: 4px solid #8D8D8D; padding: 22px; background-color: #eadfc1; border-radius: 12px; position: relative; margin-top: 17px; }
+        .slot { border: 4px solid var(--grey); padding: 22px; background-color: var(--white); border-radius: 12px; position: relative; margin-top: 17px; }
         
         .segment-title {
             position: absolute; top: -13px; left: 11px; padding: 2px 9px; 
-            border: 2px solid #342420; font-weight: bold; border-radius: 4px; font-size: 12px;
+            border: 2px solid var(--black); font-weight: bold; border-radius: 4px; font-size: 12px;
         }
-        .tab-slot { background: #d8bc6a; top: -17px; left: 17px; }
-        .tab-moveset { background: #4b689f; color: white; }
-        .tab-stats { background: #DE9996; }
-        .tab-passives { background: #874185; color: white; }
+        .tab-slot { background: var(--yellow); top: -17px; left: 17px; }
+        .tab-moveset { background: var(--blue); color: white; }
+        .tab-stats { background: var(--red); color: white; }
+        .tab-passives { background: var(--purple); color: white; }
 
-        .moveset-box { border: 3px solid #4b689f; background-color: transparent; padding: 17px 11px 11px 11px; margin-bottom: 17px; position: relative; margin-top: 17px; }
+        .moveset-box { border: 3px solid var(--blue); background-color: transparent; padding: 17px 11px 11px 11px; margin-bottom: 17px; position: relative; margin-top: 17px; }
+        .stats-panel { border: 3px solid var(--red); background-color: transparent; padding: 17px 11px 11px 11px; flex: 1; position: relative; margin-top: 17px; }
+        .passives-panel { border: 3px solid var(--purple); background-color: transparent; padding: 17px 11px 11px 11px; flex: 1; position: relative; margin-top: 17px; }
         
-        /* Updated border: Red (#C0392B) */
-        .stats-panel { border: 3px solid #C0392B; background-color: transparent; padding: 17px 11px 11px 11px; flex: 1; position: relative; margin-top: 17px; }
-        .passives-panel { border: 3px solid #874185; background-color: transparent; padding: 17px 11px 11px 11px; flex: 1; position: relative; margin-top: 17px; }
-        
-        .sprite-box { border: 3px solid #342420; width: 154px; height: 154px; background: #eadfc1; }
+        .sprite-box { border: 3px solid var(--black); width: 154px; height: 154px; background: var(--white); }
         .bottom-info { display: flex; gap: 17px; }
         .stat-row { display: flex; align-items: center; gap: 9px; margin: 7px 0; }
         
-        input, select { background: #eadfc1; border: 1px solid #342420; padding: 4px; font-family: 'MyConsolas', 'Consolas', monospace; font-size: 14px; }
+        input, select { background: var(--white); border: 1px solid var(--black); padding: 4px; font-family: 'MyConsolas', 'Consolas', monospace; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -92,7 +102,7 @@
                                     <div class="stat-row">
                                         <span style="width:33px; font-weight:bold;">${s}</span> 
                                         <select><option>C</option></select>
-                                        <div style="height:11px; width:44px; background:#d8bc6a;"></div>
+                                        <div style="height:11px; width:44px; background:var(--yellow);"></div>
                                         <span>40</span>
                                     </div>
                                 `).join('')}
