@@ -48,12 +48,10 @@
 
         .moveset-box { border: 3px solid var(--blue); padding: 17px 11px 11px 11px; margin-bottom: 17px; position: relative; margin-top: 17px; }
         
-        /* Sprite section styling */
         .sprite-section { display: flex; gap: 11px; margin-bottom: 10px; }
         .sprite-box { border: 3px solid var(--black); width: 220px; height: 154px; background: var(--white); }
         .info-col { flex: 1; display: flex; flex-direction: column; gap: 6px; }
 
-        /* Stats and Passives tightened */
         .bottom-info { display: flex; gap: 10px; }
         .stats-panel { border: 3px solid var(--red); padding: 17px 8px 11px 8px; flex: 0 0 45%; position: relative; margin-top: 17px; }
         .passives-panel { border: 3px solid var(--purple); padding: 17px 8px 11px 8px; flex: 1; position: relative; margin-top: 17px; }
@@ -114,7 +112,13 @@
                                     ${['HP','ATK','MAG','DEF','RES','SPD'].map(s => `
                                         <div class="stat-row">
                                             <span style="width:30px; font-weight:bold; font-size:11px;">${s}</span> 
-                                            <select style="width:40px;"><option>C</option></select>
+                                            <select style="width:40px;">
+                                                <option>S</option>
+                                                <option>A</option>
+                                                <option>B</option>
+                                                <option selected>C</option>
+                                                <option>D</option>
+                                            </select>
                                             <div style="height:11px; flex:1; background:var(--yellow);"></div>
                                             <span style="width:20px; text-align:right;">40</span>
                                         </div>
