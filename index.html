@@ -11,7 +11,7 @@
         }
         :root {
             --red: #d15c62; --blue: #4b689f; --purple: #874185; --pink: #DE9996;
-            --black: #342420; --grey: #808a91; --white: #eadfc1; --yellow: #d8bc6a;
+            --black: #342420; --white: #eadfc1; --yellow: #d8bc6a;
         }
         body { 
             background-color: var(--black); font-family: 'MyConsolas', monospace; 
@@ -19,11 +19,17 @@
             display: flex; justify-content: center; color: var(--black);
         }
 
-        /* This container maintains your intended layout perfectly */
-        .page-wrapper { width: 1020px; transform-origin: top center; } 
-        
+        /* MOBILE FIX: Scales the 1020px layout to fit smaller screens */
+        .page-wrapper { width: 1020px; transform-origin: top center; }
+        @media (max-width: 1050px) {
+            body { overflow-x: hidden; }
+            .page-wrapper { transform: scale(0.9); transform-origin: top center; }
+        }
+        @media (max-width: 950px) { .page-wrapper { transform: scale(0.8); } }
+        @media (max-width: 850px) { .page-wrapper { transform: scale(0.7); } }
+        @media (max-width: 750px) { .page-wrapper { transform: scale(0.6); } }
+
         .slot-grid { display: grid; grid-template-columns: 490px 490px; gap: 40px; justify-content: center; margin-bottom: 20px; }
-        
         .matchup-container { display: flex; gap: 20px; justify-content: center; width: 100%; }
         .sidebar { width: 500px; background: var(--white); border: 4px solid var(--black); padding: 15px; border-radius: 12px; }
         
@@ -42,7 +48,6 @@
         .passives-box { border: 3px solid var(--purple); }
         .sprite-section { display: flex; gap: 11px; margin-bottom: 10px; }
         .sprite-box { border: 3px solid var(--black); width: 220px; height: 154px; background: var(--white); }
-        
         .stats-panel { border: 3px solid var(--red); padding: 17px 11px 11px 11px; position: relative; margin-top: 17px; }
         .stat-row { display: flex; align-items: center; gap: 4px; margin: 4px 0; }
         .stat-bar { height: 8px; flex-grow: 1; border: 1px solid var(--black); border-radius: 2px; }
@@ -50,21 +55,6 @@
         input, select { background: var(--white); border: 1px solid var(--black); color: var(--black); padding: 2px; font-family: 'MyConsolas', monospace; font-weight: bold; font-size: 11px; }
         .top-header { display: flex; justify-content: space-between; align-items: flex-end; color: var(--white); margin-bottom: 20px; border-bottom: 2px solid var(--white); padding-bottom: 10px; }
         .btn { background: var(--pink); border: 2px solid var(--black); color: var(--black); padding: 8px 16px; font-weight: bold; cursor: pointer; font-family: 'MyConsolas', monospace; }
-
-        /* Auto-scale for mobile screens */
-        @media (max-width: 1050px) {
-            body { overflow-x: hidden; }
-            .page-wrapper { transform: scale(0.9); }
-        }
-        @media (max-width: 950px) {
-            .page-wrapper { transform: scale(0.8); }
-        }
-        @media (max-width: 850px) {
-            .page-wrapper { transform: scale(0.7); }
-        }
-        @media (max-width: 750px) {
-            .page-wrapper { transform: scale(0.6); }
-        }
     </style>
 </head>
 <body>
@@ -74,7 +64,9 @@
         <div class="header-text"><h1>MONSTERPATCH SQUAD BUILDER</h1><p>ALPHA v1.0.0</p></div>
         <div class="header-buttons"><button class="btn">IMPORT SQUAD</button> <button class="btn">EXPORT SQUAD</button></div>
     </div>
+    
     <div class="slot-grid" id="slot-area"></div>
+
     <div class="matchup-container">
         <div class="sidebar">
             <h3 style="margin-top:0; color: var(--black);">OFFENSIVE MATCHUPS</h3>
