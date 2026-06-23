@@ -77,7 +77,12 @@
         
         <div class="slot-grid">
             <script>
+                const monList = [
+                    "001 Birb", "002 Feenix", "003 Hawkamere", "004 Axolot", "005 Neptoon", "006 Salamight", "007 Gojiru", "008 Gaiaru", "009 Gaiazard", "010 Pachi", "011 Stitchi", "012 Teddychi", "013 Demidemon", "014 Demidevil", "015 Demigorgon", "016 Flauna", "017 Crystelle", "018 Auricorn", "019 Piglit", "020 Poghog", "021 Gigaboar", "022 Murkjaw", "023 Doomfin", "024 Terrorjaw", "025 Glub", "026 Tadglub", "027 Froglob", "028 Moomoo", "029 Bullwark", "030 Aegitaur", "031 Ecto", "032 Toxlic", "033 Noxecution", "034 Nibblesaur", "035 Rubblesaur", "036 Tyrannox", "037 Gnoblin", "038 Snagglin", "039 Garuogre", "040 Dragini", "041 Luvdra", "042 Dragalia", "043 Poplit", "044 Emberlily", "045 Flamara", "046 Terrabone", "047 Terrahorn", "048 Terraclops", "049 Bloaty", "050 Pinpuffer", "051 Bulbosword", "052 Harebelle", "053 Rowdibelle", "054 Bellarina", "055 Lilitad", "056 Lilipet", "057 Lilifrog", "058 Shellin", "059 Glorpin", "060 Glorpius", "061 Zagon", "062 Zellgon", "063 Zagnarok", "064 Cubskull", "065 Gloomcub", "066 Grislybear", "067 Embpurr", "068 Pyremane", "069 Solareon", "070 Wyrmpool", "071 Wyrmwind", "072 Glaedria", "073 Snok", "074 Lunaconda", "075 Cobraclysm", "076 Poppeep", "077 Faequill", "078 Pocobo", "079 Gardslug", "080 Cadeetle", "081 Bugbastion", "082 Squito", "083 Mossquito", "084 Venomite", "085 Polly", "086 Cluccaneer", "087 Beakbeard", "088 Dracobull", "089 Dracohorn", "090 Bullzerker", "091 Gillywatt", "092 Gulpawatt", "093 Lanterror", "094 Charchunk", "095 Infernace", "096 Hadrion", "097 Dumblo", "098 Driftusk", "099 Lullaphant", "100 Helmkin", "101 Hollowisp", "102 Knightgeist", "103 Nessie", "104 Moxasaur", "105 Coralodon", "106 Wilowisp", "107 Wilowraith", "108 Revreaper", "109 Alligyle", "110 Waddlgator", "111 Crocolossus", "112 Redcap", "113 Sporch", "114 Gloomshroom", "115 Psyclod", "116 Psytongue", "117 Psyrock", "118 Pengu", "119 Pengurai", "120 Raironin", "121 Clammler", "122 Shelltler", "123 Shieldler", "124 Bonpot", "125 Bonsprout", "126 Bonblossom", "127 Bitmant", "128 Metalmant", "129 Adamantis", "130 Corsea", "131 Seapuff", "132 Hippoflare", "133 Gurgle", "134 Gurgoyle", "135 Goregyle", "136 Caterbug", "137 Lavalarva", "138 Monarchfly", "139 Gubble", "140 Gyoshi", "141 Bubblegon", "142 Tanooki", "143 Tanuko", "144 Tanukuma", "145 Smoldodo", "146 Opyryx", "147 Ignychus", "148 Blubbo", "149 Narwelt", "150 Narwallop", "151 Grinnlin", "152 Gobjank", "153 Gobsmurk", "154 Cacoto", "155 Cacotid", "156 Cacoton", "157 Chicky", "158 Silligoose", "159 Doomchicken", "160 Glibat", "161 Hexbat", "162 Blightbat", "163 Pokoroko", "164 Shakasaru", "165 Masukusaru", "166 Ghostkit", "167 Netherlynx", "168 Shimmerclaw", "169 Wimpid", "170 Velvolt", "171 Vespabolt", "172 Weenut", "173 Spriggent", "174 Enchantree", "175 Kraba", "176 Krabaghast", "177 Krabaghoul", "178 Dootle", "179 Dingdung", "180 Astrobug", "181 Cawful", "182 Cultcrow", "183 Covencrow", "184 Goopy", "185 Mitomoeba", "186 Protoslime", "187 Mimlick", "188 Fortresst", "189 Ghoulgalion", "190 Fluffin", "191 Owlsage", "192 Arcanowl", "193 Snoosnail", "194 Magmolten", "195 Warloctopus", "196 Jellyzip", "197 Jellyzap", "198 Jellystorm", "199 Rohoot", "200 Rohawk", "201 Griffiron", "202 Elixapot", "203 Elixabrew", "204 Elixadon", "205 Meowmau", "206 Bastcat", "207 Cleocatra", "208 Millapod", "209 Centascale", "210 Dragapede", "211 Kiplet", "212 Kippurr", "213 Kippycat", "214 Toatoad", "215 Toadjinn", "216 Explotoad"
+                ];
+
                 function createSlot(num) {
+                    let options = monList.map(mon => `<option>${mon}</option>`).join('');
                     document.write(`
                         <div class="slot">
                             <div class="segment-title tab-slot">SLOT ${num}</div>
@@ -102,7 +107,10 @@
                                     </div>
                                 </div>
                                 <div class="info-col">
-                                    <input type="text" placeholder="003 Hawkamere">
+                                    <select style="width: 100%;">
+                                        <option>Select MoN</option>
+                                        ${options}
+                                    </select>
                                     <input type="text" placeholder="Held Item">
                                 </div>
                             </div>
