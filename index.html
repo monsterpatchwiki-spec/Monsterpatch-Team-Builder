@@ -4,52 +4,48 @@
     <meta charset="UTF-8">
     <title>Monsterpatch Squad Builder</title>
     <style>
-        body { background-color: #3b302c; color: #f4e1c1; font-family: sans-serif; padding: 20px; }
+        body { background-color: #342420; color: #342420; font-family: sans-serif; padding: 20px; }
         
-        /* The 2x2 Grid Layout from your screenshot */
-        .container { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 20px; 
-            max-width: 1000px; 
-            margin: 0 auto; 
-        }
+        .container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1000px; margin: 0 auto; }
 
-        .slot { border: 2px solid #f4e1c1; padding: 15px; background-color: #4a3f3a; border-radius: 4px; }
+        /* Slot: Green border, White back */
+        .slot { border: 3px solid #A2BA9C; padding: 15px; background-color: #eadfc1; border-radius: 4px; }
         
-        /* Headers & Sections */
-        .slot-header, .moveset-container { margin-bottom: 10px; padding: 5px; border: 1px solid #7a6a5e; }
-        .sprite-area { display: flex; gap: 10px; margin-bottom: 10px; }
+        /* Red top border */
+        .slot-header { border-top: 5px solid #d15c62; padding-top: 5px; margin-bottom: 10px; }
         
-        /* Stats & Passives Row */
+        /* Blue border for moves */
+        .moveset-container { border: 2px solid #4b689f; padding: 8px; margin-bottom: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+        
+        /* Stats: Pink border, Passives: Purple border */
         .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .stats-panel, .passives-panel { border: 1px solid #7a6a5e; padding: 5px; }
+        .stats-panel { border: 2px solid #DE9996; padding: 5px; }
+        .passives-panel { border: 2px solid #874185; padding: 5px; }
+        .passives-header { background: #874185; color: white; padding: 2px; text-align: center; font-size: 12px; margin-bottom: 5px; }
         
         .stat-row { display: flex; align-items: center; gap: 5px; font-size: 12px; margin: 4px 0; }
-        input, select { background: #dcd0b5; border: none; padding: 2px; }
+        input, select { background: #eadfc1; border: 1px solid #808a91; padding: 2px; }
     </style>
 </head>
 <body>
 
-    <h1 style="text-align: center;">MONSTERPATCH SQUAD BUILDER</h1>
-    <p style="text-align: center;">ALPHA v1.0.0</p>
+    <h1 style="text-align: center; color: #eadfc1;">MONSTERPATCH SQUAD BUILDER</h1>
     
     <div class="container">
         <script>
             function createSlot(num) {
                 document.write(`
                     <div class="slot">
-                        <div style="font-weight:bold; margin-bottom:5px;">SLOT ${num}</div>
                         <div class="slot-header">
-                            <input type="text" placeholder="NICKNAME"> Lv <input type="number" value="50" style="width: 30px;">
+                            <input type="text" placeholder="NICKNAME" style="width: 40%;"> Lv <input type="number" value="50" style="width: 30px;">
                             <input type="checkbox"> SPARKLE
                         </div>
                         <div class="moveset-container">
-                            <input type="text" placeholder="Move 1"> <input type="text" placeholder="Move 2"><br>
+                            <input type="text" placeholder="Move 1"> <input type="text" placeholder="Move 2">
                             <input type="text" placeholder="Move 3"> <input type="text" placeholder="Move 4">
                         </div>
-                        <div class="sprite-area">
-                            <div style="width: 80px; height: 80px; background: #eadfc1;"></div>
+                        <div style="display:flex; gap:10px; margin-bottom:10px;">
+                            <div style="width: 80px; height: 80px; background: #808a91;"></div>
                             <div>
                                 <input type="text" placeholder="003 Hawkamere" style="width: 100%;"><br>
                                 <input type="text" placeholder="Held Item" style="width: 100%;">
@@ -57,19 +53,20 @@
                         </div>
                         <div class="info-grid">
                             <div class="stats-panel">
+                                <strong>STATS</strong>
                                 ${['HP','ATK','MAG','DEF','RES','SPD'].map(s => `
                                     <div class="stat-row">
                                         <span>${s}</span> <select><option>C</option></select>
-                                        <div style="height:8px; width:40px; background:#dcd0b5;"></div> 40
+                                        <div style="height:8px; width:30px; background:#808a91;"></div>
                                     </div>
                                 `).join('')}
                             </div>
                             <div class="passives-panel">
-                                <strong>PASSIVES</strong>
-                                <input type="text" placeholder="Passive 1" style="width:90%; margin:2px 0;">
-                                <input type="text" placeholder="Passive 2" style="width:90%; margin:2px 0;">
-                                <input type="text" placeholder="Passive 3" style="width:90%; margin:2px 0;">
-                                <input type="text" placeholder="Passive 4" style="width:90%; margin:2px 0;">
+                                <div class="passives-header">PASSIVES</div>
+                                <input type="text" placeholder="P1" style="width:90%; margin:2px 0;">
+                                <input type="text" placeholder="P2" style="width:90%; margin:2px 0;">
+                                <input type="text" placeholder="P3" style="width:90%; margin:2px 0;">
+                                <input type="text" placeholder="P4" style="width:90%; margin:2px 0;">
                             </div>
                         </div>
                     </div>
