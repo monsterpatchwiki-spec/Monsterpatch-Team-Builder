@@ -4,69 +4,78 @@
     <meta charset="UTF-8">
     <title>Monsterpatch Squad Builder</title>
     <style>
-        body { background-color: #342420; color: #342420; font-family: sans-serif; padding: 20px; }
+        body { background-color: #3b302c; color: #342420; font-family: sans-serif; padding: 20px; font-size: 12px; }
+        .page-header { color: #f4e1c1; text-align: center; margin-bottom: 20px; }
+        .container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 900px; margin: 0 auto; }
         
-        .container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1000px; margin: 0 auto; }
-
-        /* Slot: Green border, White back */
-        .slot { border: 3px solid #A2BA9C; padding: 15px; background-color: #eadfc1; border-radius: 4px; }
+        /* Slot Container */
+        .slot { border: 2px solid #5a4a45; padding: 10px; background-color: #eadfc1; }
+        .slot-title { font-weight: bold; background: #89514e; color: white; display: inline-block; padding: 2px 8px; margin-bottom: 5px; }
         
-        /* Red top border */
-        .slot-header { border-top: 5px solid #d15c62; padding-top: 5px; margin-bottom: 10px; }
+        /* Headers & Sections */
+        .header-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .moveset-box { background: #89514e; padding: 5px; margin-bottom: 10px; color: white; }
         
-        /* Blue border for moves */
-        .moveset-container { border: 2px solid #4b689f; padding: 8px; margin-bottom: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+        /* Middle Section: Sprite + Selection */
+        .main-info { display: flex; gap: 10px; margin-bottom: 10px; }
+        .sprite-box { border: 2px solid #342420; width: 100px; height: 100px; }
         
-        /* Stats: Pink border, Passives: Purple border */
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .stats-panel { border: 2px solid #DE9996; padding: 5px; }
-        .passives-panel { border: 2px solid #874185; padding: 5px; }
-        .passives-header { background: #874185; color: white; padding: 2px; text-align: center; font-size: 12px; margin-bottom: 5px; }
+        /* Bottom: Stats & Passives */
+        .bottom-info { display: flex; gap: 10px; }
+        .stats-panel { flex: 1; border: 2px solid #808a91; padding: 5px; }
+        .passives-panel { flex: 1; border: 2px solid #874185; padding: 5px; }
         
-        .stat-row { display: flex; align-items: center; gap: 5px; font-size: 12px; margin: 4px 0; }
-        input, select { background: #eadfc1; border: 1px solid #808a91; padding: 2px; }
+        .stat-row { display: flex; align-items: center; gap: 5px; margin: 3px 0; }
+        input, select { background: #f4e1c1; border: 1px solid #342420; padding: 2px; }
     </style>
 </head>
 <body>
 
-    <h1 style="text-align: center; color: #eadfc1;">MONSTERPATCH SQUAD BUILDER</h1>
+    <div class="page-header">
+        <h1>MONSTERPATCH SQUAD BUILDER</h1>
+        <p>ALPHA v1.0.0</p>
+    </div>
     
     <div class="container">
         <script>
             function createSlot(num) {
                 document.write(`
                     <div class="slot">
-                        <div class="slot-header">
-                            <input type="text" placeholder="NICKNAME" style="width: 40%;"> Lv <input type="number" value="50" style="width: 30px;">
+                        <div class="slot-title">SLOT ${num}</div>
+                        <div class="header-row">
+                            <input type="text" placeholder="NICKNAME" style="flex:1;">
+                            Lv <input type="number" value="50" style="width: 30px;">
                             <input type="checkbox"> SPARKLE
                         </div>
-                        <div class="moveset-container">
-                            <input type="text" placeholder="Move 1"> <input type="text" placeholder="Move 2">
+                        <div class="moveset-box">
+                            <strong>MOVESET</strong><br>
+                            <input type="text" placeholder="Move 1"> <input type="text" placeholder="Move 2"><br>
                             <input type="text" placeholder="Move 3"> <input type="text" placeholder="Move 4">
                         </div>
-                        <div style="display:flex; gap:10px; margin-bottom:10px;">
-                            <div style="width: 80px; height: 80px; background: #808a91;"></div>
+                        <div class="main-info">
+                            <div class="sprite-box"></div>
                             <div>
-                                <input type="text" placeholder="003 Hawkamere" style="width: 100%;"><br>
+                                <input type="text" placeholder="003 Hawkamere" style="width: 100%; margin-bottom: 5px;"><br>
                                 <input type="text" placeholder="Held Item" style="width: 100%;">
                             </div>
                         </div>
-                        <div class="info-grid">
+                        <div class="bottom-info">
                             <div class="stats-panel">
                                 <strong>STATS</strong>
                                 ${['HP','ATK','MAG','DEF','RES','SPD'].map(s => `
                                     <div class="stat-row">
-                                        <span>${s}</span> <select><option>C</option></select>
-                                        <div style="height:8px; width:30px; background:#808a91;"></div>
+                                        <span style="width:30px;">${s}</span> 
+                                        <select><option>C</option></select>
+                                        <div style="height:8px; width:40px; background:#d8bc6a;"></div> 40
                                     </div>
                                 `).join('')}
                             </div>
                             <div class="passives-panel">
-                                <div class="passives-header">PASSIVES</div>
-                                <input type="text" placeholder="P1" style="width:90%; margin:2px 0;">
-                                <input type="text" placeholder="P2" style="width:90%; margin:2px 0;">
-                                <input type="text" placeholder="P3" style="width:90%; margin:2px 0;">
-                                <input type="text" placeholder="P4" style="width:90%; margin:2px 0;">
+                                <strong>PASSIVES</strong>
+                                <input type="text" placeholder="Passive 1" style="width:90%; display:block; margin:4px 0;">
+                                <input type="text" placeholder="Passive 2" style="width:90%; display:block; margin:4px 0;">
+                                <input type="text" placeholder="Passive 3" style="width:90%; display:block; margin:4px 0;">
+                                <input type="text" placeholder="Passive 4" style="width:90%; display:block; margin:4px 0;">
                             </div>
                         </div>
                     </div>
