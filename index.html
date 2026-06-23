@@ -29,7 +29,16 @@
         }
         .header-text h1 { margin: 0; font-size: 28px; }
         .header-buttons { display: flex; gap: 10px; }
-        .btn { background: var(--pink); border: 2px solid var(--black); padding: 8px 16px; font-weight: bold; cursor: pointer; }
+        
+        /* Updated button font styling */
+        .btn { 
+            background: var(--pink); 
+            border: 2px solid var(--black); 
+            padding: 8px 16px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-family: 'MyConsolas', 'Consolas', monospace;
+        }
 
         .slot-grid { display: grid; grid-template-columns: 484px 484px; gap: 22px; justify-content: center; }
         
@@ -55,7 +64,7 @@
         .stat-row { display: flex; align-items: center; gap: 4px; margin: 4px 0; }
         .stat-bar { height: 8px; flex-grow: 1; background: #ddd; border: 1px solid #999; border-radius: 2px; }
         
-        input, select { background: var(--white); border: 1px solid var(--black); padding: 2px; font-family: inherit; font-size: 11px; }
+        input, select { background: var(--white); border: 1px solid var(--black); padding: 2px; font-family: 'MyConsolas', 'Consolas', monospace; font-size: 11px; }
     </style>
 </head>
 <body>
