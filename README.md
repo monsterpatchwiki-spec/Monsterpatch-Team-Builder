@@ -1,2 +1,3 @@
 # Monsterpatch Team Builder
-A team builder for the game monsterpatch
+A teambuilder Princess 1 from the monsterpatch discord has built for the game Monsterpatch 
+
