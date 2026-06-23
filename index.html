@@ -52,9 +52,11 @@
         .info-col { flex: 1; display: flex; flex-direction: column; gap: 6px; }
 
         .stats-panel { border: 3px solid var(--red); padding: 17px 11px 11px 11px; position: relative; margin-top: 17px; }
-        .stat-row { display: flex; align-items: center; gap: 5px; margin: 4px 0; }
+        .stat-row { display: flex; align-items: center; gap: 4px; margin: 4px 0; }
+        /* Stat bar styling */
+        .stat-bar { height: 8px; flex-grow: 1; background: #ddd; border: 1px solid #999; border-radius: 2px; }
         
-        input, select { background: var(--white); border: 1px solid var(--black); padding: 4px; font-family: inherit; font-size: 12px; }
+        input, select { background: var(--white); border: 1px solid var(--black); padding: 2px; font-family: inherit; font-size: 11px; }
     </style>
 </head>
 <body>
@@ -118,9 +120,10 @@
                                     ${['HP','ATK','MAG','DEF','RES','SPD'].map(s => `
                                         <div class="stat-row">
                                             <span style="width:30px; font-weight:bold; font-size:11px;">${s}</span> 
-                                            <select style="width:40px;"><option>S</option><option>A</option><option>B</option><option selected>C</option><option>D</option></select>
-                                            <select style="width:35px;"><option>0</option><option>1</option><option>2</option><option>3</option></select>
-                                            <span style="font-size:11px;">40</span>
+                                            <select style="width:35px;"><option>S</option><option>A</option><option>B</option><option selected>C</option><option>D</option></select>
+                                            <select style="width:30px;"><option>0</option><option>1</option><option>2</option><option>3</option></select>
+                                            <div class="stat-bar"></div>
+                                            <span style="font-size:11px; width:15px; text-align:right;">40</span>
                                         </div>
                                     `).join('')}
                                 </div>
