@@ -4,29 +4,31 @@
     <meta charset="UTF-8">
     <title>Monsterpatch Squad Builder</title>
     <style>
-        body { background-color: #3b302c; color: #342420; font-family: sans-serif; padding: 20px; font-size: 12px; }
-        .page-header { color: #f4e1c1; text-align: center; margin-bottom: 20px; }
+        body { background-color: #342420; font-family: sans-serif; padding: 20px; font-size: 12px; }
+        .page-header { color: #eadfc1; text-align: center; margin-bottom: 20px; }
         .container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 900px; margin: 0 auto; }
         
-        /* Slot Container */
-        .slot { border: 2px solid #5a4a45; padding: 10px; background-color: #eadfc1; }
-        .slot-title { font-weight: bold; background: #89514e; color: white; display: inline-block; padding: 2px 8px; margin-bottom: 5px; }
+        /* Slot: Green Border (#A2BA9C) */
+        .slot { border: 3px solid #A2BA9C; padding: 15px; background-color: #eadfc1; border-radius: 8px; position: relative; margin-top: 15px; }
         
-        /* Headers & Sections */
-        .header-row { display: flex; gap: 10px; margin-bottom: 10px; }
-        .moveset-box { background: #89514e; padding: 5px; margin-bottom: 10px; color: white; }
+        /* Slot Tab: Yellow (#d8bc6a) */
+        .slot-title { position: absolute; top: -12px; left: 10px; background: #d8bc6a; color: #342420; padding: 2px 10px; border: 1px solid #342420; font-weight: bold; border-radius: 4px; }
         
-        /* Middle Section: Sprite + Selection */
+        /* Moveset: Blue Border (#4b689f) */
+        .moveset-box { border: 2px solid #4b689f; padding: 5px; margin-bottom: 10px; }
+        
+        /* Stats: Pink Border (#DE9996) */
+        .stats-panel { border: 2px solid #DE9996; padding: 5px; }
+        
+        /* Passives: Purple Border (#874185) */
+        .passives-panel { border: 2px solid #874185; padding: 5px; }
+        
+        .header-row { display: flex; gap: 10px; margin-top: 10px; margin-bottom: 10px; }
         .main-info { display: flex; gap: 10px; margin-bottom: 10px; }
-        .sprite-box { border: 2px solid #342420; width: 100px; height: 100px; }
-        
-        /* Bottom: Stats & Passives */
+        .sprite-box { border: 2px solid #342420; width: 100px; height: 100px; background: #eadfc1; }
         .bottom-info { display: flex; gap: 10px; }
-        .stats-panel { flex: 1; border: 2px solid #808a91; padding: 5px; }
-        .passives-panel { flex: 1; border: 2px solid #874185; padding: 5px; }
-        
         .stat-row { display: flex; align-items: center; gap: 5px; margin: 3px 0; }
-        input, select { background: #f4e1c1; border: 1px solid #342420; padding: 2px; }
+        input, select { background: #eadfc1; border: 1px solid #342420; padding: 2px; }
     </style>
 </head>
 <body>
@@ -54,7 +56,7 @@
                         </div>
                         <div class="main-info">
                             <div class="sprite-box"></div>
-                            <div>
+                            <div style="flex:1;">
                                 <input type="text" placeholder="003 Hawkamere" style="width: 100%; margin-bottom: 5px;"><br>
                                 <input type="text" placeholder="Held Item" style="width: 100%;">
                             </div>
@@ -66,7 +68,7 @@
                                     <div class="stat-row">
                                         <span style="width:30px;">${s}</span> 
                                         <select><option>C</option></select>
-                                        <div style="height:8px; width:40px; background:#d8bc6a;"></div> 40
+                                        <div style="height:8px; width:40px; background:#d8bc6a;"></div>
                                     </div>
                                 `).join('')}
                             </div>
