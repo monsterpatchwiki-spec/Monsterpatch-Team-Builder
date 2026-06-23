@@ -20,10 +20,11 @@
             font-family: 'MyConsolas', 'Consolas', monospace; 
             padding: 20px; font-size: 14px; 
             margin: 0;
+            display: flex; flex-direction: column; align-items: center;
         }
 
-        /* Fixed width to match the header content area */
-        .page-wrapper { max-width: 1024px; margin: 0 auto; }
+        /* Enforce a single width for header and content */
+        .page-wrapper { width: 1024px; }
 
         .top-header { 
             display: flex; justify-content: space-between; align-items: flex-end; 
@@ -34,8 +35,8 @@
         .header-buttons { display: flex; gap: 10px; }
         .btn { background: var(--pink); border: 2px solid var(--black); padding: 8px 16px; font-weight: bold; cursor: pointer; font-family: inherit; }
 
-        /* Slots now span the full width of the wrapper */
-        .container { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        /* Centered grid for the slots */
+        .slot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
         
         .slot { border: 4px solid var(--grey); padding: 22px; background-color: var(--white); border-radius: 12px; position: relative; margin-top: 17px; }
         
@@ -73,7 +74,7 @@
             </div>
         </div>
         
-        <div class="container">
+        <div class="slot-grid">
             <script>
                 function createSlot(num) {
                     document.write(`
