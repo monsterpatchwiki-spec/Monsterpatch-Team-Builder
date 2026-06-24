@@ -1,5 +1,5 @@
  /* @language javascript */
-// This file contains the logic and data for Monsterpatch Squad Builder
+// This file contains the logic and data for Monsterpatch Squad Builder this is also a comment
  
  const monData = {
    "001 Birby": { normal: { houses: ["Fireborn", "Normal"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/001_n.png" }, sparkly: { houses: ["Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/001_s.png" } },
