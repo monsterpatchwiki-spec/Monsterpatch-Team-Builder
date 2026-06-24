@@ -223,15 +223,21 @@
    "L03 Wrathalisk": { normal: { houses: ["Dragoon", "Overgrowth"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/L03_n.png" }, sparkly: { houses: ["Nightwatch", "Atlantian"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/L03_s.png" } }
    };
 
-const vibes = ["Playful (MAG+/ATK-)", "Lazy (DEF+/ATK-)", "Humble (RES+/ATK-)", "Suave (SPD+/ATK-)", "Spicy (ATK+/MAG-)", "Somber (DEF+/MAG-)", "Mellow (RES+/MAG-)", "Bouncy (SPD+/MAG-)", "Reckless (ATK+/DEF-)", "Dramatic (MAG+/DEF-)", "Sweet (RES+/DEF-)", "Daring (SPD+/DEF-)", "Wild (ATK+/RES-)", "Goofy (MAG+/RES-)", "Clumsy (DEF+/RES-)", "Anxious (SPD+/RES-)", "Fierce (ATK+/SPD-)", "Zesty (MAG+/SPD-)", "Stalwart (DEF+/SPD-)", "Shy (RES+/SPD-)"];
-const moveList = ["Move A", "Move B", "Move C"]; 
-const passiveList = ["Passive A", "Passive B", "Passive C"];
-const heldItemList = ["Item A", "Item B", "Item C"];
+// --- 1. CSS Injection for Custom Dropdown ---
+const style = document.createElement('style');
+style.innerHTML = `
+    .custom-dropdown-container { position: relative; width: 100%; margin-bottom: 5px; }
+    .custom-dropdown { border: 2px solid var(--black); background: var(--white); position: absolute; z-index: 100; max-height: 200px; overflow-y: auto; width: 100%; display: none; }
+    .dropdown-item { padding: 5px; display: flex; align-items: center; cursor: pointer; font-size: 12px; border-bottom: 1px solid #ccc; }
+    .dropdown-item img { width: 25px; height: 25px; margin-right: 8px; object-fit: contain; }
+    .dropdown-item:hover { background: var(--yellow); }
+`;
+document.head.appendChild(style);
 
 // --- 2. LOGIC FUNCTIONS ---
 
 function updateSprite(num) {
-    const selectedName = document.getElementById(`monSelect-${num}`).value;
+    const selectedName = document.getElementById(`search-${num}`).value;
     const isSparkly = document.querySelector(`.slot:nth-child(${num}) .sparkle-checkbox`).checked;
     const spriteBox = document.getElementById(`sprite-${num}`);
 
@@ -246,8 +252,37 @@ function updateSprite(num) {
     }
 }
 
+function toggleDropdown(num, event) {
+    event.stopPropagation();
+    document.getElementById(`dropdown-${num}`).style.display = 'block';
+}
+
+function closeAllDropdowns() {
+    document.querySelectorAll('.custom-dropdown').forEach(d => d.style.display = 'none');
+}
+
+function selectMon(num, name) {
+    document.getElementById(`search-${num}`).value = name;
+    updateSprite(num);
+    closeAllDropdowns();
+}
+
+function filterMonsters(num, event) {
+    event.stopPropagation();
+    const filter = event.target.value.toLowerCase();
+    const items = document.querySelectorAll(`#dropdown-${num} .dropdown-item`);
+    items.forEach(item => {
+        item.style.display = item.innerText.toLowerCase().includes(filter) ? 'flex' : 'none';
+    });
+}
+
 function createSlot(num) {
-    let monOptions = Object.keys(monData).map(name => `<option value="${name}">${name}</option>`).join('');
+    let monOptionsHTML = Object.keys(monData).map(name => `
+        <div class="dropdown-item" onclick="selectMon(${num}, '${name}')">
+            <img src="${monData[name].normal.sprite}"> ${name}
+        </div>`).join('');
+    
+    // ... (Your existing options builders for vibes, moves, etc) ...
     let vibeOptions = vibes.map(v => `<option>${v}</option>`).join('');
     let moveOptions = moveList.map(m => `<option>${m}</option>`).join('');
     let passiveOptions = passiveList.map(p => `<option>${p}</option>`).join('');
@@ -284,9 +319,10 @@ function createSlot(num) {
         <div class="sprite-section">
             <div class="sprite-box" id="sprite-${num}" style="flex:1;"></div>
             <div class="info-col" style="flex:1;">
-                <select id="monSelect-${num}" onchange="updateSprite(${num})" style="margin-bottom: 5px;">
-                    <option value="">Select Mon</option>${monOptions}
-                </select>
+                <div class="custom-dropdown-container">
+                    <input type="text" id="search-${num}" placeholder="Search Mon..." oninput="filterMonsters(${num}, event)" onclick="toggleDropdown(${num}, event)">
+                    <div id="dropdown-${num}" class="custom-dropdown">${monOptionsHTML}</div>
+                </div>
                 <select id="itemSelect-${num}"><option>Held Item</option>${itemOptions}</select>
             </div>
         </div>
@@ -305,16 +341,3 @@ function createSlot(num) {
             </div>
         </div></div>`;
 }
-
-// --- 3. INITIALIZATION ---
-
-const slotArea = document.getElementById('slot-area');
-for(let i=1; i<=4; i++) slotArea.innerHTML += createSlot(i);
-
-const types = ["Fireborn","Atlantian","Overgrowth","Whimsical","Nightwatch","Mystic","Dragoon","Ironclad","Brawler","Normal"];
-function fillTable(tableId) {
-    const tbody = document.querySelector(`#${tableId} tbody`);
-    types.forEach(type => { tbody.innerHTML += `<tr><td class="row-header">${type}</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0</td></tr>`; });
-}
-fillTable('off-table'); 
-fillTable('def-table');
