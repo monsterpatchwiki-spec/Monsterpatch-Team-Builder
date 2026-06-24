@@ -224,7 +224,7 @@
    };
 
 // 2. AUTOMATICALLY GENERATE LISTS FROM DATA
-const monList = Object.keys(monData).sort(); // .sort() keeps the dropdown alphabetical
+const monList = Object.keys(monData).sort(); 
 const vibes = ["Playful (MAG+/ATK-)", "Lazy (DEF+/ATK-)", "Humble (RES+/ATK-)", "Suave (SPD+/ATK-)", "Spicy (ATK+/MAG-)", "Somber (DEF+/MAG-)", "Mellow (RES+/MAG-)", "Bouncy (SPD+/MAG-)", "Reckless (ATK+/DEF-)", "Dramatic (MAG+/DEF-)", "Sweet (RES+/DEF-)", "Daring (SPD+/DEF-)", "Wild (ATK+/RES-)", "Goofy (MAG+/RES-)", "Clumsy (DEF+/RES-)", "Anxious (SPD+/RES-)", "Fierce (ATK+/SPD-)", "Zesty (MAG+/SPD-)", "Stalwart (DEF+/SPD-)", "Shy (RES+/SPD-)"];
 
 const moveList = ["Move A", "Move B", "Move C"]; 
@@ -255,10 +255,10 @@ function createSlot(num) {
     </div>`;
 }
 
-// 4. LOGIC TO CONNECT DATA TO UI (Keep your existing function)
+// 4. LOGIC TO CONNECT DATA TO UI
 function updateSlot(num) {
     const monKey = document.getElementById(`monSelect-${num}`).value;
-    if (!monData[monKey]) return; // Safety check
+    if (!monData[monKey]) return; 
 
     const isSparkly = document.querySelector(`#slot-${num} .sparkle-checkbox`).checked;
     const variant = isSparkly ? "sparkly" : "normal";
@@ -269,10 +269,16 @@ function updateSlot(num) {
     document.querySelector(`#slot-${num} .sprite-box`).style.backgroundImage = `url('${data.sprite}')`;
 }
 
-// 5. INITIALIZE
+// 5. INITIALIZE (Optimized)
 const slotArea = document.getElementById('slot-area');
 if (slotArea) {
+    let slotsHTML = "";
     for(let i=1; i<=4; i++) {
-        slotArea.innerHTML += createSlot(i);
+        slotsHTML += createSlot(i);
     }
+    slotArea.innerHTML = slotsHTML;
 }
+
+// Placeholder for Import/Export logic
+function importSquad() { console.log("Import clicked"); }
+function exportSquad() { console.log("Export clicked"); }
