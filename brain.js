@@ -289,7 +289,7 @@ function updateSprite(num) {
                 input.value = val;
                 input.style.backgroundColor = typeColors[val] || "#eadfc1";
                 input.style.color = darkTypes.includes(val) ? "#eadfc1" : "#342420";
-                icon.src = `assets/${typeToIcon[val] || 'assets/house_default.png'}`;
+                icon.src = typeToIcon[val] || 'assets/house_default.png';
             } else {
                 wrap.style.display = "none";
             }
