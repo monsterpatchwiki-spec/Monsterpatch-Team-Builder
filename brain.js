@@ -223,14 +223,11 @@
    "L03 Wrathalisk": { normal: { houses: ["Dragoon", "Overgrowth"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/wrathalisk_n.png" }, sparkly: { houses: ["Nightwatch", "Atlantian"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/wrathalisk_s.png" } }
    };
 
-// 2. CONSTANTS
 const monList = Object.keys(monData);
 const vibes = ["Playful (MAG+/ATK-)", "Lazy (DEF+/ATK-)", "Humble (RES+/ATK-)", "Suave (SPD+/ATK-)", "Spicy (ATK+/MAG-)", "Somber (DEF+/MAG-)", "Mellow (RES+/MAG-)", "Bouncy (SPD+/MAG-)", "Reckless (ATK+/DEF-)", "Dramatic (MAG+/DEF-)", "Sweet (RES+/DEF-)", "Daring (SPD+/DEF-)", "Wild (ATK+/RES-)", "Goofy (MAG+/RES-)", "Clumsy (DEF+/RES-)", "Anxious (SPD+/RES-)", "Fierce (ATK+/SPD-)", "Zesty (MAG+/SPD-)", "Stalwart (DEF+/SPD-)", "Shy (RES+/SPD-)"];
-const moveList = ["Move A", "Move B", "Move C"]; 
-const passiveList = ["Passive A", "Passive B", "Passive C"];
-const heldItemList = ["Item A", "Item B", "Item C"];
 
-// 3. FUNCTIONS
+// --- 2. FUNCTIONS ---
+
 function updateSlot(num) {
     const selectedKey = document.getElementById(`monSelect-${num}`).value;
     const mon = monData[selectedKey];
@@ -240,38 +237,57 @@ function updateSlot(num) {
 
     const data = isSparkly ? mon.sparkly : mon.normal;
 
+    // Update Sprite
     const spriteBox = document.querySelector(`.slot:nth-child(${num}) .sprite-box`);
     spriteBox.style.backgroundImage = `url('${data.sprite}')`;
     spriteBox.style.backgroundSize = 'contain';
+    spriteBox.style.backgroundRepeat = 'no-repeat';
+    spriteBox.style.backgroundPosition = 'center';
 
+    // Update Houses
     document.getElementById(`house1-${num}`).value = data.houses[0] || "";
     document.getElementById(`house2-${num}`).value = data.houses[1] || "";
 }
 
 function createSlot(num) {
-    let monOptions = monList.map(mon => `<option>${mon}</option>`).join('');
+    let monOptions = monList.map(mon => `<option value="${mon}">${mon}</option>`).join('');
+    let vibeOptions = vibes.map(v => `<option>${v}</option>`).join('');
+
     return `<div class="slot"><div class="segment-title tab-slot">SLOT ${num}</div>
         <div style="display: flex; gap: 11px; margin-top: 11px; margin-bottom: 17px; align-items: center;">
             <input type="text" placeholder="NICKNAME" style="flex:1;"> Lv <input type="number" value="50" style="width: 60px;"> 
-            <label><input type="checkbox" class="sparkle-checkbox" onchange="updateSlot(${num})"> SPARKLE</label>
+            <label style="display:flex; align-items:center; gap:4px; color: var(--black);"><input type="checkbox" class="sparkle-checkbox" onchange="updateSlot(${num})"> SPARKLE</label>
         </div>
         <div class="sprite-section">
             <div class="sprite-box" style="flex:1;"></div>
             <div class="info-col" style="flex:1;">
-                <select id="monSelect-${num}" onchange="updateSlot(${num})"><option value="">Select Mon</option>${monOptions}</select>
-                <select id="itemSelect-${num}"><option>Held Item</option></select>
+                <select id="monSelect-${num}" onchange="updateSlot(${num})" style="margin-bottom: 5px;"><option value="">Select Mon</option>${monOptions}</select>
             </div>
         </div>
         <div style="display: flex; gap: 6px; margin-bottom: 10px;">
             <input type="text" id="house1-${num}" placeholder="House 1" style="flex:1;"> 
             <input type="text" id="house2-${num}" placeholder="House 2" style="flex:1;">
-        </div></div>`;
+        </div>
+        <div class="stats-panel">VIBE: <select>${vibeOptions}</select></div>
+    </div>`;
 }
 
-// 4. INITIALIZATION
+// --- 3. INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {
     const slotArea = document.getElementById('slot-area');
     if (slotArea) {
         slotArea.innerHTML = [1,2,3,4].map(i => createSlot(i)).join('');
     }
+
+    const types = ["Fireborn","Atlantian","Overgrowth","Whimsical","Nightwatch","Mystic","Dragoon","Ironclad","Brawler","Normal"];
+    function fillTable(tableId) {
+        const tbody = document.querySelector(`#${tableId} tbody`);
+        if (tbody) {
+            tbody.innerHTML = types.map(type => 
+                `<tr><td class="row-header">${type}</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0</td></tr>`
+            ).join('');
+        }
+    }
+    fillTable('off-table'); 
+    fillTable('def-table');
 });
