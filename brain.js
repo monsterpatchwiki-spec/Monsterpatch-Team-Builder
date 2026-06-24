@@ -13,6 +13,13 @@ const typeColors = {
     "Brawler": "#89514E",
     "Normal": "#eadfc1"
 };
+
+// Map types to house_#.png indices (adjust the numbers to match your actual files)
+const typeToIcon = {
+    "Fireborn": "house_1.png", "Atlantian": "house_2.png", "Overgrowth": "house_3.png",
+    "Whimsical": "house_4.png", "Nightwatch": "house_5.png", "Mystic": "house_8.png",
+    "Dragoon": "house_7.png", "Ironclad": "house_9.png", "Brawler": "house_6.png"
+    };
  const monData = {
    "001 Birb": { normal: { houses: ["Fireborn"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/001_n.png" }, sparkly: { houses: ["Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/001_s.png" } },
    "002 Feenix": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_n.png" }, sparkly: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_s.png" } },
@@ -246,8 +253,14 @@ function updateSprite(num) {
     const selectedName = document.getElementById(`monSelect-${num}`).value;
     const isSparkly = document.querySelector(`.slot:nth-child(${num}) .sparkle-checkbox`).checked;
     const spriteBox = document.getElementById(`sprite-${num}`);
-    const house1Input = document.getElementById(`house1-${num}`);
-    const house2Input = document.getElementById(`house2-${num}`);
+    
+    // Select wrappers, inputs, and icons
+    const h1Wrap = document.getElementById(`house1-wrap-${num}`);
+    const h2Wrap = document.getElementById(`house2-wrap-${num}`);
+    const h1In = document.getElementById(`house1-${num}`);
+    const h2In = document.getElementById(`house2-${num}`);
+    const icon1 = document.getElementById(`icon1-${num}`);
+    const icon2 = document.getElementById(`icon2-${num}`);
     
     const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
 
@@ -261,25 +274,26 @@ function updateSprite(num) {
 
         const h1 = (data.houses && data.houses[0]) ? data.houses[0] : "";
         const h2 = (data.houses && data.houses[1]) ? data.houses[1] : "";
-        
-        // Handle House 1
-        house1Input.value = h1;
-        house1Input.style.backgroundColor = typeColors[h1] || "#eadfc1";
-        house1Input.style.color = darkTypes.includes(h1) ? "#eadfc1" : "#342420";
-        house1Input.style.display = h1 ? "block" : "none";
 
-        // Handle House 2: Completely remove from layout if no data
-        house2Input.value = h2;
-        house2Input.style.backgroundColor = typeColors[h2] || "#eadfc1";
-        house2Input.style.color = darkTypes.includes(h2) ? "#eadfc1" : "#342420";
-        house2Input.style.display = h2 ? "block" : "none";
-        
+        // Helper to update house UI
+        const setHouse = (val, wrap, input, icon) => {
+            if (val) {
+                wrap.style.display = "flex";
+                input.value = val;
+                input.style.backgroundColor = typeColors[val] || "#eadfc1";
+                input.style.color = darkTypes.includes(val) ? "#eadfc1" : "#342420";
+                icon.src = `assets/${typeToIcon[val] || 'house_default.png'}`;
+            } else {
+                wrap.style.display = "none";
+            }
+        };
+
+        setHouse(h1, h1Wrap, h1In, icon1);
+        setHouse(h2, h2Wrap, h2In, icon2);
     } else {
         spriteBox.style.backgroundImage = 'none';
-        [house1Input, house2Input].forEach(input => {
-            input.value = "";
-            input.style.display = "none";
-        });
+        h1Wrap.style.display = "none";
+        h2Wrap.style.display = "none";
     }
 }
 
@@ -329,8 +343,14 @@ function createSlot(num) {
         </div>
 
         <div style="display: flex; gap: 6px; margin-bottom: 10px;">
-            <input type="text" id="house1-${num}" placeholder="House 1" style="flex:1; display:none;" readonly> 
-            <input type="text" id="house2-${num}" placeholder="House 2" style="flex:1; display:none;" readonly>
+            <div id="house1-wrap-${num}" style="flex:1; display:none; align-items:center; gap:5px;">
+                <img id="icon1-${num}" style="width:20px; height:20px;">
+                <input type="text" id="house1-${num}" style="flex:1;" readonly> 
+            </div>
+            <div id="house2-wrap-${num}" style="flex:1; display:none; align-items:center; gap:5px;">
+                <img id="icon2-${num}" style="width:20px; height:20px;">
+                <input type="text" id="house2-${num}" style="flex:1;" readonly>
+            </div>
         </div>
 
         <div class="stats-panel"><div class="segment-title tab-stats">STATS</div>
