@@ -16,9 +16,9 @@ const typeColors = {
 
 // Map types to house_#.png indices (adjust the numbers to match your actual files)
 const typeToIcon = {
-    "Fireborn": "house_1.png", "Atlantian": "house_2.png", "Overgrowth": "house_3.png",
-    "Whimsical": "house_4.png", "Nightwatch": "house_5.png", "Mystic": "house_8.png",
-    "Dragoon": "house_7.png", "Ironclad": "house_9.png", "Brawler": "house_6.png"
+    "Fireborn": "assets/House_1.png", "Atlantian": "assets/House_2.png", "Overgrowth": "assets/House_3.png",
+    "Whimsical": "assets/House_4.png", "Nightwatch": "assets/House_5.png", "Mystic": "assets/House_8.png",
+    "Dragoon": "assets/House_7.png", "Ironclad": "assets/House_9.png", "Brawler": "assets/House_6.png"
     };
  const monData = {
    "001 Birb": { normal: { houses: ["Fireborn"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/001_n.png" }, sparkly: { houses: ["Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/001_s.png" } },
