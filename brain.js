@@ -232,7 +232,7 @@ const monList = Object.keys(monData);
     const heldItemList = ["Item A", "Item B", "Item C"];
 
     function createSlot(num) {
-        let monOptions = monList.map(mon => `<option>${mon}</option>`).join('');
+        let monOptions = monList.map(mon => `<option value="${mon}">${mon}</option>`).join('');
         let vibeOptions = vibes.map(v => `<option>${v}</option>`).join('');
         let moveOptions = moveList.map(m => `<option>${m}</option>`).join('');
         let passiveOptions = passiveList.map(p => `<option>${p}</option>`).join('');
