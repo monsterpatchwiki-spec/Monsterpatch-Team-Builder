@@ -301,7 +301,7 @@ function createSlot(num) {
                 ${['HP','ATK','MAG','DEF','RES','SPD'].map(s => `<div class="stat-row"><span style="width:30px; font-weight:bold; font-size:11px; color: var(--black);">${s}</span> <select style="width:45px; padding:2px;">${tierOpts}</select><select style="width:40px; padding:2px;">${invOpts}</select><div class="stat-bar"><div class="stat-bar-fill"></div></div><span style="font-size:11px; width:15px; text-align:right; color: var(--black);">40</span></div>`).join('')}
             </div>
             <div style="margin-top:15px; border-top:1px solid var(--black); padding-top:10px;">
-                <label style="font-weight:bold; color: var(--black);">VIBEs:</label> <select style="margin-top:5px;">${vibeOptions}</select>
+                <label style="font-weight:bold; color: var(--black);">VIBE:</label> <select style="margin-top:5px;">${vibeOptions}</select>
             </div>
         </div></div>`;
 }
