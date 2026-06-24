@@ -262,22 +262,23 @@ function updateSprite(num) {
         const h1 = (data.houses && data.houses[0]) ? data.houses[0] : "";
         const h2 = (data.houses && data.houses[1]) ? data.houses[1] : "";
         
+        // Handle House 1
         house1Input.value = h1;
         house1Input.style.backgroundColor = typeColors[h1] || "#eadfc1";
         house1Input.style.color = darkTypes.includes(h1) ? "#eadfc1" : "#342420";
-        house1Input.style.visibility = h1 ? "visible" : "hidden";
+        house1Input.style.display = h1 ? "block" : "none";
 
+        // Handle House 2: Completely remove from layout if no data
         house2Input.value = h2;
         house2Input.style.backgroundColor = typeColors[h2] || "#eadfc1";
         house2Input.style.color = darkTypes.includes(h2) ? "#eadfc1" : "#342420";
-        house2Input.style.visibility = h2 ? "visible" : "hidden";
+        house2Input.style.display = h2 ? "block" : "none";
+        
     } else {
         spriteBox.style.backgroundImage = 'none';
         [house1Input, house2Input].forEach(input => {
             input.value = "";
-            input.style.backgroundColor = "#eadfc1";
-            input.style.color = "#342420";
-            input.style.visibility = "hidden";
+            input.style.display = "none";
         });
     }
 }
@@ -328,8 +329,8 @@ function createSlot(num) {
         </div>
 
         <div style="display: flex; gap: 6px; margin-bottom: 10px;">
-            <input type="text" id="house1-${num}" placeholder="House 1" style="flex:1;" readonly> 
-            <input type="text" id="house2-${num}" placeholder="House 2" style="flex:1;" readonly>
+            <input type="text" id="house1-${num}" placeholder="House 1" style="flex:1; display:none;" readonly> 
+            <input type="text" id="house2-${num}" placeholder="House 2" style="flex:1; display:none;" readonly>
         </div>
 
         <div class="stats-panel"><div class="segment-title tab-stats">STATS</div>
