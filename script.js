@@ -215,41 +215,47 @@ const monData = {
    "214 Toatoad": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/214_n.png" }, sparkly: { houses: ["Atlantian", "Overgrowth"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/214_s.png" } },
    "215 Toadjinn": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/215_n.png" }, sparkly: { houses: ["Atlantian", "Overgrowth"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/215_s.png" } },
    "216 Explotoad": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/216_n.png" }, sparkly: { houses: ["Atlantian", "Overgrowth"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/216_s.png" } },
-   "Raivern": { normal: { houses: ["Atlantian", "Dragoon"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/raivern_n.png" }, sparkly: { houses: ["Fireborn", "Ironclad"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/raivern_s.png" } },
-   "Lycana": { normal: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/lycana_n.png" }, sparkly: { houses: ["Whimsical"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/lycana_s.png" } },
-   "Wrathalisk": { normal: { houses: ["Dragoon", "Overgrowth"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/wrathalisk_n.png" }, sparkly: { houses: ["Nightwatch", "Atlantian"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/wrathalisk_s.png" } }
+   "L01 Raivern": { normal: { houses: ["Atlantian", "Dragoon"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/raivern_n.png" }, sparkly: { houses: ["Fireborn", "Ironclad"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/raivern_s.png" } },
+   "L02 Lycana": { normal: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/lycana_n.png" }, sparkly: { houses: ["Whimsical"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/lycana_s.png" } },
+   "L03 Wrathalisk": { normal: { houses: ["Dragoon", "Overgrowth"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/wrathalisk_n.png" }, sparkly: { houses: ["Nightwatch", "Atlantian"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/wrathalisk_s.png" } }
    };
 
 // 2. AUTOMATICALLY GENERATE LISTS FROM DATA
-const monList = Object.keys(monData);
+const monList = Object.keys(monData).sort(); // .sort() keeps the dropdown alphabetical
 const vibes = ["Playful (MAG+/ATK-)", "Lazy (DEF+/ATK-)", "Humble (RES+/ATK-)", "Suave (SPD+/ATK-)", "Spicy (ATK+/MAG-)", "Somber (DEF+/MAG-)", "Mellow (RES+/MAG-)", "Bouncy (SPD+/MAG-)", "Reckless (ATK+/DEF-)", "Dramatic (MAG+/DEF-)", "Sweet (RES+/DEF-)", "Daring (SPD+/DEF-)", "Wild (ATK+/RES-)", "Goofy (MAG+/RES-)", "Clumsy (DEF+/RES-)", "Anxious (SPD+/RES-)", "Fierce (ATK+/SPD-)", "Zesty (MAG+/SPD-)", "Stalwart (DEF+/SPD-)", "Shy (RES+/SPD-)"];
 
-// Placeholders
 const moveList = ["Move A", "Move B", "Move C"]; 
 const passiveList = ["Passive A", "Passive B", "Passive C"];
 const heldItemList = ["Item A", "Item B", "Item C"];
 
-// 3. THE UI GENERATOR
+// 3. THE UI GENERATOR (With Searchable Datalist)
 function createSlot(num) {
-    let monOptions = monList.map(mon => `<option value="${mon}">${mon}</option>`).join('');
-    let vibeOptions = vibes.map(v => `<option>${v}</option>`).join('');
+    let monOptions = monList.map(mon => `<option value="${mon}"></option>`).join('');
     
     return `<div class="slot" id="slot-${num}">
         <div class="segment-title">SLOT ${num}</div>
-        <select id="monSelect-${num}" onchange="updateSlot(${num})">
-            <option value="">Select Mon</option>${monOptions}
-        </select>
-        <label><input type="checkbox" class="sparkle-checkbox" onchange="updateSlot(${num})"> SPARKLE</label>
-        <div class="sprite-box" style="width:100px; height:100px; border:1px solid black;"></div>
-        <input type="text" id="house1-${num}" placeholder="House 1">
+        
+        <input list="monList-${num}" id="monSelect-${num}" placeholder="Search Mon..." 
+               onchange="updateSlot(${num})" style="width: 100%; margin-bottom: 10px;">
+        <datalist id="monList-${num}">
+            ${monOptions}
+        </datalist>
+
+        <label style="display:block; margin-bottom: 10px;">
+            <input type="checkbox" class="sparkle-checkbox" onchange="updateSlot(${num})"> SPARKLE
+        </label>
+        
+        <div class="sprite-box" style="width:100px; height:100px; border:1px solid black; background-size: contain; background-repeat: no-repeat; margin-bottom: 10px;"></div>
+        
+        <input type="text" id="house1-${num}" placeholder="House 1" style="margin-bottom: 5px;">
         <input type="text" id="house2-${num}" placeholder="House 2">
     </div>`;
 }
 
-// 4. LOGIC TO CONNECT DATA TO UI
+// 4. LOGIC TO CONNECT DATA TO UI (Keep your existing function)
 function updateSlot(num) {
     const monKey = document.getElementById(`monSelect-${num}`).value;
-    if (!monKey) return;
+    if (!monData[monKey]) return; // Safety check
 
     const isSparkly = document.querySelector(`#slot-${num} .sparkle-checkbox`).checked;
     const variant = isSparkly ? "sparkly" : "normal";
@@ -262,4 +268,8 @@ function updateSlot(num) {
 
 // 5. INITIALIZE
 const slotArea = document.getElementById('slot-area');
-for(let i=1; i<=4; i++) slotArea.innerHTML += createSlot(i);
+if (slotArea) {
+    for(let i=1; i<=4; i++) {
+        slotArea.innerHTML += createSlot(i);
+    }
+}
