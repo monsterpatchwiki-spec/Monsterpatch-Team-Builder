@@ -16,10 +16,17 @@ const typeColors = {
 
 // Map types to house_#.png indices (adjust the numbers to match your actual files)
 const typeToIcon = {
-    "Fireborn": "assets/House_1.png", "Atlantian": "assets/House_2.png", "Overgrowth": "assets/House_3.png",
-    "Whimsical": "assets/House_4.png", "Nightwatch": "assets/House_5.png", "Mystic": "assets/House_8.png",
-    "Dragoon": "assets/House_7.png", "Ironclad": "assets/House_9.png", "Brawler": "assets/House_6.png"
+    "Fireborn": "assets/House_1.png", 
+    "Atlantian": "assets/House_2.png", 
+    "Overgrowth": "assets/House_3.png",
+    "Whimsical": "assets/House_4.png", 
+    "Nightwatch": "assets/House_5.png", 
+    "Mystic":"assets/House_8.png",
+    "Dragoon": "assets/House_7.png", 
+    "Ironclad": "assets/House_9.png", 
+    "Brawler": "assets/House_6.png"
     };
+
  const monData = {
    "001 Birb": { normal: { houses: ["Fireborn"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/001_n.png" }, sparkly: { houses: ["Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/001_s.png" } },
    "002 Feenix": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_n.png" }, sparkly: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_s.png" } },
@@ -282,7 +289,7 @@ function updateSprite(num) {
                 input.value = val;
                 input.style.backgroundColor = typeColors[val] || "#eadfc1";
                 input.style.color = darkTypes.includes(val) ? "#eadfc1" : "#342420";
-                icon.src = `assets/${typeToIcon[val] || 'house_default.png'}`;
+                icon.src = `assets/${typeToIcon[val] || 'assets/house_default.png'}`;
             } else {
                 wrap.style.display = "none";
             }
