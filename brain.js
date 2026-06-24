@@ -1,6 +1,18 @@
  /* @language javascript */
 // This file contains the logic and data for Monsterpatch Squad Builder this is also a comment
- 
+ // --- 0. DATA & CONFIG ---
+const typeColors = {
+    "Fireborn": "#d15c62",
+    "Atlantian": "#4b689f",
+    "Overgrowth": "#A2BA9C",
+    "Whimsical": "#d8bc6a",
+    "Nightwatch": "#874185",
+    "Mystic": "#DE9996",
+    "Dragoon": "#342420",
+    "Ironclad": "#808a91",
+    "Brawler": "#89514E",
+    "Normal": "#eadfc1"
+};
  const monData = {
    "001 Birb": { normal: { houses: ["Fireborn"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/001_n.png" }, sparkly: { houses: ["Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/001_s.png" } },
    "002 Feenix": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_n.png" }, sparkly: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_s.png" } },
@@ -234,10 +246,11 @@ function updateSprite(num) {
     const selectedName = document.getElementById(`monSelect-${num}`).value;
     const isSparkly = document.querySelector(`.slot:nth-child(${num}) .sparkle-checkbox`).checked;
     const spriteBox = document.getElementById(`sprite-${num}`);
-    
-    // Select the house inputs for this slot
     const house1Input = document.getElementById(`house1-${num}`);
     const house2Input = document.getElementById(`house2-${num}`);
+    
+    // List of types that require white text for readability
+    const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
 
     if (selectedName && monData[selectedName]) {
         const data = isSparkly ? monData[selectedName].sparkly : monData[selectedName].normal;
@@ -248,13 +261,26 @@ function updateSprite(num) {
         spriteBox.style.backgroundRepeat = 'no-repeat';
         spriteBox.style.backgroundPosition = 'center';
 
-        // Update Houses
-        house1Input.value = data.houses ? data.houses[0] : "";
-        house2Input.value = data.houses ? data.houses[1] : "";
+        // Update Houses & Colors
+        const h1 = data.houses ? data.houses[0] : "";
+        const h2 = data.houses ? data.houses[1] : "";
+        
+        house1Input.value = h1;
+        house2Input.value = h2;
+        
+        house1Input.style.backgroundColor = typeColors[h1] || "#eadfc1";
+        house2Input.style.backgroundColor = typeColors[h2] || "#eadfc1";
+        
+        house1Input.style.color = darkTypes.includes(h1) ? "#eadfc1" : "#342420";
+        house2Input.style.color = darkTypes.includes(h2) ? "#eadfc1" : "#342420";
     } else {
         spriteBox.style.backgroundImage = 'none';
         house1Input.value = "";
         house2Input.value = "";
+        house1Input.style.backgroundColor = "#eadfc1";
+        house2Input.style.backgroundColor = "#eadfc1";
+        house1Input.style.color = "#342420";
+        house2Input.style.color = "#342420";
     }
 }
 
@@ -304,8 +330,8 @@ function createSlot(num) {
         </div>
 
         <div style="display: flex; gap: 6px; margin-bottom: 10px;">
-            <input type="text" id="house1-${num}" placeholder="House 1" style="flex:1;"> 
-            <input type="text" id="house2-${num}" placeholder="House 2" style="flex:1;">
+            <input type="text" id="house1-${num}" placeholder="House 1" style="flex:1;" readonly> 
+            <input type="text" id="house2-${num}" placeholder="House 2" style="flex:1;" readonly>
         </div>
 
         <div class="stats-panel"><div class="segment-title tab-stats">STATS</div>
