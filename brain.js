@@ -249,38 +249,36 @@ function updateSprite(num) {
     const house1Input = document.getElementById(`house1-${num}`);
     const house2Input = document.getElementById(`house2-${num}`);
     
-    // List of types that require white text for readability
     const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
 
     if (selectedName && monData[selectedName]) {
         const data = isSparkly ? monData[selectedName].sparkly : monData[selectedName].normal;
         
-        // Update Sprite
         spriteBox.style.backgroundImage = `url('${data.sprite}')`;
         spriteBox.style.backgroundSize = 'contain';
         spriteBox.style.backgroundRepeat = 'no-repeat';
         spriteBox.style.backgroundPosition = 'center';
 
-        // Update Houses & Colors
-        const h1 = data.houses ? data.houses[0] : "";
-        const h2 = data.houses ? data.houses[1] : "";
+        const h1 = (data.houses && data.houses[0]) ? data.houses[0] : "";
+        const h2 = (data.houses && data.houses[1]) ? data.houses[1] : "";
         
         house1Input.value = h1;
-        house2Input.value = h2;
-        
         house1Input.style.backgroundColor = typeColors[h1] || "#eadfc1";
-        house2Input.style.backgroundColor = typeColors[h2] || "#eadfc1";
-        
         house1Input.style.color = darkTypes.includes(h1) ? "#eadfc1" : "#342420";
+        house1Input.style.visibility = h1 ? "visible" : "hidden";
+
+        house2Input.value = h2;
+        house2Input.style.backgroundColor = typeColors[h2] || "#eadfc1";
         house2Input.style.color = darkTypes.includes(h2) ? "#eadfc1" : "#342420";
+        house2Input.style.visibility = h2 ? "visible" : "hidden";
     } else {
         spriteBox.style.backgroundImage = 'none';
-        house1Input.value = "";
-        house2Input.value = "";
-        house1Input.style.backgroundColor = "#eadfc1";
-        house2Input.style.backgroundColor = "#eadfc1";
-        house1Input.style.color = "#342420";
-        house2Input.style.color = "#342420";
+        [house1Input, house2Input].forEach(input => {
+            input.value = "";
+            input.style.backgroundColor = "#eadfc1";
+            input.style.color = "#342420";
+            input.style.visibility = "hidden";
+        });
     }
 }
 
