@@ -402,37 +402,39 @@ function createSlot(num) {
 }
 
 function updateTeamEfficiencies() {
-    // Offense Table
+    // 1. Offense Table: Placeholder logic
     const offTbody = document.querySelector('#off-table tbody');
     if (offTbody) {
         offTbody.innerHTML = "";
         types.forEach(rowType => {
-            let rowHTML = `<tr><td class="row-header">${rowType}</td>`;
-            types.forEach(targetType => {
-                let val = (effectivenessChart[rowType] && effectivenessChart[rowType][targetType]) ? effectivenessChart[rowType][targetType] : 1;
-                rowHTML += `<td>${val === 1 ? '' : val}</td>`;
-            });
-            offTbody.innerHTML += rowHTML + `</tr>`;
+            offTbody.innerHTML += `<tr><td class="row-header">${rowType}</td><td>-</td><td>-</td><td>-</td><td>-</td><td></td><td></td><td></td></tr>`;
         });
     }
 
-    // Defense Table
+    // 2. Defense Table: Multiplied NET logic
     const defTbody = document.querySelector('#def-table tbody');
     if (defTbody) {
         defTbody.innerHTML = "";
         types.forEach(threatType => {
+            let netMultiplier = 1;
             let rowHTML = `<tr><td class="row-header">${threatType}</td>`;
+            
             for (let i = 1; i <= 4; i++) {
                 const name = document.getElementById(`monSelect-${i}`).value;
                 if (name && monData[name]) {
                     const isSparkly = document.querySelector(`.slot:nth-child(${i}) .sparkle-checkbox`).checked;
                     const data = isSparkly ? monData[name].sparkly : monData[name].normal;
-                    rowHTML += `<td>${getMultiplier(threatType, data.houses)}</td>`;
+                    
+                    let score = getMultiplier(threatType, data.houses);
+                    netMultiplier *= score;
+                    rowHTML += `<td>${score === 1 ? '' : score}</td>`;
                 } else {
                     rowHTML += `<td>-</td>`;
                 }
             }
-            defTbody.innerHTML += rowHTML + `</tr>`;
+            // Populate NET multiplier in the final column
+            rowHTML += `<td></td><td></td><td>${netMultiplier === 1 ? '' : netMultiplier}</td></tr>`;
+            defTbody.innerHTML += rowHTML;
         });
     }
 }
