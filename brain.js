@@ -407,7 +407,8 @@ function updateTeamEfficiencies() {
     if (offTbody) {
         offTbody.innerHTML = "";
         types.forEach(rowType => {
-            offTbody.innerHTML += `<tr><td class="row-header">${rowType}</td><td></td><td></td><td></td><td></td><td></td></tr>`;
+            // Updated to render '1's for neutral offense placeholders
+            offTbody.innerHTML += `<tr><td class="row-header">${rowType}</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>`;
         });
     }
 
@@ -427,14 +428,16 @@ function updateTeamEfficiencies() {
                     
                     let score = getMultiplier(threatType, data.houses);
                     netMultiplier *= score;
-                    rowHTML += `<td>${score === 1 ? '' : score}</td>`;
+                    // Always render the score, even if it is 1
+                    rowHTML += `<td>${score}</td>`;
                 } else {
-                    rowHTML += `<td></td>`;
+                    // Default to 1 for empty slots to maintain visual consistency
+                    rowHTML += `<td>1</td>`;
                 }
             }
             
-            // Populate the final NET cell; show empty if 1
-            rowHTML += `<td>${netMultiplier === 1 ? '' : netMultiplier}</td></tr>`;
+            // Populate the final NET cell; always render the total
+            rowHTML += `<td>${netMultiplier}</td></tr>`;
             defTbody.innerHTML += rowHTML;
         });
     }
