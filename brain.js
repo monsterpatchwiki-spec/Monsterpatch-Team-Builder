@@ -407,7 +407,7 @@ function updateTeamEfficiencies() {
     if (offTbody) {
         offTbody.innerHTML = "";
         types.forEach(rowType => {
-            offTbody.innerHTML += `<tr><td class="row-header">${rowType}</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>`;
+            offTbody.innerHTML += `<tr><td class="row-header">${rowType}</td><td></td><td></td><td></td><td></td><td></td></tr>`;
         });
     }
 
@@ -429,10 +429,11 @@ function updateTeamEfficiencies() {
                     netMultiplier *= score;
                     rowHTML += `<td>${score === 1 ? '' : score}</td>`;
                 } else {
-                    rowHTML += `<td>-</td>`;
+                    rowHTML += `<td></td>`;
                 }
             }
-            // Add the final NET cell
+            
+            // Populate the final NET cell; show empty if 1
             rowHTML += `<td>${netMultiplier === 1 ? '' : netMultiplier}</td></tr>`;
             defTbody.innerHTML += rowHTML;
         });
