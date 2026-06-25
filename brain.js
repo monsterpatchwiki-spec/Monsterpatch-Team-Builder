@@ -402,16 +402,16 @@ function createSlot(num) {
 }
 
 function updateTeamEfficiencies() {
-    // 1. Offense Table: Placeholder logic
+    // 1. Offense Table (6 columns: Type, S1, S2, S3, S4, NET)
     const offTbody = document.querySelector('#off-table tbody');
     if (offTbody) {
         offTbody.innerHTML = "";
         types.forEach(rowType => {
-            offTbody.innerHTML += `<tr><td class="row-header">${rowType}</td><td>-</td><td>-</td><td>-</td><td>-</td><td></td><td></td><td></td></tr>`;
+            offTbody.innerHTML += `<tr><td class="row-header">${rowType}</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>`;
         });
     }
 
-    // 2. Defense Table: Multiplied NET logic
+    // 2. Defense Table (6 columns: Type, S1, S2, S3, S4, NET)
     const defTbody = document.querySelector('#def-table tbody');
     if (defTbody) {
         defTbody.innerHTML = "";
@@ -432,8 +432,8 @@ function updateTeamEfficiencies() {
                     rowHTML += `<td>-</td>`;
                 }
             }
-            // Populate NET multiplier in the final column
-            rowHTML += `<td></td><td></td><td>${netMultiplier === 1 ? '' : netMultiplier}</td></tr>`;
+            // Add the final NET cell
+            rowHTML += `<td>${netMultiplier === 1 ? '' : netMultiplier}</td></tr>`;
             defTbody.innerHTML += rowHTML;
         });
     }
