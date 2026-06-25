@@ -1,5 +1,16 @@
  /* @language javascript */
 // This file contains the logic and data for Monsterpatch Squad Builder this is also a comment
+const effectivenessChart = {
+    "Overgrowth": { "Atlantian": 2, "Whimsical": 2, "Fireborn": 0.5, "Nightwatch": 0.5 },
+    "Atlantian": { "Fireborn": 2, "Brawler": 2, "Overgrowth": 0.5, "Whimsical": 0.5 },
+    "Fireborn": { "Overgrowth": 2, "Ironclad": 2, "Atlantian": 0.5, "Brawler": 0.5 },
+    "Whimsical": { "Atlantian": 2, "Nightwatch": 2, "Overgrowth": 0.5, "Dragoon": 0.5 },
+    "Nightwatch": { "Overgrowth": 2, "Mystic": 2, "Whimsical": 0.5, "Dragoon": 0.5 },
+    "Dragoon": { "Nightwatch": 2, "Whimsical": 2, "Ironclad": 0.5, "Mystic": 0.5 },
+    "Ironclad": { "Dragoon": 2, "Mystic": 2, "Fireborn": 0.5, "Brawler": 0.5 },
+    "Mystic": { "Dragoon": 2, "Brawler": 2, "Nightwatch": 0.5, "Ironclad": 0.5 },
+    "Brawler": { "Fireborn": 2, "Ironclad": 2, "Atlantian": 0.5, "Mystic": 0.5 },
+};
  // --- 0. DATA & CONFIG ---
 const typeColors = {
     "Fireborn": "#d15c62",
@@ -246,19 +257,41 @@ const typeToIcon = {
    "216 Explotoad": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/216_n.png" }, sparkly: { houses: ["Atlantian", "Overgrowth"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/216_s.png" } },
    };
 
+// --- 1. DATA AND DECLARATIONS ---
 const vibes = ["Playful (MAG+/ATK-)", "Lazy (DEF+/ATK-)", "Humble (RES+/ATK-)", "Suave (SPD+/ATK-)", "Spicy (ATK+/MAG-)", "Somber (DEF+/MAG-)", "Mellow (RES+/MAG-)", "Bouncy (SPD+/MAG-)", "Reckless (ATK+/DEF-)", "Dramatic (MAG+/DEF-)", "Sweet (RES+/DEF-)", "Daring (SPD+/DEF-)", "Wild (ATK+/RES-)", "Goofy (MAG+/RES-)", "Clumsy (DEF+/RES-)", "Anxious (SPD+/RES-)", "Fierce (ATK+/SPD-)", "Zesty (MAG+/SPD-)", "Stalwart (DEF+/SPD-)", "Shy (RES+/SPD-)"];
 const moveList = ["Move A", "Move B", "Move C"]; 
 const passiveList = ["Passive A", "Passive B", "Passive C"];
 const heldItemList = ["Item A", "Item B", "Item C"];
+const types = ["Fireborn","Atlantian","Overgrowth","Whimsical","Nightwatch","Mystic","Dragoon","Ironclad","Brawler","Normal"];
 
 // --- 2. LOGIC FUNCTIONS ---
+
+/**
+ * SEAN Rule Logic: Multiplier is neutral (1) if defender shares the move's type.
+ */
+function getMultiplier(attackType, defTypes) {
+    if (!defTypes || defTypes.length === 0 || defTypes[0] === "") return 1;
+    let multiplier = 1;
+
+    defTypes.forEach(defType => {
+        if (!defType) return;
+        let base = (effectivenessChart[attackType] && effectivenessChart[attackType][defType] !== undefined)
+            ? effectivenessChart[attackType][defType]
+            : 1;
+
+        if (base === 2 && defTypes.includes(attackType)) {
+            base = 1;
+        }
+        multiplier *= base;
+    });
+    return multiplier;
+}
 
 function updateSprite(num) {
     const selectedName = document.getElementById(`monSelect-${num}`).value;
     const isSparkly = document.querySelector(`.slot:nth-child(${num}) .sparkle-checkbox`).checked;
     const spriteBox = document.getElementById(`sprite-${num}`);
     
-    // Select wrappers, inputs, and icons
     const h1Wrap = document.getElementById(`house1-wrap-${num}`);
     const h2Wrap = document.getElementById(`house2-wrap-${num}`);
     const h1In = document.getElementById(`house1-${num}`);
@@ -279,7 +312,6 @@ function updateSprite(num) {
         const h1 = (data.houses && data.houses[0]) ? data.houses[0] : "";
         const h2 = (data.houses && data.houses[1]) ? data.houses[1] : "";
 
-        // Helper to update house UI
         const setHouse = (val, wrap, input, icon) => {
             if (val) {
                 wrap.style.display = "flex";
@@ -294,10 +326,12 @@ function updateSprite(num) {
 
         setHouse(h1, h1Wrap, h1In, icon1);
         setHouse(h2, h2Wrap, h2In, icon2);
+        updateTeamEfficiencies();
     } else {
         spriteBox.style.backgroundImage = 'none';
         h1Wrap.style.display = "none";
         h2Wrap.style.display = "none";
+        updateTeamEfficiencies();
     }
 }
 
@@ -367,16 +401,43 @@ function createSlot(num) {
         </div></div>`;
 }
 
+function updateTeamEfficiencies() {
+    // Offense Table
+    const offTbody = document.querySelector('#off-table tbody');
+    if (offTbody) {
+        offTbody.innerHTML = "";
+        types.forEach(rowType => {
+            let rowHTML = `<tr><td class="row-header">${rowType}</td>`;
+            types.forEach(targetType => {
+                let val = (effectivenessChart[rowType] && effectivenessChart[rowType][targetType]) ? effectivenessChart[rowType][targetType] : 1;
+                rowHTML += `<td>${val === 1 ? '' : val}</td>`;
+            });
+            offTbody.innerHTML += rowHTML + `</tr>`;
+        });
+    }
+
+    // Defense Table
+    const defTbody = document.querySelector('#def-table tbody');
+    if (defTbody) {
+        defTbody.innerHTML = "";
+        types.forEach(threatType => {
+            let rowHTML = `<tr><td class="row-header">${threatType}</td>`;
+            for (let i = 1; i <= 4; i++) {
+                const name = document.getElementById(`monSelect-${i}`).value;
+                if (name && monData[name]) {
+                    const isSparkly = document.querySelector(`.slot:nth-child(${i}) .sparkle-checkbox`).checked;
+                    const data = isSparkly ? monData[name].sparkly : monData[name].normal;
+                    rowHTML += `<td>${getMultiplier(threatType, data.houses)}</td>`;
+                } else {
+                    rowHTML += `<td>-</td>`;
+                }
+            }
+            defTbody.innerHTML += rowHTML + `</tr>`;
+        });
+    }
+}
+
 // --- 3. INITIALIZATION ---
 const slotArea = document.getElementById('slot-area');
 for(let i=1; i<=4; i++) slotArea.innerHTML += createSlot(i);
-
-const types = ["Fireborn","Atlantian","Overgrowth","Whimsical","Nightwatch","Mystic","Dragoon","Ironclad","Brawler","Normal"];
-function fillTable(tableId) {
-    const tbody = document.querySelector(`#${tableId} tbody`);
-    if (tbody) {
-        types.forEach(type => { tbody.innerHTML += `<tr><td class="row-header">${type}</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0</td></tr>`; });
-    }
-}
-fillTable('off-table'); 
-fillTable('def-table');
+updateTeamEfficiencies();
