@@ -38,8 +38,130 @@ const typeToIcon = {
     "Brawler": "assets/House_6.png"
     };
 
+const moveData = {
+    "Normal": {
+        "T0": [
+            { name: "CLAWS", pm: "P", type: "Damage", power: 20, trigger: 2, scale: "ATK", target: "Single Enemy", tag: null, cd: 0, effect: null },
+            { name: "PUNCH", pm: "P", type: "Damage", power: 40, trigger: 1, scale: "ATK", target: "Single Enemy", tag: "[Punch]", cd: 0, effect: null },
+            { name: "NIBBLE", pm: "P", type: "Damage", power: 40, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 0, effect: null },
+            { name: "BONK", pm: "P", type: "Damage", power: 50, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 1, effect: null },
+            { name: "STAB", pm: "P", type: "Damage", power: 40, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 0, effect: null }
+        ],
+        "T1": [
+            { name: "SLASH", pm: "P", type: "Damage", power: 60, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 0, effect: null },
+            { name: "WINGS", pm: "P", type: "Damage", power: 30, trigger: 2, scale: "ATK", target: "Single Enemy", tag: null, cd: 0, effect: null },
+            { name: "TAIL SLAM", pm: "P", type: "Damage", power: 70, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 1, effect: null },
+            { name: "JUMP KICK", pm: "P", type: "Damage", power: 50, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 2, effect: "100% Chance to EVADE 3." }
+        ]
+    },
+    "Fireborn": {
+        "T0": [
+            { name: "METEOR", pm: "M", type: "Damage", power: 15, trigger: 3, scale: "MAG", target: "Random Enemy", tag: null, cd: 1, effect: "25% Chance to BURN 2." },
+            { name: "FIREBALL", pm: "M", type: "Damage", power: 30, trigger: 1, scale: "MAG", target: "Single Enemy", tag: null, cd: 1, effect: "100% Chance to spawn 1 SUNLIGHT." },
+            { name: "SCORCH", pm: "P", type: "Damage", power: 40, trigger: 1, scale: "ATK", target: "Front Enemies", tag: null, cd: 1, effect: "50% Chance to BURN 2." }
+        ]
+    }
+    // Continue this pattern for all tiers and types in "MoN_Moves.txt"
+};
+
+const passiveData = {
+    "CRITICAL EYE": "Moves that target RANDOM ENEMY gain +25% CRIT CHANCE.",
+    "BIG HEART": "BATTLE START: Increase MAXHP by 20%.",
+    "ANIMATED": "BATTLE START: Gain HASTE 2.",
+    "SHORT REST": "TURN START: If HP is less than 75%, HEAL 10% MAX HP.",
+    "LONG REST": "TURN START: If HP is less than 50%, HEAL to full HP. [cite: 36] Once per battle. [cite: 37]",
+    "STALWART": "ON DAMAGED: Gain SHIELD equal to 5% MAX HP.",
+    "APOCALYPSE": "TURN START: If HP is less than 25%, refresh all cooldowns.",
+    "CHUBBY": "While HP is greater than 50%: Reduce incoming damage by 15%.",
+    "WARP SPEED": "While buffed with HASTE: Gain +30% CRIT CHANCE.",
+    "STINKY": "BATTLE START: Apply SLOW 2 to FRONT ENEMIES.",
+    "WILD HEART": "Moves that target RANDOM ENEMY gain +1 trigger.",
+    "BASIC STRIKER": "NORMAL moves gain +20 power.",
+    "TACTICIAN": "ON DAMAGED: Gain +15 TURN METER.",
+    "FLIGHT": "ON DAMAGED: 25% chance to gain EVADE 1.",
+    "VICIOUS": "TURN START: Apply DEF BREAK 2 to FRONT ENEMIES.",
+    "LAST STAND": "TURN START: If HP is less than 50%, GAIN INVINCIBLE 2. Once per battle.",
+    "GALEFORCE": "BATTLE START: Apply HASTE 2 to ALL ALLIES.",
+    "MIGHTY FLUFF": "BATTLE START: Double MAX HP.",
+    "MY HERO": "BATTLE START: Gain HASTE 3 and INVINCIBLE 3.",
+    "FOREST GUARD": "BATTLE START: All allies gain SHIELD equal to 15% MAX HP.",
+    "PROTECTOR": "ON SHIELD ALLY: 50% Chance to apply DEF UP 2.",
+    "COUNTER STANCE": "ON SHIELDED: Gain ATK UP 3.",
+    "HEALING GROVE": "ON HEALED: 50% Chance to spawn 1 LEAF.",
+    "SCOUNDREL": "ON ATTACK: 50% chance to remove 1 BUFF.",
+    "LANCER": "LANCE moves gain +1 trigger.",
+    "APEX MON": "ON ENEMY FAINT: Gain +50 TURN METER.",
+    "LEVIATHAN": "Increase SPD by the % of HP missing.",
+    "TAIL THRASHER": "TAIL SLAM targets ALL ENEMIES.",
+    "CANNONEER": "CANNON moves gain +1 trigger.",
+    "BIG TONGUE": "LICK targets ALL ENEMIES.",
+    "LUCKY CHARM": "TURN START: 25% Chance to gain EVADE 2.",
+    "COPYCAT": "ON DAMAGED: Copy BUFFS from attacker.",
+    "SMOLDER": "TURN START: Apply BURN 2 to RANDOM ENEMY.",
+    "FIRE TALONS": "TALONS applies BURN 2 and DEF BREAK 2.",
+    "MAX BURN": "BURN damage triggers 1 additional time.",
+    "SUNFLARE": "BATTLE START: Spawn 2 SUNLIGHT.",
+    "HOT HEAD": "TURN START: Spawn 1 SUNLIGHT.",
+    "DRENCH": "ATLANTIAN moves that target ALL ENEMIES deal +15% damage.",
+    "SLIMY SCALES": "While buffed with REGEN: Gain +15% EVASION.",
+    "BLUBBER": "Reduce incoming damage by 10%.",
+    "HOT WATER": "ATLANTIAN moves apply BURN 3.",
+    "CALM MIST": "TURN START: All allies HEAL 5% MAX HP.",
+    "SEASHORE": "BATTLE START and TURN START: 75% Chance to spawn 1 SHELL.",
+    "REGROWTH": "BATTLE START and TURN START: 75% Chance to spawn 1 LEAF.",
+    "MORE SPORE": "SPORES gains +2 triggers.",
+    "SAPROLING": "ON DAMAGED: 50% chance to spawn 1 LEAF.",
+    "REGEN SCALES": "TURN END: Heal 10% MAX HP.",
+    "MAX POISON": "POISON damage triggers 1 additional time.",
+    "SLUDGE": "ON DAMAGED: 50% chance to apply SLOW 2 to the attacker.",
+    "RAINBOW AURA": "TURN START: If HP is less than 75%, gain REGEN 3.",
+    "ELECTRIFY": "BOLT gains +30 power.",
+    "FLASHBANG": "WHIMSICAL moves have a 10% chance to apply STUN 1.",
+    "SUPERCHARGE": "BATTLE START: Gain MAG UP 2.",
+    "CLOUD SEED": "BATTLE START: All allies gain REGEN 5.",
+    "AUTO BOLT": "BOLT gains +1 trigger.",
+    "SONGBIRD": "SONG moves spawn 3 random tokens.",
+    "PHANTOM": "While buffed: Gain +15% EVASION.",
+    "CURSED": "ON DAMAGED: 50% chance to apply RANDOM DEBUFF 2 to the attacker.",
+    "TOXIC BODY": "ON DAMAGED: 50% chance to apply POISON 2 to the attacker.",
+    "RANDOM POISON": "TURN START: Apply POISON 2 to RANDOM ENEMY.",
+    "CHAOS": "TURN START: Apply 1 random DEBUFF to a RANDOM ENEMY.",
+    "DARK HARVEST": "ON DAMAGED: 25% Chance to spawn 1 DARKNESS.",
+    "GHOSTLY": "GHOST BREATH gains +2 triggers.",
+    "SHADOW GIFT": "TURN START: 50% Chance to spawn 1 DARKNESS.",
+    "VENOMOUS": "NIGHTWATCH moves apply POISON 2.",
+    "HEAVY PUNCHER": "PUNCH moves deal +20% damage.",
+    "BRUISER": "BATTLE START: If in FRONT, gain ATK UP 2 and DEF UP 2.",
+    "DEF BREAKER": "PHYSICAL moves have a 50% chance to apply DEF BREAK 2.",
+    "SLUGGER": "Moves that target SINGLE ENEMY apply SHUFFLE.",
+    "LIMIT BREAK": "DAMAGE moves gain 20 power.",
+    "ROCK ARMOR": "ON DAMAGED: Gain DEF UP 2 and RES UP 2.",
+    "BERSERKER": "Increase damage by the % of HP missing.",
+    "BUSHIDO": "BATTLE START: If in FRONT, gain ATK UP 3 and HASTE 3.",
+    "DRAGOON SOUL": "TURN START: If HP is less than 50%, remove all DEBUFFS and heal to full. Once per battle.",
+    "KAIJU STANCE": "BEAM moves target ALL ENEMIES.",
+    "SHARP TEETH": "BITE moves gain 50 power.",
+    "DRAGON EYE": "DRAGOON moves gain +25% CRIT CHANCE.",
+    "AUTO FLARE": "FLARE gains +2 triggers.",
+    "MANA GIFT": "ON HEAL ALLY: Reduce target's cooldowns by 1.",
+    "SPELLSHIELD": "BATTLE START: Gain HEXPROOF 5.",
+    "WONDER CHIRP": "BATTLE START: ALL ALLIES gain 1 random BUFF.",
+    "ELASTIC": "ON SWAP: Gain INVINCIBLE 1.",
+    "SOUL BLASTER": "DAMAGE moves now scale with RES.",
+    "RES BREAKER": "MAGICAL moves have a 50% chance to apply RES BREAK 2.",
+    "CLERIC": "HEAL moves gain 20 power.",
+    "GUARD": "BATTLE START: Gain DEF UP 3.",
+    "BARRIER": "BATTLE START: Gain RES UP 3.",
+    "TANK": "SHIELD moves gain 20 power.",
+    "STEEL SKIN": "Increase SHIELD gained by 15%.",
+    "HEAVY PLATE": "TURN END: Gain SHIELD equal to 10% MAX HP.",
+    "OVERGUARD": "ON SHIELDED: Gain DEF UP 2 and RES UP 2.",
+    "METALSMITH": "HAMMER gains +2 triggers.",
+    "QUICK SHIELD": "BATTLE START: Gain SHIELD equal to 10% MAX HP.",
+    "EXOSKELETON": "BATTLE START: Gain SHIELD equal to 25% DEF."
+};
  const monData = {
-   "001 Birb": { normal: { houses: ["Fireborn"], moves: [], passives: [], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_n.png" }, sparkly: { houses: ["Nightwatch"], moves: [], passives: [], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_s.png" } },
+   "001 Birb": { normal: { houses: ["Fireborn"], moves: ["claws"], passives: ["critical eye"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_n.png" }, sparkly: { houses: ["Nightwatch"], moves: [], passives: [], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_s.png" } },
    "002 Feenix": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_n.png" }, sparkly: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_s.png" } },
    "003 Hawkamere": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/003_n.png" }, sparkly: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/003_s.png" } },
    "004 Axolot": { normal: { houses: ["Atlantian", "Mystic"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/004_n.png" }, sparkly: { houses: ["Dragoon", "Fireborn"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/004_s.png" } },
@@ -259,13 +381,34 @@ const typeToIcon = {
 
 // --- 1. DATA AND DECLARATIONS ---
 const vibes = ["Playful (MAG+/ATK-)", "Lazy (DEF+/ATK-)", "Humble (RES+/ATK-)", "Suave (SPD+/ATK-)", "Spicy (ATK+/MAG-)", "Somber (DEF+/MAG-)", "Mellow (RES+/MAG-)", "Bouncy (SPD+/MAG-)", "Reckless (ATK+/DEF-)", "Dramatic (MAG+/DEF-)", "Sweet (RES+/DEF-)", "Daring (SPD+/DEF-)", "Wild (ATK+/RES-)", "Goofy (MAG+/RES-)", "Clumsy (DEF+/RES-)", "Anxious (SPD+/RES-)", "Fierce (ATK+/SPD-)", "Zesty (MAG+/SPD-)", "Stalwart (DEF+/SPD-)", "Shy (RES+/SPD-)"];
-const moveList = ["Move A", "Move B", "Move C"]; 
-const passiveList = ["Passive A", "Passive B", "Passive C"];
 const heldItemList = ["Item A", "Item B", "Item C"];
 const types = ["Fireborn","Atlantian","Overgrowth","Whimsical","Nightwatch","Mystic","Dragoon","Ironclad","Brawler","Normal"];
 const gradeMap = {'S': 1.0, 'A': 0.9, 'B': 0.85, 'C': 0.8, 'D': 0.75};
 
 // --- 2. LOGIC FUNCTIONS ---
+
+function populateSlotDropdowns(num) {
+    const monName = document.getElementById(`monSelect-${num}`).value;
+    const isSparkly = document.querySelector(`.slot:nth-child(${num}) .sparkle-checkbox`).checked;
+    
+    // Get the monster data
+    const mon = monData[monName];
+    const data = mon ? (isSparkly ? mon.sparkly : mon.normal) : { moves: [], passives: [] };
+
+    // Update Moves
+    for(let i=1; i<=4; i++) {
+        const sel = document.getElementById(`move${i}-${num}`);
+        sel.innerHTML = `<option value="">Move ${i}</option>` + 
+            (data.moves || []).map(m => `<option value="${m}">${m}</option>`).join('');
+    }
+
+    // Update Passives
+    for(let i=1; i<=4; i++) {
+        const sel = document.getElementById(`pass${i}-${num}`);
+        sel.innerHTML = `<option value="">Passive ${i}</option>` + 
+            (data.passives || []).map(p => `<option value="${p}">${p}</option>`).join('');
+    }
+}
 
 function getMultiplier(attackType, defTypes) {
     if (!defTypes || defTypes.length === 0 || defTypes[0] === "") return 1;
