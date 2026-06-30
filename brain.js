@@ -161,7 +161,7 @@ const passiveData = {
     "EXOSKELETON": "BATTLE START: Gain SHIELD equal to 25% DEF."
 };
  const monData = {
-   "001 Birb": { normal: { houses: ["Fireborn"], moves: ["METEOR["], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_n.png" }, sparkly: { houses: ["Nightwatch"], moves: ["CLAWS"], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_s.png" } },
+   "001 Birb": { normal: { houses: ["Fireborn"], moves: ["METEOR"], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_n.png" }, sparkly: { houses: ["Nightwatch"], moves: ["CLAWS"], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_s.png" } },
    "002 Feenix": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 1, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_n.png" }, sparkly: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_s.png" } },
    "003 Hawkamere": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/003_n.png" }, sparkly: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/003_s.png" } },
    "004 Axolot": { normal: { houses: ["Atlantian", "Mystic"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/004_n.png" }, sparkly: { houses: ["Dragoon", "Fireborn"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/004_s.png" } },
@@ -387,14 +387,25 @@ const gradeMap = {'S': 1.0, 'A': 0.9, 'B': 0.85, 'C': 0.8, 'D': 0.75};
 
 // --- 2. LOGIC FUNCTIONS ---
 
+// Helper: Scans moveData to find which Type category a move belongs to
+function findMoveType(moveName) {
+    for (const typeKey in moveData) {
+        for (const tier in moveData[typeKey]) {
+            if (moveData[typeKey][tier].some(m => m.name === moveName)) {
+                return typeKey; // Returns "Normal", "Fireborn", etc.
+            }
+        }
+    }
+    return null;
+}
+
 function updateMoveStyle(i, num) {
     const sel = document.getElementById(`move${i}-${num}`);
     const wrap = document.getElementById(`move-wrap-${i}-${num}`);
     const icon = document.getElementById(`move-icon-${i}-${num}`);
     const moveName = sel.value;
 
-    // Assumes moveData[name].type exists
-    const moveType = moveData[moveName]?.type; 
+    const moveType = findMoveType(moveName); 
 
     if (moveType && wrap && icon) {
         wrap.style.backgroundColor = typeColors[moveType] || "#eadfc1";
@@ -425,7 +436,7 @@ function populateSlotDropdowns(num) {
         sel.innerHTML = `<option value="">Move ${i}</option>` + 
             (data.moves || []).map(m => `<option value="${m}">${m}</option>`).join('');
         sel.value = currentSelection;
-        updateMoveStyle(i, num); // Apply styling
+        updateMoveStyle(i, num);
     }
 
     for(let i = 1; i <= 4; i++) {
