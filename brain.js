@@ -399,6 +399,29 @@ function findMoveType(moveName) {
     return null;
 }
 
+function toggleDropdown(i, num) {
+    const list = document.getElementById(`dropdown-list-${i}-${num}`);
+    // Close all other dropdowns first (optional but recommended)
+    document.querySelectorAll('.custom-dropdown-list').forEach(d => {
+        if (d.id !== `dropdown-list-${i}-${num}`) d.style.display = "none";
+    });
+    list.style.display = (list.style.display === "block") ? "none" : "block";
+}
+
+function selectMove(i, num, moveName) {
+    const display = document.getElementById(`move-display-${i}-${num}`);
+    
+    // 1. Update the visible text in the dropdown trigger
+    display.innerText = moveName || `Move ${i}`;
+    
+    // 2. Hide the list after selection
+    toggleDropdown(i, num);
+    
+    // 3. Update the styling (Colors and Icons)
+    // We pass moveName so it knows which type to look up
+    updateMoveStyle(i, num, moveName); 
+}
+
 function updateMoveStyle(i, num) {
     const sel = document.getElementById(`move${i}-${num}`);
     const wrap = document.getElementById(`move-wrap-${i}-${num}`);
@@ -593,23 +616,26 @@ function createSlot(num) {
         </div>
         
         <div class="section-box"><div class="segment-title tab-moveset">MOVESET</div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
-                ${[1,2,3,4].map(i => `
-                    <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; height: 35px; border: 1px solid var(--black); background-color: var(--white);">
-                        <select id="move${i}-${num}" 
-                                onchange="updateMoveStyle(${i}, ${num})" 
-                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; z-index: 2; cursor: pointer;">
-                            <option value="">Move ${i}</option>
-                        </select>
-                        <div id="move-text-${i}-${num}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; padding-left: 8px; z-index: 1; pointer-events: none; font-weight: bold; color: var(--black);">
-                            Move ${i}
-                        </div>
-                        <img id="move-icon-${i}-${num}" class="move-type-icon" 
-                             style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 7px; z-index: 1; pointer-events: none;">
-                    </div>
-                `).join('')}
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
+        ${[1,2,3,4].map(i => `
+            <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; height: 35px; border: 1px solid var(--black); background-color: var(--white);">
+                <div id="move-display-${i}-${num}" 
+                     onclick="toggleDropdown(${i}, ${num})" 
+                     style="height: 100%; display: flex; align-items: center; padding-left: 8px; cursor: pointer; font-weight: bold; color: var(--black);">
+                     Move ${i}
+                </div>
+                
+                <div id="dropdown-list-${i}-${num}" 
+                     class="custom-dropdown-list"
+                     style="display: none; position: absolute; top: 100%; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 200px; overflow-y: auto;">
+                </div>
+                
+                <img id="move-icon-${i}-${num}" class="move-type-icon" 
+                     style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 7px; pointer-events: none;">
             </div>
-        </div>
+        `).join('')}
+    </div>
+</div>
 
         <div class="section-box passives-box"><div class="segment-title tab-passives">PASSIVES</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
