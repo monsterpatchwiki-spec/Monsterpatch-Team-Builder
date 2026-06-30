@@ -522,8 +522,6 @@ function updateSprite(num) {
 function createSlot(num) {
     let monOptions = Object.keys(monData).map(name => `<option value="${name}">${name}</option>`).join('');
     let vibeOptions = vibes.map(v => `<option>${v}</option>`).join('');
-    let moveOptions = moveList.map(m => `<option>${m}</option>`).join('');
-    let passiveOptions = passiveList.map(p => `<option>${p}</option>`).join('');
     let itemOptions = heldItemList.map(i => `<option>${i}</option>`).join('');
     let tierOpts = ['S','A','B','C','D'].map(t => `<option value="${t}">${t}</option>`).join('');
     let invOpts = ['0','1','2','3'].map(i => `<option value="${i}">${i}</option>`).join('');
@@ -538,13 +536,13 @@ function createSlot(num) {
         
         <div class="section-box"><div class="segment-title tab-moveset">MOVESET</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
-                ${[1,2,3,4].map(i => `<select id="move${i}-${num}"><option value="">Move ${i}</option>${moveOptions}</select>`).join('')}
+                ${[1,2,3,4].map(i => `<select id="move${i}-${num}"><option value="">Move ${i}</option></select>`).join('')}
             </div>
         </div>
 
         <div class="section-box passives-box"><div class="segment-title tab-passives">PASSIVES</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
-                ${[1,2,3,4].map(i => `<select id="pass${i}-${num}"><option value="">Passive ${i}</option>${passiveOptions}</select>`).join('')}
+                ${[1,2,3,4].map(i => `<select id="pass${i}-${num}"><option value="">Passive ${i}</option></select>`).join('')}
             </div>
         </div>
         
@@ -557,7 +555,7 @@ function createSlot(num) {
                 <select id="itemSelect-${num}"><option value="">Held Item</option>${itemOptions}</select>
             </div>
         </div>
-
+        
         <div style="display: flex; gap: 6px; margin-bottom: 10px;">
             <div id="house1-wrap-${num}" style="flex:1; display:none; align-items:center; gap:5px;"><img id="icon1-${num}" style="width:20px; height:20px;"><input type="text" id="house1-${num}" style="flex:1;" readonly></div>
             <div id="house2-wrap-${num}" style="flex:1; display:none; align-items:center; gap:5px;"><img id="icon2-${num}" style="width:20px; height:20px;"><input type="text" id="house2-${num}" style="flex:1;" readonly></div>
