@@ -161,7 +161,7 @@ const passiveData = {
     "EXOSKELETON": "BATTLE START: Gain SHIELD equal to 25% DEF."
 };
  const monData = {
-   "001 Birb": { normal: { houses: ["Fireborn"], moves: ["METEOR"], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_n.png" }, sparkly: { houses: ["Nightwatch"], moves: ["CLAWS"], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_s.png" } },
+   "001 Birb": { normal: { houses: ["Fireborn"], moves: ["CLAWS"], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_n.png" }, sparkly: { houses: ["Nightwatch"], moves: ["CLAWS"], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_s.png" } },
    "002 Feenix": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 1, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_n.png" }, sparkly: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_s.png" } },
    "003 Hawkamere": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/003_n.png" }, sparkly: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/003_s.png" } },
    "004 Axolot": { normal: { houses: ["Atlantian", "Mystic"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/004_n.png" }, sparkly: { houses: ["Dragoon", "Fireborn"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/004_s.png" } },
@@ -387,64 +387,44 @@ const gradeMap = {'S': 1.0, 'A': 0.9, 'B': 0.85, 'C': 0.8, 'D': 0.75};
 
 // --- 2. LOGIC FUNCTIONS ---
 
-// Helper: Scans moveData to find which Type category a move belongs to
-function findMoveType(moveName) {
-    for (const typeKey in moveData) {
-        for (const tier in moveData[typeKey]) {
-            if (moveData[typeKey][tier].some(m => m.name === moveName)) {
-                return typeKey; // Returns "Normal", "Fireborn", etc.
-            }
-        }
-    }
-    return null;
-}
-
-function updateMoveStyle(i, num) {
-    const sel = document.getElementById(`move${i}-${num}`);
-    const wrap = document.getElementById(`move-wrap-${i}-${num}`);
-    const icon = document.getElementById(`move-icon-${i}-${num}`);
-    const moveName = sel.value;
-
-    const moveType = findMoveType(moveName); 
-
-    if (moveType && wrap && icon) {
-        wrap.style.backgroundColor = typeColors[moveType] || "#eadfc1";
-        icon.src = typeToIcon[moveType] || 'assets/house_default.png';
-        icon.style.display = "block";
-    } else if (wrap && icon) {
-        wrap.style.backgroundColor = "#eadfc1";
-        icon.style.display = "none";
-    }
-}
-
 function populateSlotDropdowns(num) {
+    // 1. Get the monster name and sparkliness
     const monSelect = document.getElementById(`monSelect-${num}`);
     const sparkleCheck = document.querySelector(`.slot:nth-child(${num}) .sparkle-checkbox`);
     
+    // Safety check: if elements don't exist, stop here
     if (!monSelect || !sparkleCheck) return;
 
     const monName = monSelect.value;
     const isSparkly = sparkleCheck.checked;
     
+    // 2. Fetch monster data safely
     const mon = monData[monName];
+    // If no monster is selected, provide empty arrays so the code doesn't crash
     const data = mon ? (isSparkly ? mon.sparkly : mon.normal) : { moves: [], passives: [] };
 
+    // 3. Update Moves
     for(let i = 1; i <= 4; i++) {
         const sel = document.getElementById(`move${i}-${num}`);
-        if (!sel) continue;
-        const currentSelection = sel.value;
+        if (!sel) continue; // Skip if this specific dropdown doesn't exist
+
+        const currentSelection = sel.value; // Remember what was picked
         sel.innerHTML = `<option value="">Move ${i}</option>` + 
             (data.moves || []).map(m => `<option value="${m}">${m}</option>`).join('');
-        sel.value = currentSelection;
-        updateMoveStyle(i, num);
+        
+        // Restore selection if the move is still valid for this new monster
+        sel.value = currentSelection; 
     }
 
+    // 4. Update Passives
     for(let i = 1; i <= 4; i++) {
         const sel = document.getElementById(`pass${i}-${num}`);
         if (!sel) continue; 
+
         const currentSelection = sel.value;
         sel.innerHTML = `<option value="">Passive ${i}</option>` + 
             (data.passives || []).map(p => `<option value="${p}">${p}</option>`).join('');
+        
         sel.value = currentSelection;
     }
 }
@@ -468,12 +448,14 @@ function updateStats(num) {
     const isSparkly = document.querySelector(`.slot:nth-child(${num}) .sparkle-checkbox`).checked;
     const vibe = document.getElementById(`vibe-${num}`).value;
 
+    // Fetch the correct stats object based on selected mon and form
     let baseStats = { hp: 100, atk: 100, mag: 100, def: 100, res: 100, spd: 100 };
     if (monName && monData[monName]) {
         const data = isSparkly ? monData[monName].sparkly : monData[monName].normal;
         baseStats = data.stats;
     }
 
+    // Map uppercase keys to lowercase keys found in your data
     const statKeys = { 'HP':'hp', 'ATK':'atk', 'MAG':'mag', 'DEF':'def', 'RES':'res', 'SPD':'spd' };
 
     ['HP','ATK','MAG','DEF','RES','SPD'].forEach(s => {
@@ -528,14 +510,19 @@ function updateSprite(num) {
         setHouse(data.houses[0], h1Wrap, h1In, icon1);
         setHouse(data.houses[1], h2Wrap, h2In, icon2);
         
+        // --- ADD THESE LINES ---
         populateSlotDropdowns(num); 
+        
         updateStats(num);
         updateTeamEfficiencies();
     } else {
         spriteBox.style.backgroundImage = 'none';
         h1Wrap.style.display = "none";
         h2Wrap.style.display = "none";
+        
+        // --- ADD THIS TO CLEAR DROPDOWNS WHEN NO MON IS SELECTED ---
         populateSlotDropdowns(num);
+        
         updateTeamEfficiencies();
     }
 }
@@ -557,14 +544,7 @@ function createSlot(num) {
         
         <div class="section-box"><div class="segment-title tab-moveset">MOVESET</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
-                ${[1,2,3,4].map(i => `
-                    <div class="move-wrapper" id="move-wrap-${i}-${num}">
-                        <select id="move${i}-${num}" onchange="updateMoveStyle(${i}, ${num})">
-                            <option value="">Move ${i}</option>
-                        </select>
-                        <img id="move-icon-${i}-${num}" class="move-type-icon" style="display:none;">
-                    </div>
-                `).join('')}
+                ${[1,2,3,4].map(i => `<select id="move${i}-${num}"><option value="">Move ${i}</option></select>`).join('')}
             </div>
         </div>
 
