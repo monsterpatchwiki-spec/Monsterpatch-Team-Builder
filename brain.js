@@ -402,21 +402,23 @@ function findMoveType(moveName) {
 function updateMoveStyle(i, num) {
     const sel = document.getElementById(`move${i}-${num}`);
     const wrap = document.getElementById(`move-wrap-${i}-${num}`);
+    const textDiv = document.getElementById(`move-text-${i}-${num}`); // Targeting the display div
     const icon = document.getElementById(`move-icon-${i}-${num}`);
     const moveName = sel.value;
 
     const moveType = findMoveType(moveName); 
-
-    // Define which types should have an icon visible
     const isNormal = (moveType === "Normal");
+
+    // Update the display text to show the currently selected move
+    textDiv.innerText = moveName || `Move ${i}`;
 
     if (moveType && wrap && icon) {
         // Apply color to the container
         wrap.style.backgroundColor = typeColors[moveType] || "#eadfc1";
-        sel.style.backgroundColor = "transparent";
         
+        // Style the text div instead of the select element
         const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
-        sel.style.color = darkTypes.includes(moveType) ? "#eadfc1" : "#342420";
+        textDiv.style.color = darkTypes.includes(moveType) ? "#eadfc1" : "#342420";
         
         // Show icon ONLY if it's not "Normal"
         if (!isNormal) {
@@ -428,8 +430,7 @@ function updateMoveStyle(i, num) {
     } else if (wrap && icon) {
         // Reset to default
         wrap.style.backgroundColor = "var(--white)";
-        sel.style.backgroundColor = "transparent";
-        sel.style.color = "var(--black)";
+        textDiv.style.color = "var(--black)";
         icon.style.display = "none";
     }
 }
@@ -463,6 +464,25 @@ function populateSlotDropdowns(num) {
         sel.innerHTML = `<option value="">Passive ${i}</option>` + 
             (data.passives || []).map(p => `<option value="${p}">${p}</option>`).join('');
         sel.value = currentSelection;
+    }
+
+    for(let i = 1; i <= 4; i++) {
+        const list = document.getElementById(`dropdown-list-${i}-${num}`);
+        const moves = data.moves || [];
+        
+        // This builds the dropdown list as HTML div rows
+        let html = `<div onclick="selectMove(${i}, ${num}, '')" style="padding: 5px; cursor: pointer;">Clear</div>`;
+        
+        moves.forEach(m => {
+            const type = findMoveType(m);
+            const color = typeColors[type] || "#eadfc1";
+            // THE COLOR IS APPLIED TO THE DIV BACKGROUND HERE
+            html += `<div onclick="selectMove(${i}, ${num}, '${m}')" 
+                          style="background-color: ${color}; padding: 5px; cursor: pointer; border-bottom: 1px solid #342420;">
+                          ${m}
+                     </div>`;
+        });
+        list.innerHTML = html;
     }
 }
 
@@ -575,12 +595,17 @@ function createSlot(num) {
         <div class="section-box"><div class="segment-title tab-moveset">MOVESET</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
                 ${[1,2,3,4].map(i => `
-                    <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; background-color: var(--white); border: 1px solid var(--black);">
-                        <select id="move${i}-${num}" onchange="updateMoveStyle(${i}, ${num})" style="width: 100%; height: 35px; padding-right: 30px; background-color: transparent; border: none; appearance: none; cursor: pointer;">
+                    <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; height: 35px; border: 1px solid var(--black); background-color: var(--white);">
+                        <select id="move${i}-${num}" 
+                                onchange="updateMoveStyle(${i}, ${num})" 
+                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; z-index: 2; cursor: pointer;">
                             <option value="">Move ${i}</option>
                         </select>
+                        <div id="move-text-${i}-${num}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; padding-left: 8px; z-index: 1; pointer-events: none; font-weight: bold; color: var(--black);">
+                            Move ${i}
+                        </div>
                         <img id="move-icon-${i}-${num}" class="move-type-icon" 
-                             style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 7px; pointer-events: none;">
+                             style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 7px; z-index: 1; pointer-events: none;">
                     </div>
                 `).join('')}
             </div>
