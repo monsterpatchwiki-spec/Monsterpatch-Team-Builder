@@ -427,26 +427,30 @@ function updateMoveStyle(i, num) {
     const wrap = document.getElementById(`move-wrap-${i}-${num}`);
     const textDiv = document.getElementById(`move-text-${i}-${num}`); 
     const icon = document.getElementById(`move-icon-${i}-${num}`);
-    const moveName = sel.value;
+    
+    // Safety check: ensure elements exist
+    if (!sel || !wrap || !textDiv || !icon) return;
 
+    const moveName = sel.value;
     const moveType = findMoveType(moveName); 
     
-    // Update the display text
+    // Update the display text to the name of the move
     textDiv.innerText = moveName || `Move ${i}`;
 
-    if (moveType && wrap && icon) {
-        // Apply the color to the wrapper
+    // Apply styles based on type
+    if (moveType && moveType !== "Normal") {
+        // 1. Color the wrapper (Image 1 style)
         wrap.style.backgroundColor = typeColors[moveType] || "#eadfc1";
         
-        // Handle text color for readability
+        // 2. Set icon from your mapping
+        icon.src = typeToIcon[moveType] || 'assets/house_default.png';
+        icon.style.display = "block";
+        
+        // 3. Set contrast for dark-colored types
         const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
         textDiv.style.color = darkTypes.includes(moveType) ? "#eadfc1" : "#342420";
-        
-        // Show/Hide and set the icon
-        icon.src = typeToIcon[moveType] || 'assets/house_default.png';
-        icon.style.display = (moveType === "Normal") ? "none" : "block";
     } else {
-        // Reset defaults
+        // Reset to default white/black look if no move or "Normal" type
         wrap.style.backgroundColor = "var(--white)";
         textDiv.style.color = "var(--black)";
         icon.style.display = "none";
