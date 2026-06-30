@@ -388,25 +388,44 @@ const gradeMap = {'S': 1.0, 'A': 0.9, 'B': 0.85, 'C': 0.8, 'D': 0.75};
 // --- 2. LOGIC FUNCTIONS ---
 
 function populateSlotDropdowns(num) {
-    const monName = document.getElementById(`monSelect-${num}`).value;
-    const isSparkly = document.querySelector(`.slot:nth-child(${num}) .sparkle-checkbox`).checked;
+    // 1. Get the monster name and sparkliness
+    const monSelect = document.getElementById(`monSelect-${num}`);
+    const sparkleCheck = document.querySelector(`.slot:nth-child(${num}) .sparkle-checkbox`);
     
-    // Get the monster data
+    // Safety check: if elements don't exist, stop here
+    if (!monSelect || !sparkleCheck) return;
+
+    const monName = monSelect.value;
+    const isSparkly = sparkleCheck.checked;
+    
+    // 2. Fetch monster data safely
     const mon = monData[monName];
+    // If no monster is selected, provide empty arrays so the code doesn't crash
     const data = mon ? (isSparkly ? mon.sparkly : mon.normal) : { moves: [], passives: [] };
 
-    // Update Moves
-    for(let i=1; i<=4; i++) {
+    // 3. Update Moves
+    for(let i = 1; i <= 4; i++) {
         const sel = document.getElementById(`move${i}-${num}`);
+        if (!sel) continue; // Skip if this specific dropdown doesn't exist
+
+        const currentSelection = sel.value; // Remember what was picked
         sel.innerHTML = `<option value="">Move ${i}</option>` + 
             (data.moves || []).map(m => `<option value="${m}">${m}</option>`).join('');
+        
+        // Restore selection if the move is still valid for this new monster
+        sel.value = currentSelection; 
     }
 
-    // Update Passives
-    for(let i=1; i<=4; i++) {
+    // 4. Update Passives
+    for(let i = 1; i <= 4; i++) {
         const sel = document.getElementById(`pass${i}-${num}`);
+        if (!sel) continue; 
+
+        const currentSelection = sel.value;
         sel.innerHTML = `<option value="">Passive ${i}</option>` + 
             (data.passives || []).map(p => `<option value="${p}">${p}</option>`).join('');
+        
+        sel.value = currentSelection;
     }
 }
 
