@@ -411,46 +411,46 @@ function toggleDropdown(i, num) {
 function selectMove(i, num, moveName) {
     const display = document.getElementById(`move-display-${i}-${num}`);
     
-    // 1. Update the visible text in the dropdown trigger
-    display.innerText = moveName || `Move ${i}`;
+    // 1. Update the visible text
+    if (display) {
+        display.innerText = moveName || `Move ${i}`;
+    }
     
-    // 2. Hide the list after selection
+    // 2. Hide the list
     toggleDropdown(i, num);
     
-    // 3. Update the styling (Colors and Icons)
-    // We pass moveName so it knows which type to look up
+    // 3. Update the styling (Pass moveName so we don't need to find a <select> tag)
     updateMoveStyle(i, num, moveName); 
 }
 
-function updateMoveStyle(i, num) {
-    const sel = document.getElementById(`move${i}-${num}`);
+function updateMoveStyle(i, num, moveName) {
     const wrap = document.getElementById(`move-wrap-${i}-${num}`);
-    const textDiv = document.getElementById(`move-text-${i}-${num}`); 
+    const textDiv = document.getElementById(`move-display-${i}-${num}`); 
     const icon = document.getElementById(`move-icon-${i}-${num}`);
     
-    // Safety check: ensure elements exist
-    if (!sel || !wrap || !textDiv || !icon) return;
+    // Safety check: only continue if we have the visual elements
+    if (!wrap || !textDiv || !icon) return;
 
-    const moveName = sel.value;
+    // Use the moveName passed into the function
     const moveType = findMoveType(moveName); 
     
-    // Update the display text to the name of the move
+    // Update the display text
     textDiv.innerText = moveName || `Move ${i}`;
 
     // Apply styles based on type
     if (moveType && moveType !== "Normal") {
-        // 1. Color the wrapper (Image 1 style)
+        // 1. Color the wrapper
         wrap.style.backgroundColor = typeColors[moveType] || "#eadfc1";
         
-        // 2. Set icon from your mapping
+        // 2. Set icon
         icon.src = typeToIcon[moveType] || 'assets/house_default.png';
         icon.style.display = "block";
         
-        // 3. Set contrast for dark-colored types
+        // 3. Set contrast
         const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
         textDiv.style.color = darkTypes.includes(moveType) ? "#eadfc1" : "#342420";
     } else {
-        // Reset to default white/black look if no move or "Normal" type
+        // Reset to default
         wrap.style.backgroundColor = "var(--white)";
         textDiv.style.color = "var(--black)";
         icon.style.display = "none";
