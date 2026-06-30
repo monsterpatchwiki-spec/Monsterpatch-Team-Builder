@@ -39,7 +39,7 @@ const typeToIcon = {
     };
 
  const monData = {
-   "001 Birb": { normal: { houses: ["Fireborn"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/001_n.png" }, sparkly: { houses: ["Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/001_s.png" } },
+   "001 Birb": { normal: { houses: ["Fireborn"], moves: [], passives: [], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_n.png" }, sparkly: { houses: ["Nightwatch"], moves: [], passives: [], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_s.png" } },
    "002 Feenix": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_n.png" }, sparkly: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_s.png" } },
    "003 Hawkamere": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/003_n.png" }, sparkly: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/003_s.png" } },
    "004 Axolot": { normal: { houses: ["Atlantian", "Mystic"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/004_n.png" }, sparkly: { houses: ["Dragoon", "Fireborn"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/004_s.png" } },
@@ -283,11 +283,21 @@ function getMultiplier(attackType, defTypes) {
 function updateStats(num) {
     const level = parseInt(document.getElementById(`level-${num}`).value) || 50;
     const monName = document.getElementById(`monSelect-${num}`).value;
+    const isSparkly = document.querySelector(`.slot:nth-child(${num}) .sparkle-checkbox`).checked;
     const vibe = document.getElementById(`vibe-${num}`).value;
-    const baseStats = (monName && monData[monName]) ? monData[monName].base : {HP:100, ATK:100, MAG:100, DEF:100, RES:100, SPD:100};
+
+    // Fetch the correct stats object based on selected mon and form
+    let baseStats = { hp: 100, atk: 100, mag: 100, def: 100, res: 100, spd: 100 };
+    if (monName && monData[monName]) {
+        const data = isSparkly ? monData[monName].sparkly : monData[monName].normal;
+        baseStats = data.stats;
+    }
+
+    // Map uppercase keys to lowercase keys found in your data
+    const statKeys = { 'HP':'hp', 'ATK':'atk', 'MAG':'mag', 'DEF':'def', 'RES':'res', 'SPD':'spd' };
 
     ['HP','ATK','MAG','DEF','RES','SPD'].forEach(s => {
-        const base = baseStats[s] || 100;
+        const base = baseStats[statKeys[s]] || 100;
         const grade = document.getElementById(`${s}-grade-${num}`).value;
         const growth = parseInt(document.getElementById(`${s}-growth-${num}`).value);
         
