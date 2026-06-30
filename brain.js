@@ -263,28 +263,45 @@ const moveList = ["Move A", "Move B", "Move C"];
 const passiveList = ["Passive A", "Passive B", "Passive C"];
 const heldItemList = ["Item A", "Item B", "Item C"];
 const types = ["Fireborn","Atlantian","Overgrowth","Whimsical","Nightwatch","Mystic","Dragoon","Ironclad","Brawler","Normal"];
+const gradeMap = {'S': 1.0, 'A': 0.9, 'B': 0.85, 'C': 0.8, 'D': 0.75};
 
 // --- 2. LOGIC FUNCTIONS ---
 
-/**
- * SEAN Rule Logic: Multiplier is neutral (1) if defender shares the move's type.
- */
 function getMultiplier(attackType, defTypes) {
     if (!defTypes || defTypes.length === 0 || defTypes[0] === "") return 1;
     let multiplier = 1;
-
     defTypes.forEach(defType => {
         if (!defType) return;
         let base = (effectivenessChart[attackType] && effectivenessChart[attackType][defType] !== undefined)
-            ? effectivenessChart[attackType][defType]
-            : 1;
-
-        if (base === 2 && defTypes.includes(attackType)) {
-            base = 1;
-        }
+            ? effectivenessChart[attackType][defType] : 1;
+        if (base === 2 && defTypes.includes(attackType)) base = 1;
         multiplier *= base;
     });
     return multiplier;
+}
+
+function updateStats(num) {
+    const level = parseInt(document.getElementById(`level-${num}`).value) || 50;
+    const monName = document.getElementById(`monSelect-${num}`).value;
+    const vibe = document.getElementById(`vibe-${num}`).value;
+    const baseStats = (monName && monData[monName]) ? monData[monName].base : {HP:100, ATK:100, MAG:100, DEF:100, RES:100, SPD:100};
+
+    ['HP','ATK','MAG','DEF','RES','SPD'].forEach(s => {
+        const base = baseStats[s] || 100;
+        const grade = document.getElementById(`${s}-grade-${num}`).value;
+        const growth = parseInt(document.getElementById(`${s}-growth-${num}`).value);
+        
+        let vibeMod = 1.0;
+        if (vibe.includes(s + "+")) vibeMod = 1.1;
+        else if (vibe.includes(s + "-")) vibeMod = 0.9;
+
+        const levelM = Math.pow((level / 50.0), 0.7);
+        const gradeMod = gradeMap[grade] || 1.0;
+        const growthMod = 1.0 + (growth * 0.05);
+        
+        const final = Math.round(base * levelM * gradeMod * growthMod * vibeMod);
+        document.getElementById(`${s}-result-${num}`).innerText = final;
+    });
 }
 
 function updateSprite(num) {
@@ -303,14 +320,10 @@ function updateSprite(num) {
 
     if (selectedName && monData[selectedName]) {
         const data = isSparkly ? monData[selectedName].sparkly : monData[selectedName].normal;
-        
         spriteBox.style.backgroundImage = `url('${data.sprite}')`;
         spriteBox.style.backgroundSize = 'contain';
         spriteBox.style.backgroundRepeat = 'no-repeat';
         spriteBox.style.backgroundPosition = 'center';
-
-        const h1 = (data.houses && data.houses[0]) ? data.houses[0] : "";
-        const h2 = (data.houses && data.houses[1]) ? data.houses[1] : "";
 
         const setHouse = (val, wrap, input, icon) => {
             if (val) {
@@ -319,13 +332,12 @@ function updateSprite(num) {
                 input.style.backgroundColor = typeColors[val] || "#eadfc1";
                 input.style.color = darkTypes.includes(val) ? "#eadfc1" : "#342420";
                 icon.src = typeToIcon[val] || 'assets/house_default.png';
-            } else {
-                wrap.style.display = "none";
-            }
+            } else { wrap.style.display = "none"; }
         };
 
-        setHouse(h1, h1Wrap, h1In, icon1);
-        setHouse(h2, h2Wrap, h2In, icon2);
+        setHouse(data.houses[0], h1Wrap, h1In, icon1);
+        setHouse(data.houses[1], h2Wrap, h2In, icon2);
+        updateStats(num);
         updateTeamEfficiencies();
     } else {
         spriteBox.style.backgroundImage = 'none';
@@ -341,12 +353,12 @@ function createSlot(num) {
     let moveOptions = moveList.map(m => `<option>${m}</option>`).join('');
     let passiveOptions = passiveList.map(p => `<option>${p}</option>`).join('');
     let itemOptions = heldItemList.map(i => `<option>${i}</option>`).join('');
-    let tierOpts = ['S','A','B','C','D'].map(t => `<option>${t}</option>`).join('');
-    let invOpts = ['0','1','2','3'].map(i => `<option>${i}</option>`).join('');
+    let tierOpts = ['S','A','B','C','D'].map(t => `<option value="${t}">${t}</option>`).join('');
+    let invOpts = ['0','1','2','3'].map(i => `<option value="${i}">${i}</option>`).join('');
     
     return `<div class="slot"><div class="segment-title tab-slot">SLOT ${num}</div>
         <div style="display: flex; gap: 11px; margin-top: 11px; margin-bottom: 17px; align-items: center;">
-            <input type="text" placeholder="NICKNAME" style="flex:1;"> Lv <input type="number" value="50" style="width: 60px;"> 
+            <input type="text" placeholder="NICKNAME" style="flex:1;"> Lv <input type="number" id="level-${num}" value="50" onchange="updateStats(${num})" style="width: 60px;"> 
             <label class="sparkle-label" style="display:flex; align-items:center; gap:4px; color: var(--black);">
                 <input type="checkbox" class="sparkle-checkbox" onchange="updateSprite(${num})"> SPARKLE
             </label>
@@ -354,19 +366,13 @@ function createSlot(num) {
         
         <div class="section-box"><div class="segment-title tab-moveset">MOVESET</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
-                <select id="move1-${num}"><option>Move 1</option>${moveOptions}</select>
-                <select id="move2-${num}"><option>Move 2</option>${moveOptions}</select>
-                <select id="move3-${num}"><option>Move 3</option>${moveOptions}</select>
-                <select id="move4-${num}"><option>Move 4</option>${moveOptions}</select>
+                ${[1,2,3,4].map(i => `<select id="move${i}-${num}"><option value="">Move ${i}</option>${moveOptions}</select>`).join('')}
             </div>
         </div>
 
         <div class="section-box passives-box"><div class="segment-title tab-passives">PASSIVES</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
-                <select id="pass1-${num}"><option>Passive 1</option>${passiveOptions}</select>
-                <select id="pass2-${num}"><option>Passive 2</option>${passiveOptions}</select>
-                <select id="pass3-${num}"><option>Passive 3</option>${passiveOptions}</select>
-                <select id="pass4-${num}"><option>Passive 4</option>${passiveOptions}</select>
+                ${[1,2,3,4].map(i => `<select id="pass${i}-${num}"><option value="">Passive ${i}</option>${passiveOptions}</select>`).join('')}
             </div>
         </div>
         
@@ -376,67 +382,57 @@ function createSlot(num) {
                 <select id="monSelect-${num}" onchange="updateSprite(${num})" style="margin-bottom: 5px;">
                     <option value="">Select Mon</option>${monOptions}
                 </select>
-                <select id="itemSelect-${num}"><option>Held Item</option>${itemOptions}</select>
+                <select id="itemSelect-${num}"><option value="">Held Item</option>${itemOptions}</select>
             </div>
         </div>
 
         <div style="display: flex; gap: 6px; margin-bottom: 10px;">
-            <div id="house1-wrap-${num}" style="flex:1; display:none; align-items:center; gap:5px;">
-                <img id="icon1-${num}" style="width:20px; height:20px;">
-                <input type="text" id="house1-${num}" style="flex:1;" readonly> 
-            </div>
-            <div id="house2-wrap-${num}" style="flex:1; display:none; align-items:center; gap:5px;">
-                <img id="icon2-${num}" style="width:20px; height:20px;">
-                <input type="text" id="house2-${num}" style="flex:1;" readonly>
-            </div>
+            <div id="house1-wrap-${num}" style="flex:1; display:none; align-items:center; gap:5px;"><img id="icon1-${num}" style="width:20px; height:20px;"><input type="text" id="house1-${num}" style="flex:1;" readonly></div>
+            <div id="house2-wrap-${num}" style="flex:1; display:none; align-items:center; gap:5px;"><img id="icon2-${num}" style="width:20px; height:20px;"><input type="text" id="house2-${num}" style="flex:1;" readonly></div>
         </div>
 
         <div class="stats-panel"><div class="segment-title tab-stats">STATS</div>
             <div style="display: flex; flex-direction: column; gap: 6px;">
-                ${['HP','ATK','MAG','DEF','RES','SPD'].map(s => `<div class="stat-row"><span style="width:30px; font-weight:bold; font-size:11px; color: var(--black);">${s}</span> <select style="width:45px; padding:2px;">${tierOpts}</select><select style="width:40px; padding:2px;">${invOpts}</select><div class="stat-bar"><div class="stat-bar-fill"></div></div><span style="font-size:11px; width:15px; text-align:right; color: var(--black);">40</span></div>`).join('')}
+                ${['HP','ATK','MAG','DEF','RES','SPD'].map(s => `
+                    <div class="stat-row">
+                        <span style="width:30px; font-weight:bold; font-size:11px; color: var(--black);">${s}</span> 
+                        <select id="${s}-grade-${num}" onchange="updateStats(${num})" style="width:45px; padding:2px;">${tierOpts}</select>
+                        <select id="${s}-growth-${num}" onchange="updateStats(${num})" style="width:40px; padding:2px;">${invOpts}</select>
+                        <div class="stat-bar"><div class="stat-bar-fill"></div></div>
+                        <span id="${s}-result-${num}" style="font-size:11px; width:30px; text-align:right; color: var(--black);">40</span>
+                    </div>`).join('')}
             </div>
             <div style="margin-top:15px; border-top:1px solid var(--black); padding-top:10px;">
-                <label style="font-weight:bold; color: var(--black);">VIBE:</label> <select style="margin-top:5px;">${vibeOptions}</select>
+                <label style="font-weight:bold; color: var(--black);">VIBE:</label> <select id="vibe-${num}" onchange="updateStats(${num})" style="margin-top:5px;">${vibeOptions}</select>
             </div>
         </div></div>`;
 }
 
 function updateTeamEfficiencies() {
-    // 1. Offense Table (6 columns: Type, S1, S2, S3, S4, NET)
     const offTbody = document.querySelector('#off-table tbody');
     if (offTbody) {
         offTbody.innerHTML = "";
         types.forEach(rowType => {
-            // Updated to render '1's for neutral offense placeholders
             offTbody.innerHTML += `<tr><td class="row-header">${rowType}</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>`;
         });
     }
 
-    // 2. Defense Table (6 columns: Type, S1, S2, S3, S4, NET)
     const defTbody = document.querySelector('#def-table tbody');
     if (defTbody) {
         defTbody.innerHTML = "";
         types.forEach(threatType => {
             let netMultiplier = 1;
             let rowHTML = `<tr><td class="row-header">${threatType}</td>`;
-            
             for (let i = 1; i <= 4; i++) {
                 const name = document.getElementById(`monSelect-${i}`).value;
                 if (name && monData[name]) {
                     const isSparkly = document.querySelector(`.slot:nth-child(${i}) .sparkle-checkbox`).checked;
                     const data = isSparkly ? monData[name].sparkly : monData[name].normal;
-                    
                     let score = getMultiplier(threatType, data.houses);
                     netMultiplier *= score;
-                    // Always render the score, even if it is 1
                     rowHTML += `<td>${score}</td>`;
-                } else {
-                    // Default to 1 for empty slots to maintain visual consistency
-                    rowHTML += `<td>1</td>`;
-                }
+                } else { rowHTML += `<td>1</td>`; }
             }
-            
-            // Populate the final NET cell; always render the total
             rowHTML += `<td>${netMultiplier}</td></tr>`;
             defTbody.innerHTML += rowHTML;
         });
