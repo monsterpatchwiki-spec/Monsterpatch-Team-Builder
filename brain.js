@@ -387,28 +387,6 @@ const gradeMap = {'S': 1.0, 'A': 0.9, 'B': 0.85, 'C': 0.8, 'D': 0.75};
 
 // --- 2. LOGIC FUNCTIONS ---
 
-function populateSlotDropdowns(num) {
-    const monName = document.getElementById(`monSelect-${num}`).value;
-    const isSparkly = document.querySelector(`.slot:nth-child(${num}) .sparkle-checkbox`).checked;
-    
-    // Get the monster data
-    const mon = monData[monName];
-    const data = mon ? (isSparkly ? mon.sparkly : mon.normal) : { moves: [], passives: [] };
-
-    // Update Moves
-    for(let i=1; i<=4; i++) {
-        const sel = document.getElementById(`move${i}-${num}`);
-        sel.innerHTML = `<option value="">Move ${i}</option>` + 
-            (data.moves || []).map(m => `<option value="${m}">${m}</option>`).join('');
-    }
-
-    // Update Passives
-    for(let i=1; i<=4; i++) {
-        const sel = document.getElementById(`pass${i}-${num}`);
-        sel.innerHTML = `<option value="">Passive ${i}</option>` + 
-            (data.passives || []).map(p => `<option value="${p}">${p}</option>`).join('');
-    }
-}
 
 function getMultiplier(attackType, defTypes) {
     if (!defTypes || defTypes.length === 0 || defTypes[0] === "") return 1;
