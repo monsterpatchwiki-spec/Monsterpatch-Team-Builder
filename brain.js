@@ -425,33 +425,28 @@ function selectMove(i, num, moveName) {
 function updateMoveStyle(i, num) {
     const sel = document.getElementById(`move${i}-${num}`);
     const wrap = document.getElementById(`move-wrap-${i}-${num}`);
-    const textDiv = document.getElementById(`move-text-${i}-${num}`); // Targeting the display div
+    const textDiv = document.getElementById(`move-text-${i}-${num}`); 
     const icon = document.getElementById(`move-icon-${i}-${num}`);
     const moveName = sel.value;
 
     const moveType = findMoveType(moveName); 
-    const isNormal = (moveType === "Normal");
-
-    // Update the display text to show the currently selected move
+    
+    // Update the display text
     textDiv.innerText = moveName || `Move ${i}`;
 
     if (moveType && wrap && icon) {
-        // Apply color to the container
+        // Apply the color to the wrapper
         wrap.style.backgroundColor = typeColors[moveType] || "#eadfc1";
         
-        // Style the text div instead of the select element
+        // Handle text color for readability
         const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
         textDiv.style.color = darkTypes.includes(moveType) ? "#eadfc1" : "#342420";
         
-        // Show icon ONLY if it's not "Normal"
-        if (!isNormal) {
-            icon.src = typeToIcon[moveType] || 'assets/house_default.png';
-            icon.style.display = "block";
-        } else {
-            icon.style.display = "none";
-        }
-    } else if (wrap && icon) {
-        // Reset to default
+        // Show/Hide and set the icon
+        icon.src = typeToIcon[moveType] || 'assets/house_default.png';
+        icon.style.display = (moveType === "Normal") ? "none" : "block";
+    } else {
+        // Reset defaults
         wrap.style.backgroundColor = "var(--white)";
         textDiv.style.color = "var(--black)";
         icon.style.display = "none";
