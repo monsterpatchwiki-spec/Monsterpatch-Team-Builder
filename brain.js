@@ -509,12 +509,20 @@ function updateSprite(num) {
 
         setHouse(data.houses[0], h1Wrap, h1In, icon1);
         setHouse(data.houses[1], h2Wrap, h2In, icon2);
+        
+        // --- ADD THESE LINES ---
+        populateSlotDropdowns(num); 
+        
         updateStats(num);
         updateTeamEfficiencies();
     } else {
         spriteBox.style.backgroundImage = 'none';
         h1Wrap.style.display = "none";
         h2Wrap.style.display = "none";
+        
+        // --- ADD THIS TO CLEAR DROPDOWNS WHEN NO MON IS SELECTED ---
+        populateSlotDropdowns(num);
+        
         updateTeamEfficiencies();
     }
 }
