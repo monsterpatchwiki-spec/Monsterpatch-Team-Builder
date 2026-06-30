@@ -396,12 +396,6 @@ function findMoveType(moveName) {
     return null;
 }
 
-// Custom Dropdown Logic
-function toggleDropdown(i, num) {
-    const list = document.getElementById(`dropdown-list-${i}-${num}`);
-    list.style.display = list.style.display === "block" ? "none" : "block";
-}
-
 function selectMove(i, num, moveName) {
     const textSpan = document.getElementById(`move-text-${i}-${num}`);
     const wrap = document.getElementById(`move-wrap-${i}-${num}`);
