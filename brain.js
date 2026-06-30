@@ -562,6 +562,7 @@ function createSlot(num) {
             </label>
         </div>
         
+        // Inside createSlot(num)
 <div class="section-box"><div class="segment-title tab-moveset">MOVESET</div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
         ${[1,2,3,4].map(i => `
