@@ -161,7 +161,7 @@ const passiveData = {
     "EXOSKELETON": "BATTLE START: Gain SHIELD equal to 25% DEF."
 };
  const monData = {
-   "001 Birb": { normal: { houses: ["Fireborn"], moves: ["METEOR"], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_n.png" }, sparkly: { houses: ["Nightwatch"], moves: ["CLAWS"], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_s.png" } },
+   "001 Birb": { normal: { houses: ["Fireborn"], moves: ["METEOR", "CLAWS"], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_n.png" }, sparkly: { houses: ["Nightwatch"], moves: ["CLAWS"], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_s.png" } },
    "002 Feenix": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 1, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_n.png" }, sparkly: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_s.png" } },
    "003 Hawkamere": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/003_n.png" }, sparkly: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/003_s.png" } },
    "004 Axolot": { normal: { houses: ["Atlantian", "Mystic"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/004_n.png" }, sparkly: { houses: ["Dragoon", "Fireborn"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/004_s.png" } },
@@ -401,28 +401,23 @@ function findMoveType(moveName) {
 
 function updateMoveStyle(i, num) {
     const sel = document.getElementById(`move${i}-${num}`);
+    const wrap = document.getElementById(`move-wrap-${i}-${num}`);
     const icon = document.getElementById(`move-icon-${i}-${num}`);
     const moveName = sel.value;
-
     const moveType = findMoveType(moveName); 
 
     if (moveType) {
-        // Paint the background and set the icon
-        sel.style.backgroundColor = typeColors[moveType] || "#eadfc1";
-        
-        // Adjust text color for better contrast if needed
+        wrap.style.backgroundColor = typeColors[moveType];
+        // Ensure text is readable
         const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
         sel.style.color = darkTypes.includes(moveType) ? "#eadfc1" : "#342420";
-        
-        icon.src = typeToIcon[moveType] || 'assets/house_default.png';
+        icon.src = typeToIcon[moveType];
         icon.style.display = "block";
     } else {
-        // Reset to default
-        sel.style.backgroundColor = "var(--white)";
+        wrap.style.backgroundColor = "var(--white)";
         sel.style.color = "var(--black)";
         icon.style.display = "none";
     }
-}
 
 function populateSlotDropdowns(num) {
     const monSelect = document.getElementById(`monSelect-${num}`);
@@ -562,20 +557,19 @@ function createSlot(num) {
             </label>
         </div>
         
-        // Inside createSlot(num)
-<div class="section-box"><div class="segment-title tab-moveset">MOVESET</div>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
-        ${[1,2,3,4].map(i => `
-            <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative;">
-                <select id="move${i}-${num}" onchange="updateMoveStyle(${i}, ${num})" style="width: 100%; height: 35px; padding-right: 30px;">
-                    <option value="">Move ${i}</option>
-                </select>
-                <img id="move-icon-${i}-${num}" class="move-type-icon" 
-                     style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 7px; pointer-events: none;">
+        <div class="section-box"><div class="segment-title tab-moveset">MOVESET</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
+                ${[1,2,3,4].map(i => `
+                    <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; background-color: var(--white); border: 1px solid var(--black);">
+                        <select id="move${i}-${num}" onchange="updateMoveStyle(${i}, ${num})" style="width: 100%; height: 35px; padding-right: 30px; background-color: transparent; border: none; appearance: none; cursor: pointer;">
+                            <option value="">Move ${i}</option>
+                        </select>
+                        <img id="move-icon-${i}-${num}" class="move-type-icon" 
+                             style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 7px; pointer-events: none;">
+                    </div>
+                `).join('')}
             </div>
-        `).join('')}
-    </div>
-</div>
+        </div>
 
         <div class="section-box passives-box"><div class="segment-title tab-passives">PASSIVES</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
