@@ -387,55 +387,56 @@ const gradeMap = {'S': 1.0, 'A': 0.9, 'B': 0.85, 'C': 0.8, 'D': 0.75};
 
 // --- 2. LOGIC FUNCTIONS ---
 
+// Helper: Scans moveData to find which Type category a move belongs to
 function findMoveType(moveName) {
     for (const typeKey in moveData) {
         for (const tier in moveData[typeKey]) {
-            if (moveData[typeKey][tier].some(m => m.name === moveName)) return typeKey;
+            if (moveData[typeKey][tier].some(m => m.name === moveName)) {
+                return typeKey; // Returns "Normal", "Fireborn", etc.
+            }
         }
     }
     return null;
 }
 
-function selectMove(i, num, moveName) {
-    const textSpan = document.getElementById(`move-text-${i}-${num}`);
+function updateMoveStyle(i, num) {
+    const sel = document.getElementById(`move${i}-${num}`);
     const wrap = document.getElementById(`move-wrap-${i}-${num}`);
     const icon = document.getElementById(`move-icon-${i}-${num}`);
-    const hiddenInput = document.getElementById(`move${i}-${num}-input`);
-    
-    hiddenInput.value = moveName;
-    textSpan.innerText = moveName || `Move ${i}`;
-    
-    const moveType = findMoveType(moveName);
+    const moveName = sel.value;
 
-    // Apply color to the wrapper container directly
-    if (moveType && typeof typeColors !== 'undefined') {
+    const moveType = findMoveType(moveName); 
+
+    if (moveType && wrap && icon) {
         wrap.style.backgroundColor = typeColors[moveType] || "#eadfc1";
         icon.src = typeToIcon[moveType] || 'assets/house_default.png';
         icon.style.display = "block";
-    } else {
+    } else if (wrap && icon) {
         wrap.style.backgroundColor = "#eadfc1";
         icon.style.display = "none";
     }
-    
-    toggleDropdown(i, num);
 }
 
 function populateSlotDropdowns(num) {
     const monSelect = document.getElementById(`monSelect-${num}`);
     const sparkleCheck = document.querySelector(`.slot:nth-child(${num}) .sparkle-checkbox`);
+    
     if (!monSelect || !sparkleCheck) return;
 
     const monName = monSelect.value;
     const isSparkly = sparkleCheck.checked;
+    
     const mon = monData[monName];
     const data = mon ? (isSparkly ? mon.sparkly : mon.normal) : { moves: [], passives: [] };
 
     for(let i = 1; i <= 4; i++) {
-        const listContainer = document.getElementById(`dropdown-list-${i}-${num}`);
-        if (!listContainer) continue;
-        
-        listContainer.innerHTML = `<div class="dropdown-item" onclick="selectMove(${i}, ${num}, '')">Clear</div>` + 
-            (data.moves || []).map(m => `<div class="dropdown-item" onclick="selectMove(${i}, ${num}, '${m}')">${m}</div>`).join('');
+        const sel = document.getElementById(`move${i}-${num}`);
+        if (!sel) continue;
+        const currentSelection = sel.value;
+        sel.innerHTML = `<option value="">Move ${i}</option>` + 
+            (data.moves || []).map(m => `<option value="${m}">${m}</option>`).join('');
+        sel.value = currentSelection;
+        updateMoveStyle(i, num);
     }
 
     for(let i = 1; i <= 4; i++) {
@@ -557,11 +558,11 @@ function createSlot(num) {
         <div class="section-box"><div class="segment-title tab-moveset">MOVESET</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
                 ${[1,2,3,4].map(i => `
-                    <div class="custom-dropdown" id="move-wrap-${i}-${num}" onclick="toggleDropdown(${i}, ${num})">
-                        <span id="move-text-${i}-${num}">Move ${i}</span>
+                    <div class="move-wrapper" id="move-wrap-${i}-${num}">
+                        <select id="move${i}-${num}" onchange="updateMoveStyle(${i}, ${num})">
+                            <option value="">Move ${i}</option>
+                        </select>
                         <img id="move-icon-${i}-${num}" class="move-type-icon" style="display:none;">
-                        <input type="hidden" id="move${i}-${num}-input">
-                        <div class="dropdown-list" id="dropdown-list-${i}-${num}"></div>
                     </div>
                 `).join('')}
             </div>
