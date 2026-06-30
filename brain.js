@@ -413,7 +413,8 @@ function selectMove(i, num, moveName) {
     
     const moveType = findMoveType(moveName);
 
-    if (moveType) {
+    // Apply color to the wrapper container directly
+    if (moveType && typeof typeColors !== 'undefined') {
         wrap.style.backgroundColor = typeColors[moveType] || "#eadfc1";
         icon.src = typeToIcon[moveType] || 'assets/house_default.png';
         icon.style.display = "block";
@@ -609,6 +610,7 @@ function createSlot(num) {
             </div>
         </div></div>`;
 }
+
 function updateTeamEfficiencies() {
     const offTbody = document.querySelector('#off-table tbody');
     if (offTbody) {
