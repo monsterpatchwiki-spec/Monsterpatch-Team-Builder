@@ -440,12 +440,12 @@ function updateMoveStyle(i, num, moveName) {
     
     if (!wrap || !textDiv) return;
 
-    // 1. Force the wrap container to be a column
+    // 1. Force the wrap container to be a column and allow auto-height for expansion
     wrap.style.display = "flex";
     wrap.style.flexDirection = "column";
     wrap.style.height = "auto"; 
     
-    // 2. Lock the "dark part" (header) to a fixed height
+    // 2. Lock the "header" to a fixed height
     textDiv.style.height = "30px"; 
     textDiv.style.display = "flex";
     textDiv.style.alignItems = "center"; 
@@ -483,29 +483,29 @@ function updateMoveStyle(i, num, moveName) {
     if (moveDataObj && detailsDiv) {
         // Set dynamic colors based on the header's dark/light state
         const textColor = isDark ? "#eadfc1" : "#342420";
-        const bgColor = isDark ? "rgba(0,0,0,0.2)" : "rgba(255,255,255,0.2)";
+        const bgColor = isDark ? "rgba(0,0,0,0.15)" : "rgba(0,0,0,0.05)";
         const borderColor = isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)";
         
+        // This structure matches your preferred passive-style formatting
         detailsDiv.innerHTML = `
             <div style="font-size: 0.85em; 
-                        padding: 4px; 
+                        padding: 8px; 
                         color: ${textColor}; 
                         background: ${bgColor}; 
                         border-top: 1px solid ${borderColor};">
-                ${moveDataObj.power} power | 
-                ${moveDataObj.trigger} trigger | 
-                ${moveDataObj.scale} scaling | 
-                ${moveDataObj.type} ${moveDataObj.pm} 
-                ${moveDataObj.tag ? `| ${moveDataObj.tag.replace(/[\[\]]/g, '')}` : ''}
-                <br>
-                ${moveDataObj.cd} CD | ${moveDataObj.effect || 'none'}
+                <div style="font-weight: bold; margin-bottom: 4px;">
+                    ${moveDataObj.power} Power | ${moveDataObj.trigger} Trigger | ${moveDataObj.scale} Scaling
+                </div>
+                <div>
+                    ${moveDataObj.cd} CD | ${moveDataObj.effect || 'none'} 
+                    ${moveDataObj.tag ? `| <b>${moveDataObj.tag.replace(/[\[\]]/g, '')}</b>` : ''}
+                </div>
             </div>
         `;
     } else if (detailsDiv) {
         detailsDiv.innerHTML = "";
     }
 }
-
 function populateSlotDropdowns(num) {
     const monSelect = document.getElementById(`monSelect-${num}`);
     const sparkleCheck = document.querySelector(`.slot:nth-child(${num}) .sparkle-checkbox`);
@@ -570,7 +570,7 @@ function populateSlotDropdowns(num) {
         });
         list.innerHTML = html;
     }
-    
+
     for(let i = 1; i <= 4; i++) {
     const sel = document.getElementById(`pass${i}-${num}`);
     if (!sel) continue; 
@@ -700,20 +700,22 @@ function createSlot(num) {
         <div class="section-box"><div class="segment-title tab-moveset">MOVESET</div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
         ${[1,2,3,4].map(i => `
-            <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; height: 35px; border: 1px solid var(--black); background-color: var(--white);">
+            <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; height: auto; border: 1px solid var(--black); background-color: var(--white);">
                 <div id="move-display-${i}-${num}" 
                       onclick="toggleDropdown(${i}, ${num})" 
-                      style="height: 100%; display: flex; align-items: center; padding-left: 8px; cursor: pointer; font-weight: bold; color: var(--black);">
+                      style="height: 30px; display: flex; align-items: center; padding-left: 8px; cursor: pointer; font-weight: bold; color: var(--black);">
                       Move ${i}
                 </div>
                 
                 <div id="dropdown-list-${i}-${num}" 
                       class="custom-dropdown-list"
-                      style="display: none; position: absolute; top: 100%; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 200px; overflow-y: auto;">
+                      style="display: none; position: absolute; top: 30px; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 200px; overflow-y: auto;">
                 </div>
                 
                 <img id="move-icon-${i}-${num}" class="move-type-icon" 
-                      style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 7px; pointer-events: none;">
+                      style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 5px; pointer-events: none;">
+                      
+                <div id="move-details-${i}-${num}"></div>
             </div>
         `).join('')}
     </div>
@@ -774,6 +776,28 @@ function updatePassiveDisplay(passiveName, slotId) {
         descDiv.innerHTML = `<div style="font-size: 0.8em; padding: 6px; background: rgba(0,0,0,0.05); margin-top: 5px; border-left: 3px solid #874185;">${description}</div>`;
     } else {
         descDiv.innerHTML = "";
+    }
+}
+
+function updateMoveDisplay(moveName, slotId) {
+    const detailsDiv = document.getElementById(`move-details-${slotId}`);
+    if (!detailsDiv) return;
+
+    const moveObj = findMoveObject(moveName); // Your existing function
+    
+    if (moveObj) {
+        // You can pull the styling logic from your current updateMoveStyle here
+        // or just inject the clean text block
+        detailsDiv.innerHTML = `
+            <div style="font-size: 0.85em; padding: 8px; border-top: 1px solid rgba(0,0,0,0.1);">
+                <div style="font-weight: bold; margin-bottom: 4px;">
+                    ${moveObj.power} Power | ${moveObj.trigger} Trigger
+                </div>
+                <div>${moveObj.effect || 'No effect'}</div>
+            </div>
+        `;
+    } else {
+        detailsDiv.innerHTML = "";
     }
 }
 
