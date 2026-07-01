@@ -440,13 +440,17 @@ function updateMoveStyle(i, num, moveName) {
     
     if (!wrap || !textDiv) return;
 
-    // --- FIX: Force height to auto so it can expand ---
+    // 1. Force the wrap container to be a column
     wrap.style.display = "flex";
     wrap.style.flexDirection = "column";
     wrap.style.height = "auto"; 
-    wrap.style.minHeight = "40px"; // Keeps it looking normal when empty
+    
+    // 2. Lock the "dark part" (header) to a fixed height
+    textDiv.style.height = "40px"; 
+    textDiv.style.display = "flex";
+    textDiv.style.alignItems = "center"; // Keeps text centered vertically
 
-    // 2. Locate or create the details container
+    // 3. Locate or create the details container
     let detailsDiv = document.getElementById(`move-details-${i}-${num}`);
     if (!detailsDiv) {
         detailsDiv = document.createElement('div');
@@ -472,7 +476,7 @@ function updateMoveStyle(i, num, moveName) {
         icon.style.display = "none";
     }
 
-   // --- Inject Move Details ---
+    // --- Inject Move Details ---
     const moveDataObj = findMoveObject(moveName);
     if (moveDataObj && detailsDiv) {
         detailsDiv.innerHTML = `
@@ -480,7 +484,6 @@ function updateMoveStyle(i, num, moveName) {
                         padding: 4px; 
                         color: #342420; 
                         background: rgba(255,255,255,0.2); 
-                        margin-top: 2px;
                         border-top: 1px solid rgba(0,0,0,0.1);">
                 ${moveDataObj.power} power | 
                 ${moveDataObj.trigger} trigger | 
