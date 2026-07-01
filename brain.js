@@ -469,6 +469,7 @@ function populateSlotDropdowns(num) {
     const mon = monData[monName];
     const data = mon ? (isSparkly ? mon.sparkly : mon.normal) : { moves: [], passives: [] };
 
+    // Update the hidden <select> elements for legacy compatibility (if needed)
     for(let i = 1; i <= 4; i++) {
         const sel = document.getElementById(`move${i}-${num}`);
         if (!sel) continue;
@@ -476,7 +477,7 @@ function populateSlotDropdowns(num) {
         sel.innerHTML = `<option value="">Move ${i}</option>` + 
             (data.moves || []).map(m => `<option value="${m}">${m}</option>`).join('');
         sel.value = currentSelection;
-        updateMoveStyle(i, num);
+        updateMoveStyle(i, num, currentSelection);
     }
 
     for(let i = 1; i <= 4; i++) {
@@ -488,20 +489,34 @@ function populateSlotDropdowns(num) {
         sel.value = currentSelection;
     }
 
+    // Build the custom div-based dropdown lists
+    const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
+    
     for(let i = 1; i <= 4; i++) {
         const list = document.getElementById(`dropdown-list-${i}-${num}`);
+        if (!list) continue;
+        
         const moves = data.moves || [];
         
-        // This builds the dropdown list as HTML div rows
-        let html = `<div onclick="selectMove(${i}, ${num}, '')" style="padding: 5px; cursor: pointer;">Clear</div>`;
+        let html = `<div onclick="selectMove(${i}, ${num}, '')" style="padding: 5px; cursor: pointer; background: var(--white); color: var(--black); border-bottom: 1px solid #342420;">Clear</div>`;
         
         moves.forEach(m => {
             const type = findMoveType(m);
             const color = typeColors[type] || "#eadfc1";
-            // THE COLOR IS APPLIED TO THE DIV BACKGROUND HERE
+            const icon = typeToIcon[type] || 'assets/house_default.png';
+            const textColor = darkTypes.includes(type) ? "#eadfc1" : "#342420";
+            
             html += `<div onclick="selectMove(${i}, ${num}, '${m}')" 
-                          style="background-color: ${color}; padding: 5px; cursor: pointer; border-bottom: 1px solid #342420;">
-                          ${m}
+                          style="background-color: ${color}; 
+                                 color: ${textColor}; 
+                                 padding: 5px; 
+                                 cursor: pointer; 
+                                 display: flex; 
+                                 align-items: center; 
+                                 gap: 5px; 
+                                 border-bottom: 1px solid #342420;">
+                          <img src="${icon}" style="width:16px; height:16px; pointer-events: none;">
+                          <span>${m}</span>
                      </div>`;
         });
         list.innerHTML = html;
