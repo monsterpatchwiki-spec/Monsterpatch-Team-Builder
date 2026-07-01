@@ -421,7 +421,7 @@ function toggleDropdown(i, num) {
 function selectMove(i, num, moveName) {
     const display = document.getElementById(`move-display-${i}-${num}`);
     
-    // 1. Update the visible text
+    // 1. Update the visible header text
     if (display) {
         display.innerText = moveName || `Move ${i}`;
     }
@@ -429,8 +429,12 @@ function selectMove(i, num, moveName) {
     // 2. Hide the list
     toggleDropdown(i, num);
     
-    // 3. Update the styling and the new details display
+    // 3. Update the Header/Wrapper colors and Icons
     updateMoveStyle(i, num, moveName); 
+    
+    // 4. Inject the Move Details into the description div
+    // This calls the logic we discussed to match the passive display
+    injectMoveDetails(moveName, `${i}-${num}`);
 }
 
 function updateMoveStyle(i, num, moveName) {
