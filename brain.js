@@ -161,7 +161,7 @@ const passiveData = {
     "EXOSKELETON": "BATTLE START: Gain SHIELD equal to 25% DEF."
 };
  const monData = {
-   "001 Birb": { normal: { houses: ["Fireborn"], moves: ["METEOR", "CLAWS"], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_n.png" }, sparkly: { houses: ["Nightwatch"], moves: ["CLAWS"], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_s.png" } },
+   "001 Birb": { normal: { houses: ["Fireborn"], moves: ["METEOR", "CLAWS", "PUNCH"], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_n.png" }, sparkly: { houses: ["Nightwatch"], moves: ["CLAWS"], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_s.png" } },
    "002 Feenix": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 3, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_n.png" }, sparkly: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_s.png" } },
    "003 Hawkamere": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/003_n.png" }, sparkly: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/003_s.png" } },
    "004 Axolot": { normal: { houses: ["Atlantian", "Mystic"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/004_n.png" }, sparkly: { houses: ["Dragoon", "Fireborn"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/004_s.png" } },
@@ -464,19 +464,30 @@ function updateMoveStyle(i, num, moveName) {
         icon.style.display = "none";
     }
 
-    // --- Inject Move Details using the Finder ---
+// --- Inject Move Details ---
     const moveDataObj = findMoveObject(moveName);
-    if (moveDataObj && detailsDiv) {
-        detailsDiv.innerHTML = `
-            <div style="font-size: 0.8em; padding: 4px; background: #fdf6e3; border: 1px solid #342420; border-top: none;">
-                ${moveDataObj.power} Power | ${moveDataObj.trigger} Trigger | ${moveDataObj.scale} Scaling | ${moveDataObj.type}
-                ${moveDataObj.tag ? `| ${moveDataObj.tag}` : ''}
-                <br>
-                ${moveDataObj.cd} CD Turn | ${moveDataObj.effect || 'None'}
-            </div>
-        `;
-    } else if (detailsDiv) {
-        detailsDiv.innerHTML = ""; 
+    
+    if (detailsDiv) {
+        if (moveDataObj) {
+            // Updated style: Transparent background, no border, slightly smaller text
+            detailsDiv.innerHTML = `
+                <div style="font-size: 0.85em; 
+                            padding: 5px 2px; 
+                            color: #342420; 
+                            margin-top: 2px; 
+                            line-height: 1.4;">
+                    <strong>${moveDataObj.power}</strong> Power | 
+                    <strong>${moveDataObj.trigger}</strong> Trigger | 
+                    <strong>${moveDataObj.scale}</strong> Scaling | 
+                    ${moveDataObj.type}
+                    ${moveDataObj.tag ? `| <strong>${moveDataObj.tag}</strong>` : ''}
+                    <br>
+                    <strong>${moveDataObj.cd}</strong> CD Turn | ${moveDataObj.effect || 'None'}
+                </div>
+            `;
+        } else {
+            detailsDiv.innerHTML = ""; // Clear if empty
+        }
     }
 }
 
