@@ -755,7 +755,8 @@ function createSlot(num) {
                 <label style="font-weight:bold; color: var(--black);">VIBE:</label> <select id="vibe-${num}" onchange="updateStats(${num})" style="margin-top:5px;">${vibeOptions}</select>
             </div>
 
-            <div class="section-box passives-box"><div class="segment-title tab-passives">PASSIVES</div>
+            // Keep ONLY this passives section inside your createSlot return string:
+<div class="section-box passives-box"><div class="segment-title tab-passives">PASSIVES</div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
         ${[1,2,3,4].map(i => `
             <div>
