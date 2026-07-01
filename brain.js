@@ -437,6 +437,29 @@ function selectMove(i, num, moveName) {
     injectMoveDetails(moveName, `${i}-${num}`);
 }
 
+function injectMoveDetails(moveName, slotId) {
+    const detailsDiv = document.getElementById(`move-details-${slotId}`);
+    if (!detailsDiv) return;
+
+    const moveObj = findMoveObject(moveName);
+
+    if (moveObj) {
+        detailsDiv.innerHTML = `
+            <div style="font-size: 0.85em; padding: 8px; border-top: 1px solid rgba(0,0,0,0.1); background: rgba(0,0,0,0.03);">
+                <div style="font-weight: bold; margin-bottom: 4px;">
+                    ${moveObj.power} Power | ${moveObj.trigger} Trigger | ${moveObj.scale} Scaling
+                </div>
+                <div>
+                    ${moveObj.cd} CD | ${moveObj.effect || 'none'} 
+                    ${moveObj.tag ? `| <b>${moveObj.tag.replace(/[\[\]]/g, '')}</b>` : ''}
+                </div>
+            </div>
+        `;
+    } else {
+        detailsDiv.innerHTML = "";
+    }
+}
+
 function updateMoveStyle(i, num, moveName) {
     const wrap = document.getElementById(`move-wrap-${i}-${num}`);
     const textDiv = document.getElementById(`move-display-${i}-${num}`); 
