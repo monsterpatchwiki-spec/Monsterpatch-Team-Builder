@@ -735,7 +735,7 @@ function createSlot(num) {
             <div style="margin-top:15px; border-top:1px solid var(--black); padding-top:10px;">
                 <label style="font-weight:bold; color: var(--black);">VIBE:</label> <select id="vibe-${num}" onchange="updateStats(${num})" style="margin-top:5px;">${vibeOptions}</select>
             </div>
-            
+
             <div class="section-box passives-box"><div class="segment-title tab-passives">PASSIVES</div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
         ${[1,2,3,4].map(i => `
@@ -752,29 +752,26 @@ function createSlot(num) {
 }
 
 function updatePassiveDisplay(passiveName, slotId) {
-    // 1. Locate the container where the passive text should go
-    // Assuming your HTML has an element like <div id="passive-desc-1"></div>
+    // slotId now comes in as "1-1", "2-1", etc.
     const descDiv = document.getElementById(`passive-desc-${slotId}`);
-    
     if (!descDiv) return;
 
-    // 2. Fetch the description from your dictionary
     const description = passiveData[passiveName];
 
     if (description) {
-        // 3. Inject the text with clean formatting
         descDiv.innerHTML = `
             <div style="font-size: 0.8em; 
                         padding: 6px; 
                         color: #342420; 
                         background: rgba(0,0,0,0.05); 
                         margin-top: 5px; 
-                        border-left: 3px solid #874185;">
+                        border-left: 3px solid #874185;
+                        margin-bottom: 5px;">
                 ${description}
             </div>
         `;
     } else {
-        descDiv.innerHTML = ""; // Clear if no passive selected
+        descDiv.innerHTML = "";
     }
 }
 
