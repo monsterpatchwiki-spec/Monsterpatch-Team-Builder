@@ -570,6 +570,19 @@ function populateSlotDropdowns(num) {
         });
         list.innerHTML = html;
     }
+    for(let i = 1; i <= 4; i++) {
+    const sel = document.getElementById(`pass${i}-${num}`);
+    if (!sel) continue; 
+    const currentSelection = sel.value;
+    sel.innerHTML = `<option value="">Passive ${i}</option>` + 
+        (data.passives || []).map(p => `<option value="${p}">${p}</option>`).join('');
+    
+    // Clear the description if the old selection is gone or reset
+    sel.value = currentSelection;
+    if (!sel.value) {
+        document.getElementById(`passive-desc-${i}-${num}`).innerHTML = "";
+    }
+}
 }
 
 function getMultiplier(attackType, defTypes) {
