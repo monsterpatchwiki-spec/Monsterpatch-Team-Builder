@@ -441,17 +441,14 @@ function updateMoveStyle(i, num, moveName) {
     
     if (!wrap || !textDiv || !detailsDiv) return;
 
-    // DO NOT SET wrap.style.height = "auto";
-    wrap.style.display = "flex";
-    wrap.style.flexDirection = "column";
+    // UPDATE HEADER
+    textDiv.innerText = moveName || `Move ${i}`;
 
+    // UPDATE COLORS/ICONS
     const moveType = findMoveType(moveName); 
     const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
     const isDark = darkTypes.includes(moveType);
-    
-    textDiv.innerText = moveName || `Move ${i}`;
 
-    // Styling
     if (moveType && moveType !== "Normal") {
         wrap.style.backgroundColor = typeColors[moveType] || "#eadfc1";
         icon.src = typeToIcon[moveType] || 'assets/house_default.png';
@@ -463,23 +460,19 @@ function updateMoveStyle(i, num, moveName) {
         icon.style.display = "none";
     }
 
-    // --- Inject Move Details ---
+    // UPDATE DETAILS (Inject into existing container)
     const moveDataObj = findMoveObject(moveName);
     if (moveDataObj) {
-        const borderColor = isDark ? "#eadfc1" : "#874185";
-        const bgColor = isDark ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.05)";
-        
+        detailsDiv.style.display = "block"; // Show the container
         detailsDiv.innerHTML = `
-            <div style="font-size: 0.8em; padding: 6px; margin-top: 5px; 
-                        background: ${bgColor}; 
-                        border-left: 3px solid ${borderColor};
-                        height: 100%; overflow-y: auto;">
-                <b>${moveDataObj.power} power</b> | ${moveDataObj.trigger} trigger<br>
+            <div style="font-size: 0.8em; padding: 4px; border-left: 3px solid ${isDark ? '#eadfc1' : '#874185'}; background: rgba(0,0,0,0.05);">
+                ${moveDataObj.power} power | ${moveDataObj.trigger} trigger<br>
                 ${moveDataObj.scale} scaling | ${moveDataObj.cd} CD<br>
                 ${moveDataObj.effect || 'none'}
             </div>
         `;
     } else {
+        detailsDiv.style.display = "none"; // Hide it so it doesn't take space
         detailsDiv.innerHTML = "";
     }
 }
