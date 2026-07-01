@@ -466,9 +466,13 @@ function updateMoveStyle(i, num, moveName) {
         detailsDiv.style.display = "block"; // Show the container
         detailsDiv.innerHTML = `
             <div style="font-size: 0.8em; padding: 4px; border-left: 3px solid ${isDark ? '#eadfc1' : '#874185'}; background: rgba(0,0,0,0.05);">
-                ${moveDataObj.power} power | ${moveDataObj.trigger} trigger<br>
-                ${moveDataObj.scale} scaling | ${moveDataObj.cd} CD<br>
-                ${moveDataObj.effect || 'none'}
+                ${moveDataObj.power} power | 
+                ${moveDataObj.trigger} trigger | 
+                ${moveDataObj.scale} scaling | 
+                ${moveDataObj.type} ${moveDataObj.pm} 
+                ${moveDataObj.tag ? `| ${moveDataObj.tag.replace(/[\[\]]/g, '')}` : ''}
+                <br>
+                ${moveDataObj.cd} CD | ${moveDataObj.effect || 'none'}
             </div>
         `;
     } else {
@@ -653,7 +657,7 @@ function updateSprite(num) {
     }
 }
 
-function createSlot(num) {
+[function createSlot(num) {
     let monOptions = Object.keys(monData).map(name => `<option value="${name}">${name}</option>`).join('');
     let vibeOptions = vibes.map(v => `<option>${v}</option>`).join('');
     let itemOptions = heldItemList.map(i => `<option>${i}</option>`).join('');
@@ -672,20 +676,20 @@ function createSlot(num) {
     <div class="segment-title tab-moveset">MOVESET</div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
         ${[1,2,3,4].map(i => `
-    <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; height: 35px; border: 1px solid var(--black); background-color: var(--white); display: flex; flex-direction: column;">
+    <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; height: 35px; overflow: visible; border: 1px solid var(--black); background-color: var(--white); display: flex; flex-direction: column;">
         <div id="move-display-${i}-${num}" 
              onclick="toggleDropdown(${i}, ${num})" 
-             style="height: 30px; display: flex; align-items: center; padding-left: 8px; cursor: pointer; font-weight: bold; color: var(--black);">
+             style="height: 35px; display: flex; align-items: center; padding-left: 8px; cursor: pointer; font-weight: bold; color: var(--black);">
              Move ${i}
         </div>
         
-        <div id="move-details-${i}-${num}" style="display: none; flex: 1; overflow-y: auto; padding: 4px; font-size: 0.8em; border-top: 1px solid rgba(0,0,0,0.1);">
+        <div id="move-details-${i}-${num}" style="display: none; position: absolute; top: 35px; left: 0; width: 100%; z-index: 10; padding: 4px; font-size: 0.8em; border: 1px solid var(--black); border-top: none; background: var(--white);">
         </div>
         
-        <div id="dropdown-list-${i}-${num}" class="custom-dropdown-list" style="display: none; position: absolute; top: 30px; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 200px; overflow-y: auto;">
+        <div id="dropdown-list-${i}-${num}" class="custom-dropdown-list" style="display: none; position: absolute; top: 35px; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 200px; overflow-y: auto;">
         </div>
         
-        <img id="move-icon-${i}-${num}" class="move-type-icon" style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 5px; pointer-events: none;">
+        <img id="move-icon-${i}-${num}" class="move-type-icon" style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 7px; pointer-events: none;">
     </div>
 `).join('')}
     </div>
@@ -735,7 +739,7 @@ function createSlot(num) {
                 <label style="font-weight:bold; color: var(--black);">VIBE:</label> <select id="vibe-${num}" onchange="updateStats(${num})" style="margin-top:5px;">${vibeOptions}</select>
             </div>
         </div></div>`;
-}
+}]
 
 function updatePassiveDisplay(passiveName, slotId) {
     const descDiv = document.getElementById(`passive-desc-${slotId}`);
