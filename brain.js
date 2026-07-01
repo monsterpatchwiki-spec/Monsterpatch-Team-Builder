@@ -472,7 +472,7 @@ function updateMoveStyle(i, num, moveName) {
         icon.style.display = "none";
     }
 
-    // --- Inject Move Details ---
+   // --- Inject Move Details ---
     const moveDataObj = findMoveObject(moveName);
     if (moveDataObj && detailsDiv) {
         detailsDiv.innerHTML = `
@@ -482,10 +482,13 @@ function updateMoveStyle(i, num, moveName) {
                         background: rgba(255,255,255,0.2); 
                         margin-top: 2px;
                         border-top: 1px solid rgba(0,0,0,0.1);">
-                <strong>${moveDataObj.power}</strong>P | <strong>${moveDataObj.trigger}</strong>T | ${moveDataObj.scale} | ${moveDataObj.type}
-                ${moveDataObj.tag ? `| <strong>${moveDataObj.tag}</strong>` : ''}
+                ${moveDataObj.power} power | 
+                ${moveDataObj.trigger} trigger | 
+                ${moveDataObj.scale} scaling | 
+                ${moveDataObj.type} ${moveDataObj.pm} 
+                ${moveDataObj.tag ? `| ${moveDataObj.tag.replace(/[\[\]]/g, '')}` : ''}
                 <br>
-                <strong>${moveDataObj.cd}</strong> CD | ${moveDataObj.effect || 'None'}
+                ${moveDataObj.cd} CD | ${moveDataObj.effect || 'none'}
             </div>
         `;
     } else if (detailsDiv) {
