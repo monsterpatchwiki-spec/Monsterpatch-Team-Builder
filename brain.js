@@ -573,13 +573,19 @@ function populateSlotDropdowns(num) {
     for(let i = 1; i <= 4; i++) {
     const sel = document.getElementById(`pass${i}-${num}`);
     if (!sel) continue; 
-    const currentSelection = sel.value;
-    sel.innerHTML = `<option value="">Passive ${i}</option>` + 
-        (data.passives || []).map(p => `<option value="${p}">${p}</option>`).join('');
     
-    // Clear the description if the old selection is gone or reset
-    sel.value = currentSelection;
-    if (!sel.value) {
+    const currentSelection = sel.value;
+    const availablePassives = data.passives || [];
+    
+    // Update the innerHTML
+    sel.innerHTML = `<option value="">Passive ${i}</option>` + 
+        availablePassives.map(p => `<option value="${p}">${p}</option>`).join('');
+    
+    // Check if the previous selection is still available in the new list
+    if (availablePassives.includes(currentSelection)) {
+        sel.value = currentSelection;
+    } else {
+        sel.value = ""; // Reset to empty if the move is no longer available
         document.getElementById(`passive-desc-${i}-${num}`).innerHTML = "";
     }
 }
