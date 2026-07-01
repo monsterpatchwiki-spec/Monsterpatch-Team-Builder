@@ -437,28 +437,13 @@ function updateMoveStyle(i, num, moveName) {
     const wrap = document.getElementById(`move-wrap-${i}-${num}`);
     const textDiv = document.getElementById(`move-display-${i}-${num}`); 
     const icon = document.getElementById(`move-icon-${i}-${num}`);
+    const detailsDiv = document.getElementById(`move-details-${i}-${num}`); // Target existing container
     
-    if (!wrap || !textDiv) return;
+    if (!wrap || !textDiv || !detailsDiv) return;
 
-    // 1. Force the wrap container to be a column
+    // Remove the forced height: auto so it respects the CSS/HTML height of 100px
     wrap.style.display = "flex";
     wrap.style.flexDirection = "column";
-    wrap.style.height = "auto"; 
-    
-    // 2. Lock the "dark part" (header) to a fixed height
-    textDiv.style.height = "30px"; 
-    textDiv.style.display = "flex";
-    textDiv.style.alignItems = "center"; 
-
-    // 3. Locate or create the details container
-    let detailsDiv = document.getElementById(`move-details-${i}-${num}`);
-    if (!detailsDiv) {
-        detailsDiv = document.createElement('div');
-        detailsDiv.id = `move-details-${i}-${num}`;
-        wrap.appendChild(detailsDiv);
-    }
-    
-    if (!icon) return; 
 
     const moveType = findMoveType(moveName); 
     const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
@@ -480,7 +465,7 @@ function updateMoveStyle(i, num, moveName) {
 
     // --- Inject Move Details ---
     const moveDataObj = findMoveObject(moveName);
-    if (moveDataObj && detailsDiv) {
+    if (moveDataObj) {
         // Set dynamic colors based on the header's dark/light state
         const textColor = isDark ? "#eadfc1" : "#342420";
         const bgColor = isDark ? "rgba(0,0,0,0.2)" : "rgba(255,255,255,0.2)";
@@ -501,7 +486,7 @@ function updateMoveStyle(i, num, moveName) {
                 ${moveDataObj.cd} CD | ${moveDataObj.effect || 'none'}
             </div>
         `;
-    } else if (detailsDiv) {
+    } else {
         detailsDiv.innerHTML = "";
     }
 }
@@ -697,25 +682,26 @@ function createSlot(num) {
             </label>
         </div>
         
-        <div class="section-box"><div class="segment-title tab-moveset">MOVESET</div>
+    <div class="section-box">
+    <div class="segment-title tab-moveset">MOVESET</div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
         ${[1,2,3,4].map(i => `
-            <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; height: 35px; border: 1px solid var(--black); background-color: var(--white);">
-                <div id="move-display-${i}-${num}" 
-                      onclick="toggleDropdown(${i}, ${num})" 
-                      style="height: 100%; display: flex; align-items: center; padding-left: 8px; cursor: pointer; font-weight: bold; color: var(--black);">
-                      Move ${i}
-                </div>
-                
-                <div id="dropdown-list-${i}-${num}" 
-                      class="custom-dropdown-list"
-                      style="display: none; position: absolute; top: 100%; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 200px; overflow-y: auto;">
-                </div>
-                
-                <img id="move-icon-${i}-${num}" class="move-type-icon" 
-                      style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 7px; pointer-events: none;">
+    <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; height: 100px; border: 1px solid var(--black); background-color: var(--white); display: flex; flex-direction: column;">
+        <div id="move-display-${i}-${num}" 
+             onclick="toggleDropdown(${i}, ${num})" 
+             style="height: 30px; display: flex; align-items: center; padding-left: 8px; cursor: pointer; font-weight: bold; color: var(--black);">
+             Move ${i}
+        </div>
+        
+        <div id="move-details-${i}-${num}" style="flex: 1; overflow-y: auto; padding: 4px; font-size: 0.8em; border-top: 1px solid rgba(0,0,0,0.1);">
             </div>
-        `).join('')}
+        
+        <div id="dropdown-list-${i}-${num}" class="custom-dropdown-list" style="display: none; position: absolute; top: 30px; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 200px; overflow-y: auto;">
+        </div>
+        
+        <img id="move-icon-${i}-${num}" class="move-type-icon" style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 5px; pointer-events: none;">
+    </div>
+`).join('')}
     </div>
 </div>
 
@@ -772,6 +758,26 @@ function updatePassiveDisplay(passiveName, slotId) {
     const description = passiveData[passiveName]; // Ensure passiveData is globally accessible
     if (description) {
         descDiv.innerHTML = `<div style="font-size: 0.8em; padding: 6px; background: rgba(0,0,0,0.05); margin-top: 5px; border-left: 3px solid #874185;">${description}</div>`;
+    } else {
+        descDiv.innerHTML = "";
+    }
+}
+
+function updateMoveDisplay(moveName, slotId) {
+    const descDiv = document.getElementById(`move-details-${slotId}`);
+    if (!descDiv) return;
+
+    const moveObj = findMoveObject(moveName); 
+    
+    if (moveObj) {
+        // This mirrors your passive display styling exactly
+        descDiv.innerHTML = `
+            <div style="font-size: 0.8em; padding: 6px; background: rgba(0,0,0,0.05); margin-top: 5px; border-left: 3px solid #874185;">
+                <b>${moveObj.power} Power</b> | ${moveObj.trigger} Trigger | ${moveObj.scale} Scaling
+                <br>
+                ${moveObj.cd} CD | ${moveObj.effect || 'No effect'}
+            </div>
+        `;
     } else {
         descDiv.innerHTML = "";
     }
