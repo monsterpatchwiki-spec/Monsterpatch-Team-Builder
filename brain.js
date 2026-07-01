@@ -448,7 +448,7 @@ function updateMoveStyle(i, num, moveName) {
     // 2. Lock the "dark part" (header) to a fixed height
     textDiv.style.height = "30px"; 
     textDiv.style.display = "flex";
-    textDiv.style.alignItems = "center"; // Keeps text centered vertically
+    textDiv.style.alignItems = "center"; 
 
     // 3. Locate or create the details container
     let detailsDiv = document.getElementById(`move-details-${i}-${num}`);
@@ -461,6 +461,9 @@ function updateMoveStyle(i, num, moveName) {
     if (!icon) return; 
 
     const moveType = findMoveType(moveName); 
+    const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
+    const isDark = darkTypes.includes(moveType);
+    
     textDiv.innerText = moveName || `Move ${i}`;
 
     // --- Apply Styling ---
@@ -468,8 +471,7 @@ function updateMoveStyle(i, num, moveName) {
         wrap.style.backgroundColor = typeColors[moveType] || "#eadfc1";
         icon.src = typeToIcon[moveType] || 'assets/house_default.png';
         icon.style.display = "block";
-        const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
-        textDiv.style.color = darkTypes.includes(moveType) ? "#eadfc1" : "#342420";
+        textDiv.style.color = isDark ? "#eadfc1" : "#342420";
     } else {
         wrap.style.backgroundColor = "var(--white)";
         textDiv.style.color = "var(--black)";
@@ -479,12 +481,17 @@ function updateMoveStyle(i, num, moveName) {
     // --- Inject Move Details ---
     const moveDataObj = findMoveObject(moveName);
     if (moveDataObj && detailsDiv) {
+        // Set dynamic colors based on the header's dark/light state
+        const textColor = isDark ? "#eadfc1" : "#342420";
+        const bgColor = isDark ? "rgba(0,0,0,0.2)" : "rgba(255,255,255,0.2)";
+        const borderColor = isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)";
+        
         detailsDiv.innerHTML = `
             <div style="font-size: 0.85em; 
                         padding: 4px; 
-                        color: #342420; 
-                        background: rgba(255,255,255,0.2); 
-                        border-top: 1px solid rgba(0,0,0,0.1);">
+                        color: ${textColor}; 
+                        background: ${bgColor}; 
+                        border-top: 1px solid ${borderColor};">
                 ${moveDataObj.power} power | 
                 ${moveDataObj.trigger} trigger | 
                 ${moveDataObj.scale} scaling | 
