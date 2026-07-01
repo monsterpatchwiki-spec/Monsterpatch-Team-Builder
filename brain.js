@@ -437,11 +437,10 @@ function updateMoveStyle(i, num, moveName) {
     const wrap = document.getElementById(`move-wrap-${i}-${num}`);
     const textDiv = document.getElementById(`move-display-${i}-${num}`); 
     const icon = document.getElementById(`move-icon-${i}-${num}`);
-    const detailsDiv = document.getElementById(`move-details-${i}-${num}`); // Target existing container
+    const detailsDiv = document.getElementById(`move-details-${i}-${num}`);
     
     if (!wrap || !textDiv || !detailsDiv) return;
 
-    // Remove the forced height: auto so it respects the CSS/HTML height of 100px
     wrap.style.display = "flex";
     wrap.style.flexDirection = "column";
 
@@ -463,26 +462,22 @@ function updateMoveStyle(i, num, moveName) {
         icon.style.display = "none";
     }
 
-    // --- Inject Move Details ---
+    // --- Inject Move Details (Passive Style) ---
     const moveDataObj = findMoveObject(moveName);
     if (moveDataObj) {
-        // Set dynamic colors based on the header's dark/light state
+        // We use the same border-left accent as the passives
+        const borderColor = isDark ? "#eadfc1" : "#874185";
+        const bgColor = isDark ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.05)";
         const textColor = isDark ? "#eadfc1" : "#342420";
-        const bgColor = isDark ? "rgba(0,0,0,0.2)" : "rgba(255,255,255,0.2)";
-        const borderColor = isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)";
         
         detailsDiv.innerHTML = `
-            <div style="font-size: 0.85em; 
-                        padding: 4px; 
-                        color: ${textColor}; 
+            <div style="font-size: 0.8em; 
+                        padding: 6px; 
+                        margin-top: 5px; 
+                        color: ${textColor};
                         background: ${bgColor}; 
-                        border-top: 1px solid ${borderColor};">
-                ${moveDataObj.power} power | 
-                ${moveDataObj.trigger} trigger | 
-                ${moveDataObj.scale} scaling | 
-                ${moveDataObj.type} ${moveDataObj.pm} 
-                ${moveDataObj.tag ? `| ${moveDataObj.tag.replace(/[\[\]]/g, '')}` : ''}
-                <br>
+                        border-left: 3px solid ${borderColor};">
+                <b>${moveDataObj.power} power</b> | ${moveDataObj.trigger} trigger | ${moveDataObj.scale} scaling<br>
                 ${moveDataObj.cd} CD | ${moveDataObj.effect || 'none'}
             </div>
         `;
@@ -758,26 +753,6 @@ function updatePassiveDisplay(passiveName, slotId) {
     const description = passiveData[passiveName]; // Ensure passiveData is globally accessible
     if (description) {
         descDiv.innerHTML = `<div style="font-size: 0.8em; padding: 6px; background: rgba(0,0,0,0.05); margin-top: 5px; border-left: 3px solid #874185;">${description}</div>`;
-    } else {
-        descDiv.innerHTML = "";
-    }
-}
-
-function updateMoveDisplay(moveName, slotId) {
-    const descDiv = document.getElementById(`move-details-${slotId}`);
-    if (!descDiv) return;
-
-    const moveObj = findMoveObject(moveName); 
-    
-    if (moveObj) {
-        // This mirrors your passive display styling exactly
-        descDiv.innerHTML = `
-            <div style="font-size: 0.8em; padding: 6px; background: rgba(0,0,0,0.05); margin-top: 5px; border-left: 3px solid #874185;">
-                <b>${moveObj.power} Power</b> | ${moveObj.trigger} Trigger | ${moveObj.scale} Scaling
-                <br>
-                ${moveObj.cd} CD | ${moveObj.effect || 'No effect'}
-            </div>
-        `;
     } else {
         descDiv.innerHTML = "";
     }
