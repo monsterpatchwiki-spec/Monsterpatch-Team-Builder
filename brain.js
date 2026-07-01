@@ -702,26 +702,34 @@ function createSlot(num) {
         ${[1,2,3,4].map(i => `
             <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; height: 35px; border: 1px solid var(--black); background-color: var(--white);">
                 <div id="move-display-${i}-${num}" 
-                     onclick="toggleDropdown(${i}, ${num})" 
-                     style="height: 100%; display: flex; align-items: center; padding-left: 8px; cursor: pointer; font-weight: bold; color: var(--black);">
-                     Move ${i}
+                      onclick="toggleDropdown(${i}, ${num})" 
+                      style="height: 100%; display: flex; align-items: center; padding-left: 8px; cursor: pointer; font-weight: bold; color: var(--black);">
+                      Move ${i}
                 </div>
                 
                 <div id="dropdown-list-${i}-${num}" 
-                     class="custom-dropdown-list"
-                     style="display: none; position: absolute; top: 100%; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 200px; overflow-y: auto;">
+                      class="custom-dropdown-list"
+                      style="display: none; position: absolute; top: 100%; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 200px; overflow-y: auto;">
                 </div>
                 
                 <img id="move-icon-${i}-${num}" class="move-type-icon" 
-                     style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 7px; pointer-events: none;">
+                      style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 7px; pointer-events: none;">
             </div>
         `).join('')}
     </div>
 </div>
 
-        <div class="section-box passives-box"><div class="segment-title tab-passives">PASSIVES</div>
+        <div class="section-box passives-box">
+            <div class="segment-title tab-passives">PASSIVES</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
-                ${[1,2,3,4].map(i => `<select id="pass${i}-${num}"><option value="">Passive ${i}</option></select>`).join('')}
+                ${[1,2,3,4].map(i => `
+                    <div>
+                        <select id="pass${i}-${num}" onchange="updatePassiveDisplay(this.value, '${i}-${num}')">
+                            <option value="">Passive ${i}</option>
+                        </select>
+                        <div id="passive-desc-${i}-${num}"></div> 
+                    </div>
+                `).join('')}
             </div>
         </div>
         
@@ -754,35 +762,16 @@ function createSlot(num) {
             <div style="margin-top:15px; border-top:1px solid var(--black); padding-top:10px;">
                 <label style="font-weight:bold; color: var(--black);">VIBE:</label> <select id="vibe-${num}" onchange="updateStats(${num})" style="margin-top:5px;">${vibeOptions}</select>
             </div>
-            <div class="section-box passives-box"><div class="segment-title tab-passives">PASSIVES</div>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
-        ${[1,2,3,4].map(i => `
-            <div>
-                <select id="pass${i}-${num}" onchange="updatePassiveDisplay(this.value, '${i}-${num}')">
-                    <option value="">Passive ${i}</option>
-                </select>
-                <div id="passive-desc-${i}-${num}"></div> 
-            </div>
-        `).join('')}
-    </div>
-</div>
         </div></div>`;
-        
 }
 
 function updatePassiveDisplay(passiveName, slotId) {
     const descDiv = document.getElementById(`passive-desc-${slotId}`);
     if (!descDiv) return;
 
-    // Make sure passiveData is defined in your project
-    const description = passiveData[passiveName];
-
+    const description = passiveData[passiveName]; // Ensure passiveData is globally accessible
     if (description) {
-        descDiv.innerHTML = `
-            <div style="font-size: 0.8em; padding: 6px; color: #342420; background: rgba(0,0,0,0.05); margin-top: 5px; border-left: 3px solid #874185; margin-bottom: 5px;">
-                ${description}
-            </div>
-        `;
+        descDiv.innerHTML = `<div style="font-size: 0.8em; padding: 6px; background: rgba(0,0,0,0.05); margin-top: 5px; border-left: 3px solid #874185;">${description}</div>`;
     } else {
         descDiv.innerHTML = "";
     }
