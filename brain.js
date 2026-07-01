@@ -440,19 +440,21 @@ function updateMoveStyle(i, num, moveName) {
     
     if (!wrap || !textDiv) return;
 
-    // 1. Ensure the wrap is a column so children stack
+    // --- FIX: Force height to auto so it can expand ---
     wrap.style.display = "flex";
     wrap.style.flexDirection = "column";
+    wrap.style.height = "auto"; 
+    wrap.style.minHeight = "40px"; // Keeps it looking normal when empty
 
-    // 2. Locate or create the details container INSIDE the wrap
+    // 2. Locate or create the details container
     let detailsDiv = document.getElementById(`move-details-${i}-${num}`);
     if (!detailsDiv) {
         detailsDiv = document.createElement('div');
         detailsDiv.id = `move-details-${i}-${num}`;
-        wrap.appendChild(detailsDiv); // Appended inside, not outside!
+        wrap.appendChild(detailsDiv);
     }
     
-    if (!icon) return; // Only stop if icon is truly missing
+    if (!icon) return; 
 
     const moveType = findMoveType(moveName); 
     textDiv.innerText = moveName || `Move ${i}`;
