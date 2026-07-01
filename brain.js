@@ -438,15 +438,21 @@ function updateMoveStyle(i, num, moveName) {
     const textDiv = document.getElementById(`move-display-${i}-${num}`); 
     const icon = document.getElementById(`move-icon-${i}-${num}`);
     
-    // Locate or create the details container
+    if (!wrap || !textDiv) return;
+
+    // 1. Ensure the wrap is a column so children stack
+    wrap.style.display = "flex";
+    wrap.style.flexDirection = "column";
+
+    // 2. Locate or create the details container INSIDE the wrap
     let detailsDiv = document.getElementById(`move-details-${i}-${num}`);
-    if (!detailsDiv && wrap) {
+    if (!detailsDiv) {
         detailsDiv = document.createElement('div');
         detailsDiv.id = `move-details-${i}-${num}`;
-        wrap.parentNode.insertBefore(detailsDiv, wrap.nextSibling);
+        wrap.appendChild(detailsDiv); // Appended inside, not outside!
     }
     
-    if (!wrap || !textDiv || !icon) return;
+    if (!icon) return; // Only stop if icon is truly missing
 
     const moveType = findMoveType(moveName); 
     textDiv.innerText = moveName || `Move ${i}`;
@@ -464,30 +470,24 @@ function updateMoveStyle(i, num, moveName) {
         icon.style.display = "none";
     }
 
-// --- Inject Move Details ---
+    // --- Inject Move Details ---
     const moveDataObj = findMoveObject(moveName);
-    
-    if (detailsDiv) {
-        if (moveDataObj) {
-            // Updated style: Transparent background, no border, slightly smaller text
-            detailsDiv.innerHTML = `
-                <div style="font-size: 0.85em; 
-                            padding: 5px 2px; 
-                            color: #342420; 
-                            margin-top: 2px; 
-                            line-height: 1.4;">
-                    <strong>${moveDataObj.power}</strong> Power | 
-                    <strong>${moveDataObj.trigger}</strong> Trigger | 
-                    <strong>${moveDataObj.scale}</strong> Scaling | 
-                    ${moveDataObj.type}
-                    ${moveDataObj.tag ? `| <strong>${moveDataObj.tag}</strong>` : ''}
-                    <br>
-                    <strong>${moveDataObj.cd}</strong> CD Turn | ${moveDataObj.effect || 'None'}
-                </div>
-            `;
-        } else {
-            detailsDiv.innerHTML = ""; // Clear if empty
-        }
+    if (moveDataObj && detailsDiv) {
+        detailsDiv.innerHTML = `
+            <div style="font-size: 0.85em; 
+                        padding: 4px; 
+                        color: #342420; 
+                        background: rgba(255,255,255,0.2); 
+                        margin-top: 2px;
+                        border-top: 1px solid rgba(0,0,0,0.1);">
+                <strong>${moveDataObj.power}</strong>P | <strong>${moveDataObj.trigger}</strong>T | ${moveDataObj.scale} | ${moveDataObj.type}
+                ${moveDataObj.tag ? `| <strong>${moveDataObj.tag}</strong>` : ''}
+                <br>
+                <strong>${moveDataObj.cd}</strong> CD | ${moveDataObj.effect || 'None'}
+            </div>
+        `;
+    } else if (detailsDiv) {
+        detailsDiv.innerHTML = "";
     }
 }
 
