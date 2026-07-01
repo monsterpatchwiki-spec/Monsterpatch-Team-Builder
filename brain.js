@@ -570,6 +570,7 @@ function populateSlotDropdowns(num) {
         });
         list.innerHTML = html;
     }
+    
     for(let i = 1; i <= 4; i++) {
     const sel = document.getElementById(`pass${i}-${num}`);
     if (!sel) continue; 
@@ -577,16 +578,15 @@ function populateSlotDropdowns(num) {
     const currentSelection = sel.value;
     const availablePassives = data.passives || [];
     
-    // Update the innerHTML
     sel.innerHTML = `<option value="">Passive ${i}</option>` + 
         availablePassives.map(p => `<option value="${p}">${p}</option>`).join('');
     
-    // Check if the previous selection is still available in the new list
+    // SYNC: If the old passive isn't in the new list, clear the selection AND the description
     if (availablePassives.includes(currentSelection)) {
         sel.value = currentSelection;
     } else {
-        sel.value = ""; // Reset to empty if the move is no longer available
-        document.getElementById(`passive-desc-${i}-${num}`).innerHTML = "";
+        sel.value = "";
+        document.getElementById(`passive-desc-${i}-${num}`).innerHTML = ""; // <--- THIS IS CRITICAL
     }
 }
 }
@@ -754,9 +754,7 @@ function createSlot(num) {
             <div style="margin-top:15px; border-top:1px solid var(--black); padding-top:10px;">
                 <label style="font-weight:bold; color: var(--black);">VIBE:</label> <select id="vibe-${num}" onchange="updateStats(${num})" style="margin-top:5px;">${vibeOptions}</select>
             </div>
-
-            // Keep ONLY this passives section inside your createSlot return string:
-<div class="section-box passives-box"><div class="segment-title tab-passives">PASSIVES</div>
+            <div class="section-box passives-box"><div class="segment-title tab-passives">PASSIVES</div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
         ${[1,2,3,4].map(i => `
             <div>
@@ -769,24 +767,19 @@ function createSlot(num) {
     </div>
 </div>
         </div></div>`;
+        
 }
 
 function updatePassiveDisplay(passiveName, slotId) {
-    // slotId now comes in as "1-1", "2-1", etc.
     const descDiv = document.getElementById(`passive-desc-${slotId}`);
     if (!descDiv) return;
 
+    // Make sure passiveData is defined in your project
     const description = passiveData[passiveName];
 
     if (description) {
         descDiv.innerHTML = `
-            <div style="font-size: 0.8em; 
-                        padding: 6px; 
-                        color: #342420; 
-                        background: rgba(0,0,0,0.05); 
-                        margin-top: 5px; 
-                        border-left: 3px solid #874185;
-                        margin-bottom: 5px;">
+            <div style="font-size: 0.8em; padding: 6px; color: #342420; background: rgba(0,0,0,0.05); margin-top: 5px; border-left: 3px solid #874185; margin-bottom: 5px;">
                 ${description}
             </div>
         `;
