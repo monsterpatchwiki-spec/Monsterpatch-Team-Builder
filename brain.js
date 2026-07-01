@@ -419,7 +419,7 @@ function selectMove(i, num, moveName) {
     // 2. Hide the list
     toggleDropdown(i, num);
     
-    // 3. Update the styling (Pass moveName so we don't need to find a <select> tag)
+    // 3. Update the styling and the new details display
     updateMoveStyle(i, num, moveName); 
 }
 
@@ -428,32 +428,45 @@ function updateMoveStyle(i, num, moveName) {
     const textDiv = document.getElementById(`move-display-${i}-${num}`); 
     const icon = document.getElementById(`move-icon-${i}-${num}`);
     
-    // Safety check: only continue if we have the visual elements
+    // Locate or create the details container directly under the move wrap
+    let detailsDiv = document.getElementById(`move-details-${i}-${num}`);
+    if (!detailsDiv && wrap) {
+        detailsDiv = document.createElement('div');
+        detailsDiv.id = `move-details-${i}-${num}`;
+        wrap.parentNode.insertBefore(detailsDiv, wrap.nextSibling);
+    }
+    
     if (!wrap || !textDiv || !icon) return;
 
-    // Use the moveName passed into the function
     const moveType = findMoveType(moveName); 
-    
-    // Update the display text
     textDiv.innerText = moveName || `Move ${i}`;
 
-    // Apply styles based on type
+    // --- Apply Styling ---
     if (moveType && moveType !== "Normal") {
-        // 1. Color the wrapper
         wrap.style.backgroundColor = typeColors[moveType] || "#eadfc1";
-        
-        // 2. Set icon
         icon.src = typeToIcon[moveType] || 'assets/house_default.png';
         icon.style.display = "block";
-        
-        // 3. Set contrast
         const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
         textDiv.style.color = darkTypes.includes(moveType) ? "#eadfc1" : "#342420";
     } else {
-        // Reset to default
         wrap.style.backgroundColor = "var(--white)";
         textDiv.style.color = "var(--black)";
         icon.style.display = "none";
+    }
+
+    // --- Inject Move Details ---
+    const moveData = moveDictionary[moveName]; // Assumes your dictionary is named moveDictionary
+    if (moveData && detailsDiv) {
+        detailsDiv.innerHTML = `
+            <div style="font-size: 0.8em; padding: 4px; background: #fdf6e3; border: 1px solid #342420; border-top: none;">
+                ${moveData.power} Power | ${moveData.trigger} Trigger | ${moveData.scale} Scaling | ${moveData.type}
+                ${moveData.tag ? `| ${moveData.tag}` : ''}
+                <br>
+                ${moveData.cd} CD Turn | ${moveData.effect}
+            </div>
+        `;
+    } else if (detailsDiv) {
+        detailsDiv.innerHTML = ""; // Clear details if "Clear" is selected
     }
 }
 
