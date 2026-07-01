@@ -446,7 +446,7 @@ function updateMoveStyle(i, num, moveName) {
     wrap.style.height = "auto"; 
     
     // 2. Lock the "dark part" (header) to a fixed height
-    textDiv.style.height = "40px"; 
+    textDiv.style.height = "30px"; 
     textDiv.style.display = "flex";
     textDiv.style.alignItems = "center"; // Keeps text centered vertically
 
