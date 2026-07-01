@@ -657,7 +657,7 @@ function updateSprite(num) {
     }
 }
 
-[function createSlot(num) {
+function createSlot(num) {
     let monOptions = Object.keys(monData).map(name => `<option value="${name}">${name}</option>`).join('');
     let vibeOptions = vibes.map(v => `<option>${v}</option>`).join('');
     let itemOptions = heldItemList.map(i => `<option>${i}</option>`).join('');
@@ -739,7 +739,7 @@ function updateSprite(num) {
                 <label style="font-weight:bold; color: var(--black);">VIBE:</label> <select id="vibe-${num}" onchange="updateStats(${num})" style="margin-top:5px;">${vibeOptions}</select>
             </div>
         </div></div>`;
-}]
+}
 
 function updatePassiveDisplay(passiveName, slotId) {
     const descDiv = document.getElementById(`passive-desc-${slotId}`);
