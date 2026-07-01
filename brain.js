@@ -387,6 +387,16 @@ const gradeMap = {'S': 1.0, 'A': 0.9, 'B': 0.85, 'C': 0.8, 'D': 0.75};
 
 // --- 2. LOGIC FUNCTIONS ---
 
+function findMoveObject(moveName) {
+    for (const type in moveData) {
+        for (const tier in moveData[type]) {
+            const found = moveData[type][tier].find(m => m.name === moveName);
+            if (found) return found;
+        }
+    }
+    return null;
+}
+
 // Helper: Scans moveData to find which Type category a move belongs to
 function findMoveType(moveName) {
     for (const typeKey in moveData) {
@@ -428,7 +438,7 @@ function updateMoveStyle(i, num, moveName) {
     const textDiv = document.getElementById(`move-display-${i}-${num}`); 
     const icon = document.getElementById(`move-icon-${i}-${num}`);
     
-    // Locate or create the details container directly under the move wrap
+    // Locate or create the details container
     let detailsDiv = document.getElementById(`move-details-${i}-${num}`);
     if (!detailsDiv && wrap) {
         detailsDiv = document.createElement('div');
@@ -454,19 +464,19 @@ function updateMoveStyle(i, num, moveName) {
         icon.style.display = "none";
     }
 
-    // --- Inject Move Details ---
-    const moveData = moveDictionary[moveName]; // Assumes your dictionary is named moveDictionary
-    if (moveData && detailsDiv) {
+    // --- Inject Move Details using the Finder ---
+    const moveDataObj = findMoveObject(moveName);
+    if (moveDataObj && detailsDiv) {
         detailsDiv.innerHTML = `
             <div style="font-size: 0.8em; padding: 4px; background: #fdf6e3; border: 1px solid #342420; border-top: none;">
-                ${moveData.power} Power | ${moveData.trigger} Trigger | ${moveData.scale} Scaling | ${moveData.type}
-                ${moveData.tag ? `| ${moveData.tag}` : ''}
+                ${moveDataObj.power} Power | ${moveDataObj.trigger} Trigger | ${moveDataObj.scale} Scaling | ${moveDataObj.type}
+                ${moveDataObj.tag ? `| ${moveDataObj.tag}` : ''}
                 <br>
-                ${moveData.cd} CD Turn | ${moveData.effect}
+                ${moveDataObj.cd} CD Turn | ${moveDataObj.effect || 'None'}
             </div>
         `;
     } else if (detailsDiv) {
-        detailsDiv.innerHTML = ""; // Clear details if "Clear" is selected
+        detailsDiv.innerHTML = ""; 
     }
 }
 
