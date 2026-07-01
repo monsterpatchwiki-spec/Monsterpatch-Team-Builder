@@ -441,6 +441,7 @@ function updateMoveStyle(i, num, moveName) {
     
     if (!wrap || !textDiv || !detailsDiv) return;
 
+    // DO NOT SET wrap.style.height = "auto";
     wrap.style.display = "flex";
     wrap.style.flexDirection = "column";
 
@@ -450,7 +451,7 @@ function updateMoveStyle(i, num, moveName) {
     
     textDiv.innerText = moveName || `Move ${i}`;
 
-    // --- Apply Styling ---
+    // Styling
     if (moveType && moveType !== "Normal") {
         wrap.style.backgroundColor = typeColors[moveType] || "#eadfc1";
         icon.src = typeToIcon[moveType] || 'assets/house_default.png';
@@ -462,23 +463,20 @@ function updateMoveStyle(i, num, moveName) {
         icon.style.display = "none";
     }
 
-    // --- Inject Move Details (Passive Style) ---
+    // --- Inject Move Details ---
     const moveDataObj = findMoveObject(moveName);
     if (moveDataObj) {
-        // We use the same border-left accent as the passives
         const borderColor = isDark ? "#eadfc1" : "#874185";
         const bgColor = isDark ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.05)";
-        const textColor = isDark ? "#eadfc1" : "#342420";
         
         detailsDiv.innerHTML = `
-            <div style="font-size: 0.8em; 
-                        padding: 6px; 
-                        margin-top: 5px; 
-                        color: ${textColor};
+            <div style="font-size: 0.8em; padding: 6px; margin-top: 5px; 
                         background: ${bgColor}; 
-                        border-left: 3px solid ${borderColor};">
-                <b>${moveDataObj.power} power</b> | ${moveDataObj.trigger} trigger | ${moveDataObj.scale} scaling<br>
-                ${moveDataObj.cd} CD | ${moveDataObj.effect || 'none'}
+                        border-left: 3px solid ${borderColor};
+                        height: 100%; overflow-y: auto;">
+                <b>${moveDataObj.power} power</b> | ${moveDataObj.trigger} trigger<br>
+                ${moveDataObj.scale} scaling | ${moveDataObj.cd} CD<br>
+                ${moveDataObj.effect || 'none'}
             </div>
         `;
     } else {
