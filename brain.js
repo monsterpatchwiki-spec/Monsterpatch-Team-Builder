@@ -461,22 +461,6 @@ function updateMoveStyle(moveName, slotId) {
             icon.src = typeToIcon[moveType] || 'assets/house_default.png';
             icon.style.display = "block";
         }
-
-        // 4. UPDATE DETAILS (The card body)
-        detailsDiv.innerHTML = `
-            <div style="font-size: 0.8em; padding: 6px; background: rgba(255,255,255,0.2); color: ${isDark ? '#eadfc1' : '#342420'};">
-                ${moveDataObj.power} power | ${moveDataObj.trigger} trigger | ${moveDataObj.scale} scaling<br>
-                ${moveDataObj.type} ${moveDataObj.pm} | ${moveDataObj.cd} CD<br>
-                ${moveDataObj.effect || 'none'}
-            </div>`;
-    } else {
-        // RESET TO DEFAULT
-        wrap.style.backgroundColor = "var(--white)";
-        textDiv.innerText = "Move"; 
-        textDiv.style.color = "var(--black)";
-        textDiv.style.borderBottom = "none";
-        if (icon) icon.style.display = "none";
-        detailsDiv.innerHTML = ""; 
     }
 }
 
