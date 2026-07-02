@@ -459,22 +459,6 @@ function updateMoveStyle(i, num, moveName) {
         textDiv.style.color = "var(--black)";
         icon.style.display = "none";
     }
-
-    // UPDATE DETAILS
-    const moveDataObj = findMoveObject(moveName);
-    if (moveDataObj) {
-        detailsDiv.style.display = "block"; 
-        detailsDiv.innerHTML = `
-            <div style="font-size: 0.8em; padding: 4px; border-left: 3px solid ${isDark ? '#eadfc1' : '#874185'}; background: rgba(0,0,0,0.05);">
-                ${moveDataObj.power} power | ${moveDataObj.trigger} trigger | ${moveDataObj.scale} scaling<br>
-                ${moveDataObj.type} ${moveDataObj.pm} ${moveDataObj.tag ? `| ${moveDataObj.tag.replace(/[\[\]]/g, '')}` : ''}<br>
-                ${moveDataObj.cd} CD | ${moveDataObj.effect || 'none'}
-            </div>
-        `;
-    } else {
-        detailsDiv.style.display = "none";
-        detailsDiv.innerHTML = "";
-    }
 }
 
 function populateSlotDropdowns(num) {
@@ -679,15 +663,26 @@ function createSlot(num) {
              Move ${i}
         </div>
         
-        <div id="move-details-${i}-${num}" style="display: none; position: absolute; top: 35px; left: 0; width: 100%; z-index: 10; padding: 4px; font-size: 0.8em; border: 1px solid var(--black); border-top: none; background: var(--white);">
-        </div>
-        
         <div id="dropdown-list-${i}-${num}" class="custom-dropdown-list" style="display: none; position: absolute; top: 35px; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 200px; overflow-y: auto;">
         </div>
         
         <img id="move-icon-${i}-${num}" class="move-type-icon" style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 7px; pointer-events: none;">
     </div>
 `).join('')}
+    </div>
+</div>
+
+<div class="section-box moveset-box">
+    <div class="segment-title tab-moveset">MOVESET</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
+        ${[1,2,3,4].map(i => `
+            <div>
+                <select id="move${i}-${num}" onchange="updateMoveDisplay(this.value, '${i}-${num}')">
+                    <option value="">Move ${i}</option>
+                </select>
+                <div id="move-desc-${i}-${num}"></div> 
+            </div>
+        `).join('')}
     </div>
 </div>
 
@@ -744,6 +739,28 @@ function updatePassiveDisplay(passiveName, slotId) {
     const description = passiveData[passiveName]; // Ensure passiveData is globally accessible
     if (description) {
         descDiv.innerHTML = `<div style="font-size: 0.8em; padding: 6px; background: rgba(0,0,0,0.05); margin-top: 5px; border-left: 3px solid #874185;">${description}</div>`;
+    } else {
+        descDiv.innerHTML = "";
+    }
+}
+
+function updateMoveDisplay(moveName, slotId) {
+    const descDiv = document.getElementById(`move-desc-${slotId}`);
+    if (!descDiv) return;
+
+    const moveObj = findMoveObject(moveName);
+
+    if (moveObj) {
+        descDiv.innerHTML = `
+            <div style="font-size: 0.8em; padding: 6px; background: rgba(0,0,0,0.05); margin-top: 5px; border-left: 3px solid #874185;">
+                ${moveObj.power} power | 
+                ${moveObj.trigger} trigger | 
+                ${moveObj.scale} scaling | 
+                ${moveObj.type} ${moveObj.pm} 
+                ${moveObj.tag ? `| ${moveObj.tag.replace(/[\[\]]/g, '')}` : ''}
+                <br>
+                ${moveObj.cd} CD | ${moveObj.effect || 'none'}
+            </div>`;
     } else {
         descDiv.innerHTML = "";
     }
