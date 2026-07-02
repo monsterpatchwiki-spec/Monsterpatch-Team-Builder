@@ -433,34 +433,31 @@ function selectMove(i, num, moveName) {
     updateMoveStyle(i, num, moveName); 
 }
 
-function updateMoveStyle(moveName, slotId) {
-    const wrap = document.getElementById(`move-wrap-${slotId}`);
-    const textDiv = document.getElementById(`move-display-${slotId}`);
-    const icon = document.getElementById(`move-icon-${slotId}`);
-    const detailsDiv = document.getElementById(`move-details-${slotId}`);
+function updateMoveStyle(i, num, moveName) {
+    const wrap = document.getElementById(`move-wrap-${i}-${num}`);
+    const textDiv = document.getElementById(`move-display-${i}-${num}`); 
+    const icon = document.getElementById(`move-icon-${i}-${num}`);
+    const detailsDiv = document.getElementById(`move-details-${i}-${num}`);
     
     if (!wrap || !textDiv || !detailsDiv) return;
 
-    const moveDataObj = findMoveObject(moveName);
-    const moveType = findMoveType(moveName);
+    // UPDATE HEADER
+    textDiv.innerText = moveName || `Move ${i}`;
+
+    // UPDATE COLORS/ICONS
+    const moveType = findMoveType(moveName); 
     const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
     const isDark = darkTypes.includes(moveType);
 
-    if (moveDataObj) {
-        // 1. UPDATE WRAPPER (The card color)
-        wrap.style.backgroundColor = typeColors[moveType] || "#d15c62";
-        
-        // 2. UPDATE HEADER
-        textDiv.innerText = moveName.toUpperCase();
+    if (moveType && moveType !== "Normal") {
+        wrap.style.backgroundColor = typeColors[moveType] || "#eadfc1";
+        icon.src = typeToIcon[moveType] || 'assets/house_default.png';
+        icon.style.display = "block";
         textDiv.style.color = isDark ? "#eadfc1" : "#342420";
-        // Remove bottom border from header so it blends into the card body
-        textDiv.style.borderBottom = "1px solid rgba(0,0,0,0.1)"; 
-
-        // 3. SHOW ICON
-        if (icon) {
-            icon.src = typeToIcon[moveType] || 'assets/house_default.png';
-            icon.style.display = "block";
-        }
+    } else {
+        wrap.style.backgroundColor = "var(--white)";
+        textDiv.style.color = "var(--black)";
+        icon.style.display = "none";
     }
 }
 
