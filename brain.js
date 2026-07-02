@@ -669,21 +669,20 @@ function createSlot(num) {
     <div class="segment-title tab-moveset">MOVESET</div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
         ${[1, 2, 3, 4].map(i => `
-            <div style="position: relative;">
+            <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; border: 1px solid var(--black); background-color: var(--white); display: flex; flex-direction: column;">
+                
                 <div id="move-display-${i}-${num}" 
                      onclick="toggleDropdown(${i}, ${num})" 
-                     style="height: 35px; border: 1px solid var(--black); background-color: var(--white); display: flex; align-items: center; padding-left: 8px; cursor: pointer; font-weight: bold; color: var(--black);">
+                     style="height: 35px; display: flex; align-items: center; padding-left: 8px; cursor: pointer; font-weight: bold; color: var(--black); transition: background-color 0.2s;">
                      Move ${i}
                 </div>
-
-                <div id="dropdown-list-${i}-${num}" class="custom-dropdown-list" 
-                     style="display: none; position: absolute; top: 35px; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 200px; overflow-y: auto;">
+                
+                <div id="move-details-${i}-${num}" style="width: 100%;"></div>
+                
+                <div id="dropdown-list-${i}-${num}" class="custom-dropdown-list" style="display: none; position: absolute; top: 35px; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 200px; overflow-y: auto;">
                 </div>
-
-                <img id="move-icon-${i}-${num}" class="move-type-icon" 
-                     style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 7px; pointer-events: none;">
-
-                <div id="move-details-${i}-${num}"></div> 
+                
+                <img id="move-icon-${i}-${num}" class="move-type-icon" style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 7px; pointer-events: none;">
             </div>
         `).join('')}
     </div>
