@@ -441,10 +441,10 @@ function updateMoveStyle(i, num, moveName) {
     
     if (!wrap || !textDiv || !detailsDiv) return;
 
-    // UPDATE HEADER
+    // 1. UPDATE HEADER
     textDiv.innerText = moveName || `Move ${i}`;
 
-    // UPDATE COLORS/ICONS
+    // 2. UPDATE COLORS/ICONS
     const moveType = findMoveType(moveName); 
     const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
     const isDark = darkTypes.includes(moveType);
@@ -460,16 +460,19 @@ function updateMoveStyle(i, num, moveName) {
         icon.style.display = "none";
     }
 
-   // UPDATE DETAILS (Converting passive-style logic to moves)
+    // 3. UPDATE DETAILS (Combined Logic)
     const moveDataObj = findMoveObject(moveName);
     if (moveDataObj) {
-        detailsDiv.innerHTML = `<div style="font-size: 0.8em; padding: 6px; background: rgba(0,0,0,0.05); margin-top: 5px; border-left: 3px solid ${isDark ? '#eadfc1' : '#874185'};">
+        detailsDiv.innerHTML = `
+            <div style="font-size: 0.8em; padding: 6px; background: rgba(0,0,0,0.05); margin-top: 5px; border-left: 3px solid ${isDark ? '#eadfc1' : '#874185'};">
                 ${moveDataObj.power} power | ${moveDataObj.trigger} trigger | ${moveDataObj.scale} scaling<br>
                 ${moveDataObj.type} ${moveDataObj.pm} ${moveDataObj.tag ? `| ${moveDataObj.tag.replace(/[\[\]]/g, '')}` : ''}<br>
                 ${moveDataObj.cd} CD | ${moveDataObj.effect || 'none'}
-            </div>`;
+            </div>
+        `;
     } else {
-        detailsDiv.innerHTML = "";
+        // CRITICAL: Collapses the move wrapper by clearing the HTML
+        detailsDiv.innerHTML = ""; 
     }
 }
 
@@ -510,33 +513,27 @@ function populateSlotDropdowns(num) {
     const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
     
     for(let i = 1; i <= 4; i++) {
-        const list = document.getElementById(`dropdown-list-${i}-${num}`);
-        if (!list) continue;
+        const sel = document.getElementById(`move${i}-${num}`);
+        if (!sel) continue;
+
+        const currentSelection = sel.value;
+        const availableMoves = data.moves || [];
         
-        const moves = data.moves || [];
+        // 1. Update dropdown options
+        sel.innerHTML = `<option value="">Move ${i}</option>` + 
+            availableMoves.map(m => `<option value="${m}">${m}</option>`).join('');
         
-        let html = `<div onclick="selectMove(${i}, ${num}, '')" style="padding: 5px; cursor: pointer; background: var(--white); color: var(--black); border-bottom: 1px solid #342420;">Clear</div>`;
+        // 2. SYNC: If the old move isn't in the new list, clear it AND collapse the box
+        if (availableMoves.includes(currentSelection)) {
+            sel.value = currentSelection;
+        } else {
+            sel.value = "";
+            // THIS CLEARS THE BOX AND COLLAPSES IT
+            document.getElementById(`move-details-${i}-${num}`).innerHTML = ""; 
+        }
         
-        moves.forEach(m => {
-            const type = findMoveType(m);
-            const color = typeColors[type] || "#eadfc1";
-            const icon = typeToIcon[type] || 'assets/house_default.png';
-            const textColor = darkTypes.includes(type) ? "#eadfc1" : "#342420";
-            
-            html += `<div onclick="selectMove(${i}, ${num}, '${m}')" 
-                          style="background-color: ${color}; 
-                                 color: ${textColor}; 
-                                 padding: 5px; 
-                                 cursor: pointer; 
-                                 display: flex; 
-                                 align-items: center; 
-                                 gap: 5px; 
-                                 border-bottom: 1px solid #342420;">
-                          <img src="${icon}" style="width:16px; height:16px; pointer-events: none;">
-                          <span>${m}</span>
-                     </div>`;
-        });
-        list.innerHTML = html;
+        // 3. Refresh the UI for the move
+        updateMoveStyle(i, num, sel.value);
     }
     
     for(let i = 1; i <= 4; i++) {
@@ -668,23 +665,18 @@ function createSlot(num) {
     <div class="section-box">
     <div class="segment-title tab-moveset">MOVESET</div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
-        ${[1,2,3,4].map(i => `
-    <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; border: 1px solid var(--black); background-color: var(--white); display: flex; flex-direction: column;">
-        <div id="move-display-${i}-${num}" 
-             onclick="toggleDropdown(${i}, ${num})" 
-             style="height: 35px; display: flex; align-items: center; padding-left: 8px; cursor: pointer; font-weight: bold; color: var(--black);">
-             Move ${i}
-        </div>
-        
-        <div id="move-details-${i}-${num}" style="width: 100%; border-top: 1px solid rgba(0,0,0,0.1); background: var(--white);">
-        </div>
-        
-        <div id="dropdown-list-${i}-${num}" class="custom-dropdown-list" style="display: none; position: absolute; top: 35px; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 200px; overflow-y: auto;">
-        </div>
-        
-        <img id="move-icon-${i}-${num}" class="move-type-icon" style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 7px; pointer-events: none;">
-    </div>
-`).join('')}
+        ${[1, 2, 3, 4].map(i => `
+            <div id="move-wrap-${i}-${num}" style="border: 1px solid var(--black); background-color: var(--white);">
+                <div id="move-display-${i}-${num}" 
+                     onclick="toggleDropdown(${i}, ${num})" 
+                     style="height: 35px; display: flex; align-items: center; padding-left: 8px; cursor: pointer; font-weight: bold; color: var(--black);">
+                     Move ${i}
+                </div>
+                <div id="move-details-${i}-${num}"></div>
+                
+                <div id="dropdown-list-${i}-${num}" class="custom-dropdown-list" style="display: none; position: absolute; z-index: 999; border: 1px solid var(--black); background: var(--white);"></div>
+            </div>
+        `).join('')}
     </div>
 </div>
 
