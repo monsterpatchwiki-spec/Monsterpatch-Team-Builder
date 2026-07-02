@@ -676,7 +676,7 @@ function createSlot(num) {
              Move ${i}
         </div>
         
-        <div id="move-details-${i}-${num}" style="display: none; width: 100%; border-top: 1px solid rgba(0,0,0,0.1); background: var(--white);">
+        <div id="move-details-${i}-${num}" style="width: 100%; border-top: 1px solid rgba(0,0,0,0.1); background: var(--white);">
         </div>
         
         <div id="dropdown-list-${i}-${num}" class="custom-dropdown-list" style="display: none; position: absolute; top: 35px; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 200px; overflow-y: auto;">
