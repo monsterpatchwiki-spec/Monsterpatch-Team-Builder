@@ -162,7 +162,7 @@ const passiveData = {
 };
  const monData = {
    "001 Birb": { normal: { houses: ["Fireborn"], moves: ["METEOR", "CLAWS", "PUNCH"], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_n.png" }, sparkly: { houses: ["Nightwatch"], moves: ["CLAWS"], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_s.png" } },
-   "002 Feenix": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 8, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_n.png" }, sparkly: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_s.png" } },
+   "002 Feenix": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 7, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_n.png" }, sparkly: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_s.png" } },
    "003 Hawkamere": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/003_n.png" }, sparkly: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/003_s.png" } },
    "004 Axolot": { normal: { houses: ["Atlantian", "Mystic"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/004_n.png" }, sparkly: { houses: ["Dragoon", "Fireborn"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/004_s.png" } },
    "005 Neptoon": { normal: { houses: ["Atlantian", "Mystic"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/005_n.png" }, sparkly: { houses: ["Dragoon", "Fireborn"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/005_s.png" } },
@@ -387,55 +387,117 @@ const gradeMap = {'S': 1.0, 'A': 0.9, 'B': 0.85, 'C': 0.8, 'D': 0.75};
 
 // --- 2. LOGIC FUNCTIONS ---
 
-function findMoveType(moveName) {
-    for (const typeKey in moveData) {
-        for (const tier in moveData[typeKey]) {
-            if (moveData[typeKey][tier].some(m => m.name === moveName)) return typeKey;
+function findMoveObject(moveName) {
+    for (const type in moveData) {
+        for (const tier in moveData[type]) {
+            const found = moveData[type][tier].find(m => m.name === moveName);
+            if (found) return found;
         }
     }
     return null;
 }
 
-function selectMove(i, num, moveName) {
-    const textSpan = document.getElementById(`move-text-${i}-${num}`);
-    const wrap = document.getElementById(`move-wrap-${i}-${num}`);
-    const icon = document.getElementById(`move-icon-${i}-${num}`);
-    const hiddenInput = document.getElementById(`move${i}-${num}-input`);
-    
-    hiddenInput.value = moveName;
-    textSpan.innerText = moveName || `Move ${i}`;
-    
-    const moveType = findMoveType(moveName);
+// Helper: Scans moveData to find which Type category a move belongs to
+function findMoveType(moveName) {
+    for (const typeKey in moveData) {
+        for (const tier in moveData[typeKey]) {
+            if (moveData[typeKey][tier].some(m => m.name === moveName)) {
+                return typeKey; // Returns "Normal", "Fireborn", etc.
+            }
+        }
+    }
+    return null;
+}
 
-    // Apply color to the wrapper container directly
-    if (moveType && typeof typeColors !== 'undefined') {
+function toggleDropdown(i, num) {
+    const list = document.getElementById(`dropdown-list-${i}-${num}`);
+    // Close all other dropdowns first (optional but recommended)
+    document.querySelectorAll('.custom-dropdown-list').forEach(d => {
+        if (d.id !== `dropdown-list-${i}-${num}`) d.style.display = "none";
+    });
+    list.style.display = (list.style.display === "block") ? "none" : "block";
+}
+
+function selectMove(i, num, moveName) {
+    const display = document.getElementById(`move-display-${i}-${num}`);
+    
+    // 1. Update the visible text
+    if (display) {
+        display.innerText = moveName || `Move ${i}`;
+    }
+    
+    // 2. Hide the list
+    toggleDropdown(i, num);
+    
+    // 3. Update the styling and the new details display
+    updateMoveStyle(i, num, moveName); 
+}
+
+function updateMoveStyle(i, num, moveName) {
+    const wrap = document.getElementById(`move-wrap-${i}-${num}`);
+    const textDiv = document.getElementById(`move-display-${i}-${num}`); 
+    const icon = document.getElementById(`move-icon-${i}-${num}`);
+    const detailsDiv = document.getElementById(`move-details-${i}-${num}`);
+    
+    if (!wrap || !textDiv || !detailsDiv) return;
+
+    // UPDATE HEADER
+    textDiv.innerText = moveName || `Move ${i}`;
+
+    // UPDATE COLORS/ICONS
+    const moveType = findMoveType(moveName); 
+    const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
+    const isDark = darkTypes.includes(moveType);
+
+    if (moveType && moveType !== "Normal") {
         wrap.style.backgroundColor = typeColors[moveType] || "#eadfc1";
         icon.src = typeToIcon[moveType] || 'assets/house_default.png';
         icon.style.display = "block";
+        textDiv.style.color = isDark ? "#eadfc1" : "#342420";
     } else {
-        wrap.style.backgroundColor = "#eadfc1";
+        wrap.style.backgroundColor = "var(--white)";
+        textDiv.style.color = "var(--black)";
         icon.style.display = "none";
     }
-    
-    toggleDropdown(i, num);
+
+    // UPDATE DETAILS
+    const moveDataObj = findMoveObject(moveName);
+    if (moveDataObj) {
+        detailsDiv.style.display = "block"; 
+        detailsDiv.innerHTML = `
+            <div style="font-size: 0.8em; padding: 4px; border-left: 3px solid ${isDark ? '#eadfc1' : '#874185'}; background: rgba(0,0,0,0.05);">
+                ${moveDataObj.power} power | ${moveDataObj.trigger} trigger | ${moveDataObj.scale} scaling<br>
+                ${moveDataObj.type} ${moveDataObj.pm} ${moveDataObj.tag ? `| ${moveDataObj.tag.replace(/[\[\]]/g, '')}` : ''}<br>
+                ${moveDataObj.cd} CD | ${moveDataObj.effect || 'none'}
+            </div>
+        `;
+    } else {
+        detailsDiv.style.display = "none";
+        detailsDiv.innerHTML = "";
+    }
 }
 
 function populateSlotDropdowns(num) {
     const monSelect = document.getElementById(`monSelect-${num}`);
     const sparkleCheck = document.querySelector(`.slot:nth-child(${num}) .sparkle-checkbox`);
+    
     if (!monSelect || !sparkleCheck) return;
 
     const monName = monSelect.value;
     const isSparkly = sparkleCheck.checked;
+    
     const mon = monData[monName];
     const data = mon ? (isSparkly ? mon.sparkly : mon.normal) : { moves: [], passives: [] };
 
+    // Update the hidden <select> elements for legacy compatibility (if needed)
     for(let i = 1; i <= 4; i++) {
-        const listContainer = document.getElementById(`dropdown-list-${i}-${num}`);
-        if (!listContainer) continue;
-        
-        listContainer.innerHTML = `<div class="dropdown-item" onclick="selectMove(${i}, ${num}, '')">Clear</div>` + 
-            (data.moves || []).map(m => `<div class="dropdown-item" onclick="selectMove(${i}, ${num}, '${m}')">${m}</div>`).join('');
+        const sel = document.getElementById(`move${i}-${num}`);
+        if (!sel) continue;
+        const currentSelection = sel.value;
+        sel.innerHTML = `<option value="">Move ${i}</option>` + 
+            (data.moves || []).map(m => `<option value="${m}">${m}</option>`).join('');
+        sel.value = currentSelection;
+        updateMoveStyle(i, num, currentSelection);
     }
 
     for(let i = 1; i <= 4; i++) {
@@ -446,6 +508,58 @@ function populateSlotDropdowns(num) {
             (data.passives || []).map(p => `<option value="${p}">${p}</option>`).join('');
         sel.value = currentSelection;
     }
+
+    // Build the custom div-based dropdown lists
+    const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
+    
+    for(let i = 1; i <= 4; i++) {
+        const list = document.getElementById(`dropdown-list-${i}-${num}`);
+        if (!list) continue;
+        
+        const moves = data.moves || [];
+        
+        let html = `<div onclick="selectMove(${i}, ${num}, '')" style="padding: 5px; cursor: pointer; background: var(--white); color: var(--black); border-bottom: 1px solid #342420;">Clear</div>`;
+        
+        moves.forEach(m => {
+            const type = findMoveType(m);
+            const color = typeColors[type] || "#eadfc1";
+            const icon = typeToIcon[type] || 'assets/house_default.png';
+            const textColor = darkTypes.includes(type) ? "#eadfc1" : "#342420";
+            
+            html += `<div onclick="selectMove(${i}, ${num}, '${m}')" 
+                          style="background-color: ${color}; 
+                                 color: ${textColor}; 
+                                 padding: 5px; 
+                                 cursor: pointer; 
+                                 display: flex; 
+                                 align-items: center; 
+                                 gap: 5px; 
+                                 border-bottom: 1px solid #342420;">
+                          <img src="${icon}" style="width:16px; height:16px; pointer-events: none;">
+                          <span>${m}</span>
+                     </div>`;
+        });
+        list.innerHTML = html;
+    }
+    
+    for(let i = 1; i <= 4; i++) {
+    const sel = document.getElementById(`pass${i}-${num}`);
+    if (!sel) continue; 
+    
+    const currentSelection = sel.value;
+    const availablePassives = data.passives || [];
+    
+    sel.innerHTML = `<option value="">Passive ${i}</option>` + 
+        availablePassives.map(p => `<option value="${p}">${p}</option>`).join('');
+    
+    // SYNC: If the old passive isn't in the new list, clear the selection AND the description
+    if (availablePassives.includes(currentSelection)) {
+        sel.value = currentSelection;
+    } else {
+        sel.value = "";
+        document.getElementById(`passive-desc-${i}-${num}`).innerHTML = ""; // <--- THIS IS CRITICAL
+    }
+}
 }
 
 function getMultiplier(attackType, defTypes) {
@@ -554,22 +668,40 @@ function createSlot(num) {
             </label>
         </div>
         
-        <div class="section-box"><div class="segment-title tab-moveset">MOVESET</div>
+    <div class="section-box">
+    <div class="segment-title tab-moveset">MOVESET</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
+        ${[1,2,3,4].map(i => `
+    <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; height: 35px; overflow: visible; border: 1px solid var(--black); background-color: var(--white); display: flex; flex-direction: column;">
+        <div id="move-display-${i}-${num}" 
+             onclick="toggleDropdown(${i}, ${num})" 
+             style="height: 35px; display: flex; align-items: center; padding-left: 8px; cursor: pointer; font-weight: bold; color: var(--black);">
+             Move ${i}
+        </div>
+        
+        <div id="move-details-${i}-${num}" style="display: none; position: absolute; top: 35px; left: 0; width: 100%; z-index: 10; padding: 4px; font-size: 0.8em; border: 1px solid var(--black); border-top: none; background: var(--white);">
+        </div>
+        
+        <div id="dropdown-list-${i}-${num}" class="custom-dropdown-list" style="display: none; position: absolute; top: 35px; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 200px; overflow-y: auto;">
+        </div>
+        
+        <img id="move-icon-${i}-${num}" class="move-type-icon" style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 7px; pointer-events: none;">
+    </div>
+`).join('')}
+    </div>
+</div>
+
+        <div class="section-box passives-box">
+            <div class="segment-title tab-passives">PASSIVES</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
                 ${[1,2,3,4].map(i => `
-                    <div class="custom-dropdown" id="move-wrap-${i}-${num}" onclick="toggleDropdown(${i}, ${num})">
-                        <span id="move-text-${i}-${num}">Move ${i}</span>
-                        <img id="move-icon-${i}-${num}" class="move-type-icon" style="display:none;">
-                        <input type="hidden" id="move${i}-${num}-input">
-                        <div class="dropdown-list" id="dropdown-list-${i}-${num}"></div>
+                    <div>
+                        <select id="pass${i}-${num}" onchange="updatePassiveDisplay(this.value, '${i}-${num}')">
+                            <option value="">Passive ${i}</option>
+                        </select>
+                        <div id="passive-desc-${i}-${num}"></div> 
                     </div>
                 `).join('')}
-            </div>
-        </div>
-
-        <div class="section-box passives-box"><div class="segment-title tab-passives">PASSIVES</div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
-                ${[1,2,3,4].map(i => `<select id="pass${i}-${num}"><option value="">Passive ${i}</option></select>`).join('')}
             </div>
         </div>
         
@@ -603,6 +735,18 @@ function createSlot(num) {
                 <label style="font-weight:bold; color: var(--black);">VIBE:</label> <select id="vibe-${num}" onchange="updateStats(${num})" style="margin-top:5px;">${vibeOptions}</select>
             </div>
         </div></div>`;
+}
+
+function updatePassiveDisplay(passiveName, slotId) {
+    const descDiv = document.getElementById(`passive-desc-${slotId}`);
+    if (!descDiv) return;
+
+    const description = passiveData[passiveName]; // Ensure passiveData is globally accessible
+    if (description) {
+        descDiv.innerHTML = `<div style="font-size: 0.8em; padding: 6px; background: rgba(0,0,0,0.05); margin-top: 5px; border-left: 3px solid #874185;">${description}</div>`;
+    } else {
+        descDiv.innerHTML = "";
+    }
 }
 
 function updateTeamEfficiencies() {
