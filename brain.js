@@ -437,8 +437,10 @@ function updateMoveStyle(i, num, moveName) {
     const wrap = document.getElementById(`move-wrap-${i}-${num}`);
     const textDiv = document.getElementById(`move-display-${i}-${num}`); 
     const icon = document.getElementById(`move-icon-${i}-${num}`);
-    const detailsDiv = document.getElementById(`move-details-${i}-${num}`);
     
+    // Removed detailsDiv from the check as it is now handled by updateMoveDisplay
+    if (!wrap || !textDiv || !icon) return;
+
     // UPDATE HEADER
     textDiv.innerText = moveName || `Move ${i}`;
 
