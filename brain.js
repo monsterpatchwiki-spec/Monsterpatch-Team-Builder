@@ -470,11 +470,10 @@ function populateSlotDropdowns(num) {
 
     const monName = monSelect.value;
     const isSparkly = sparkleCheck.checked;
-    
     const mon = monData[monName];
     const data = mon ? (isSparkly ? mon.sparkly : mon.normal) : { moves: [], passives: [] };
 
-    // Update the hidden <select> elements for legacy compatibility (if needed)
+    // Update the hidden <select> elements for legacy compatibility
     for(let i = 1; i <= 4; i++) {
         const sel = document.getElementById(`move${i}-${num}`);
         if (!sel) continue;
@@ -482,16 +481,9 @@ function populateSlotDropdowns(num) {
         sel.innerHTML = `<option value="">Move ${i}</option>` + 
             (data.moves || []).map(m => `<option value="${m}">${m}</option>`).join('');
         sel.value = currentSelection;
+        // Keep the UI consistent when population happens
         updateMoveStyle(i, num, currentSelection);
-    }
-
-    for(let i = 1; i <= 4; i++) {
-        const sel = document.getElementById(`pass${i}-${num}`);
-        if (!sel) continue; 
-        const currentSelection = sel.value;
-        sel.innerHTML = `<option value="">Passive ${i}</option>` + 
-            (data.passives || []).map(p => `<option value="${p}">${p}</option>`).join('');
-        sel.value = currentSelection;
+        updateMoveDisplay(currentSelection, `${i}-${num}`);
     }
 
     // Build the custom div-based dropdown lists
@@ -502,8 +494,9 @@ function populateSlotDropdowns(num) {
         if (!list) continue;
         
         const moves = data.moves || [];
+        const slotId = `${i}-${num}`;
         
-        let html = `<div onclick="selectMove(${i}, ${num}, '')" style="padding: 5px; cursor: pointer; background: var(--white); color: var(--black); border-bottom: 1px solid #342420;">Clear</div>`;
+        let html = `<div onclick="updateMoveStyle(${i}, ${num}, ''); updateMoveDisplay('', '${slotId}'); toggleDropdown(${i}, ${num});" style="padding: 5px; cursor: pointer; background: var(--white); color: var(--black); border-bottom: 1px solid #342420;">Clear</div>`;
         
         moves.forEach(m => {
             const type = findMoveType(m);
@@ -511,21 +504,15 @@ function populateSlotDropdowns(num) {
             const icon = typeToIcon[type] || 'assets/house_default.png';
             const textColor = darkTypes.includes(type) ? "#eadfc1" : "#342420";
             
-            html += `<div onclick="selectMove(${i}, ${num}, '${m}')" 
-                          style="background-color: ${color}; 
-                                 color: ${textColor}; 
-                                 padding: 5px; 
-                                 cursor: pointer; 
-                                 display: flex; 
-                                 align-items: center; 
-                                 gap: 5px; 
-                                 border-bottom: 1px solid #342420;">
+            html += `<div onclick="updateMoveStyle(${i}, ${num}, '${m}'); updateMoveDisplay('${m}', '${slotId}'); toggleDropdown(${i}, ${num});" 
+                          style="background-color: ${color}; color: ${textColor}; padding: 5px; cursor: pointer; display: flex; align-items: center; gap: 5px; border-bottom: 1px solid #342420;">
                           <img src="${icon}" style="width:16px; height:16px; pointer-events: none;">
                           <span>${m}</span>
                      </div>`;
         });
         list.innerHTML = html;
     }
+}
     
     for(let i = 1; i <= 4; i++) {
     const sel = document.getElementById(`pass${i}-${num}`);
@@ -544,7 +531,6 @@ function populateSlotDropdowns(num) {
         sel.value = "";
         document.getElementById(`passive-desc-${i}-${num}`).innerHTML = ""; // <--- THIS IS CRITICAL
     }
-}
 }
 
 function getMultiplier(attackType, defTypes) {
@@ -729,6 +715,28 @@ function updatePassiveDisplay(passiveName, slotId) {
     const description = passiveData[passiveName]; // Ensure passiveData is globally accessible
     if (description) {
         descDiv.innerHTML = `<div style="font-size: 0.8em; padding: 6px; background: rgba(0,0,0,0.05); margin-top: 5px; border-left: 3px solid #874185;">${description}</div>`;
+    } else {
+        descDiv.innerHTML = "";
+    }
+}
+
+function updateMoveDisplay(moveName, slotId) {
+    const descDiv = document.getElementById(`move-details-${slotId}`);
+    if (!descDiv) return;
+
+    // Retrieve move object to get the effect description
+    const moveDataObj = findMoveObject(moveName);
+    const moveType = findMoveType(moveName);
+    const isDark = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"].includes(moveType);
+
+    if (moveDataObj) {
+        // Exactly copying the logic pattern of updatePassiveDisplay
+        descDiv.innerHTML = `
+            <div style="font-size: 0.8em; padding: 6px; background: rgba(0,0,0,0.05); margin-top: 5px; border-left: 3px solid ${isDark ? '#eadfc1' : '#874185'};">
+                ${moveDataObj.power} power | ${moveDataObj.trigger} trigger | ${moveDataObj.scale} scaling<br>
+                ${moveDataObj.type} ${moveDataObj.pm} | ${moveDataObj.cd} CD<br>
+                ${moveDataObj.effect || 'none'}
+            </div>`;
     } else {
         descDiv.innerHTML = "";
     }
