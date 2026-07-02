@@ -439,8 +439,6 @@ function updateMoveStyle(i, num, moveName) {
     const icon = document.getElementById(`move-icon-${i}-${num}`);
     const detailsDiv = document.getElementById(`move-details-${i}-${num}`);
     
-    if (!wrap || !textDiv || !detailsDiv) return;
-
     // UPDATE HEADER
     textDiv.innerText = moveName || `Move ${i}`;
 
@@ -655,32 +653,18 @@ function createSlot(num) {
     <div class="section-box">
     <div class="segment-title tab-moveset">MOVESET</div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
-        ${[1,2,3,4].map(i => `
-    <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; height: 35px; overflow: visible; border: 1px solid var(--black); background-color: var(--white); display: flex; flex-direction: column;">
-        <div id="move-display-${i}-${num}" 
-             onclick="toggleDropdown(${i}, ${num})" 
-             style="height: 35px; display: flex; align-items: center; padding-left: 8px; cursor: pointer; font-weight: bold; color: var(--black);">
-             Move ${i}
-        </div>
-        
-        <div id="dropdown-list-${i}-${num}" class="custom-dropdown-list" style="display: none; position: absolute; top: 35px; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 200px; overflow-y: auto;">
-        </div>
-        
-        <img id="move-icon-${i}-${num}" class="move-type-icon" style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 7px; pointer-events: none;">
-    </div>
-`).join('')}
-    </div>
-</div>
-
-<div class="section-box moveset-box">
-    <div class="segment-title tab-moveset">MOVESET</div>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
-        ${[1,2,3,4].map(i => `
-            <div>
-                <select id="move${i}-${num}" onchange="updateMoveDisplay(this.value, '${i}-${num}')">
-                    <option value="">Move ${i}</option>
-                </select>
-                <div id="move-desc-${i}-${num}"></div> 
+        ${[1, 2, 3, 4].map(i => `
+            <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; border: 1px solid var(--black); background-color: var(--white); display: flex; flex-direction: column;">
+                
+                <div style="height: 35px; display: flex; align-items: center; padding-left: 8px;">
+                    <select id="move${i}-${num}" onchange="updateMoveDisplay(this.value, '${i}-${num}'); updateMoveStyle(${i}, ${num}, this.value);" style="width: 90%; border: none; font-weight: bold;">
+                        <option value="">Move ${i}</option>
+                    </select>
+                </div>
+                
+                <div id="move-desc-${i}-${num}" style="width: 100%;"></div>
+                
+                <img id="move-icon-${i}-${num}" class="move-type-icon" style="display:none; width: 20px; height: 20px; position: absolute; right: 8px; top: 7px; pointer-events: none;">
             </div>
         `).join('')}
     </div>
