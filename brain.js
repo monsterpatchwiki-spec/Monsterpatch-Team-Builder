@@ -433,43 +433,54 @@ function selectMove(i, num, moveName) {
     updateMoveStyle(i, num, moveName); 
 }
 
-function updateMoveStyle(i, num, moveName) {
-    const wrap = document.getElementById(`move-wrap-${i}-${num}`);
-    const textDiv = document.getElementById(`move-display-${i}-${num}`); 
-    const icon = document.getElementById(`move-icon-${i}-${num}`);
-    const detailsDiv = document.getElementById(`move-details-${i}-${num}`);
+function updateMoveStyle(moveName, slotId) {
+    // 1. Get elements based on the standard slotId (e.g., "1-1")
+    const wrap = document.getElementById(`move-wrap-${slotId}`);
+    const textDiv = document.getElementById(`move-display-${slotId}`);
+    const icon = document.getElementById(`move-icon-${slotId}`);
+    const detailsDiv = document.getElementById(`move-details-${slotId}`);
     
-    if (!wrap || !textDiv || !detailsDiv) return;
+    if (!detailsDiv) return;
 
-    // UPDATE HEADER
-    textDiv.innerText = moveName || `Move ${i}`;
-
-    // UPDATE COLORS/ICONS
-    const moveType = findMoveType(moveName); 
+    // 2. Fetch Data
+    const moveDataObj = findMoveObject(moveName);
+    const moveType = findMoveType(moveName);
     const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
     const isDark = darkTypes.includes(moveType);
 
-    if (moveType && moveType !== "Normal") {
-        wrap.style.backgroundColor = typeColors[moveType] || "#eadfc1";
-        icon.src = typeToIcon[moveType] || 'assets/house_default.png';
-        icon.style.display = "block";
-        textDiv.style.color = isDark ? "#eadfc1" : "#342420";
-    } else {
-        wrap.style.backgroundColor = "var(--white)";
-        textDiv.style.color = "var(--black)";
-        icon.style.display = "none";
-    }
-
-   // UPDATE DETAILS (Converting passive-style logic to moves)
-    const moveDataObj = findMoveObject(moveName);
+    // 3. Update Visuals
     if (moveDataObj) {
-        detailsDiv.innerHTML = `<div style="font-size: 0.8em; padding: 6px; background: rgba(0,0,0,0.05); margin-top: 5px; border-left: 3px solid ${isDark ? '#eadfc1' : '#874185'};">
+        // Cosmetic Update (Header)
+        if (textDiv) {
+            textDiv.innerText = moveName.toUpperCase();
+            textDiv.style.color = isDark ? "#eadfc1" : "#342420";
+        }
+        if (wrap) {
+            wrap.style.backgroundColor = typeColors[moveType] || "#d15c62";
+        }
+        if (icon) {
+            icon.src = typeToIcon[moveType] || 'assets/house_default.png';
+            icon.style.display = "block";
+        }
+
+        // 4. Update Details (Collapsing logic identical to Passives)
+        detailsDiv.innerHTML = `
+            <div style="font-size: 0.8em; padding: 6px; background: rgba(0,0,0,0.1); border-left: 3px solid ${isDark ? '#eadfc1' : '#874185'}; color: ${isDark ? '#eadfc1' : '#342420'};">
                 ${moveDataObj.power} power | ${moveDataObj.trigger} trigger | ${moveDataObj.scale} scaling<br>
-                ${moveDataObj.type} ${moveDataObj.pm} ${moveDataObj.tag ? `| ${moveDataObj.tag.replace(/[\[\]]/g, '')}` : ''}<br>
-                ${moveDataObj.cd} CD | ${moveDataObj.effect || 'none'}
+                ${moveDataObj.type} ${moveDataObj.pm} | ${moveDataObj.cd} CD<br>
+                ${moveDataObj.effect || 'none'}
             </div>`;
     } else {
-        detailsDiv.innerHTML = "";
+        // Reset UI if no move is selected (The "Passive" way)
+        if (wrap) wrap.style.backgroundColor = "var(--white)";
+        if (textDiv) {
+            textDiv.innerText = "Move"; // or your default label
+            textDiv.style.color = "var(--black)";
+        }
+        if (icon) icon.style.display = "none";
+        
+        // This is the critical line that keeps it collapsed
+        detailsDiv.innerHTML = ""; 
     }
 }
 
