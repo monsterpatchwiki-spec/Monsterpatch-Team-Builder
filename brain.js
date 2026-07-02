@@ -460,23 +460,19 @@ function updateMoveStyle(i, num, moveName) {
         icon.style.display = "none";
     }
 
-    // UPDATE DETAILS (Inject into existing container)
+    // UPDATE DETAILS
     const moveDataObj = findMoveObject(moveName);
     if (moveDataObj) {
-        detailsDiv.style.display = "block"; // Show the container
+        detailsDiv.style.display = "block"; 
         detailsDiv.innerHTML = `
             <div style="font-size: 0.8em; padding: 4px; border-left: 3px solid ${isDark ? '#eadfc1' : '#874185'}; background: rgba(0,0,0,0.05);">
-                ${moveDataObj.power} power | 
-                ${moveDataObj.trigger} trigger | 
-                ${moveDataObj.scale} scaling | 
-                ${moveDataObj.type} ${moveDataObj.pm} 
-                ${moveDataObj.tag ? `| ${moveDataObj.tag.replace(/[\[\]]/g, '')}` : ''}
-                <br>
+                ${moveDataObj.power} power | ${moveDataObj.trigger} trigger | ${moveDataObj.scale} scaling<br>
+                ${moveDataObj.type} ${moveDataObj.pm} ${moveDataObj.tag ? `| ${moveDataObj.tag.replace(/[\[\]]/g, '')}` : ''}<br>
                 ${moveDataObj.cd} CD | ${moveDataObj.effect || 'none'}
             </div>
         `;
     } else {
-        detailsDiv.style.display = "none"; // Hide it so it doesn't take space
+        detailsDiv.style.display = "none";
         detailsDiv.innerHTML = "";
     }
 }
