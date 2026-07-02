@@ -485,33 +485,10 @@ function populateSlotDropdowns(num) {
 
     const monName = monSelect.value;
     const isSparkly = sparkleCheck.checked;
-    
     const mon = monData[monName];
     const data = mon ? (isSparkly ? mon.sparkly : mon.normal) : { moves: [], passives: [] };
 
-    // Update the hidden <select> elements for legacy compatibility (if needed)
-    for(let i = 1; i <= 4; i++) {
-        const sel = document.getElementById(`move${i}-${num}`);
-        if (!sel) continue;
-        const currentSelection = sel.value;
-        sel.innerHTML = `<option value="">Move ${i}</option>` + 
-            (data.moves || []).map(m => `<option value="${m}">${m}</option>`).join('');
-        sel.value = currentSelection;
-        updateMoveStyle(i, num, currentSelection);
-    }
-
-    for(let i = 1; i <= 4; i++) {
-        const sel = document.getElementById(`pass${i}-${num}`);
-        if (!sel) continue; 
-        const currentSelection = sel.value;
-        sel.innerHTML = `<option value="">Passive ${i}</option>` + 
-            (data.passives || []).map(p => `<option value="${p}">${p}</option>`).join('');
-        sel.value = currentSelection;
-    }
-
-    // Build the custom div-based dropdown lists
-    const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
-    
+    // 1. SYNC MOVES (One single loop)
     for(let i = 1; i <= 4; i++) {
         const sel = document.getElementById(`move${i}-${num}`);
         if (!sel) continue;
@@ -519,41 +496,63 @@ function populateSlotDropdowns(num) {
         const currentSelection = sel.value;
         const availableMoves = data.moves || [];
         
-        // 1. Update dropdown options
+        // Update options
         sel.innerHTML = `<option value="">Move ${i}</option>` + 
             availableMoves.map(m => `<option value="${m}">${m}</option>`).join('');
         
-        // 2. SYNC: If the old move isn't in the new list, clear it AND collapse the box
+        // Sync selection & clear details if invalid
         if (availableMoves.includes(currentSelection)) {
             sel.value = currentSelection;
         } else {
             sel.value = "";
-            // THIS CLEARS THE BOX AND COLLAPSES IT
             document.getElementById(`move-details-${i}-${num}`).innerHTML = ""; 
         }
         
-        // 3. Refresh the UI for the move
+        // Update the visual style
         updateMoveStyle(i, num, sel.value);
     }
+
+    // 2. SYNC PASSIVES (One single loop)
+    for(let i = 1; i <= 4; i++) {
+        const sel = document.getElementById(`pass${i}-${num}`);
+        if (!sel) continue; 
+        
+        const currentSelection = sel.value;
+        const availablePassives = data.passives || [];
+        
+        sel.innerHTML = `<option value="">Passive ${i}</option>` + 
+            availablePassives.map(p => `<option value="${p}">${p}</option>`).join('');
+        
+        if (availablePassives.includes(currentSelection)) {
+            sel.value = currentSelection;
+        } else {
+            sel.value = "";
+            document.getElementById(`passive-desc-${i}-${num}`).innerHTML = "";
+        }
+    }
+
+    // 3. BUILD CUSTOM DROP-DOWN LISTS (HTML injection)
+    const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
     
     for(let i = 1; i <= 4; i++) {
-    const sel = document.getElementById(`pass${i}-${num}`);
-    if (!sel) continue; 
-    
-    const currentSelection = sel.value;
-    const availablePassives = data.passives || [];
-    
-    sel.innerHTML = `<option value="">Passive ${i}</option>` + 
-        availablePassives.map(p => `<option value="${p}">${p}</option>`).join('');
-    
-    // SYNC: If the old passive isn't in the new list, clear the selection AND the description
-    if (availablePassives.includes(currentSelection)) {
-        sel.value = currentSelection;
-    } else {
-        sel.value = "";
-        document.getElementById(`passive-desc-${i}-${num}`).innerHTML = ""; // <--- THIS IS CRITICAL
+        const list = document.getElementById(`dropdown-list-${i}-${num}`);
+        if (!list) continue;
+        
+        let html = `<div onclick="selectMove(${i}, ${num}, '')" style="padding: 5px; cursor: pointer;">Clear</div>`;
+        
+        (data.moves || []).forEach(m => {
+            const type = findMoveType(m);
+            const color = typeColors[type] || "#eadfc1";
+            const icon = typeToIcon[type] || 'assets/house_default.png';
+            const textColor = darkTypes.includes(type) ? "#eadfc1" : "#342420";
+            
+            html += `<div onclick="selectMove(${i}, ${num}, '${m}')" style="background-color: ${color}; color: ${textColor}; padding: 5px; cursor: pointer; display: flex; align-items: center; gap: 5px; border-bottom: 1px solid #342420;">
+                        <img src="${icon}" style="width:16px; height:16px; pointer-events: none;">
+                        <span>${m}</span>
+                     </div>`;
+        });
+        list.innerHTML = html;
     }
-}
 }
 
 function getMultiplier(attackType, defTypes) {
