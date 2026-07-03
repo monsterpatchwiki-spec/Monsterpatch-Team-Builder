@@ -657,7 +657,7 @@ function createSlot(num) {
     <div class="segment-title tab-moveset">MOVESET</div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
         ${[1,2,3,4].map(i => `
-    <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; height: 35px; overflow: visible; border: 1px solid var(--black); background-color: var(--white); display: flex; flex-direction: column;">
+    <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; min-height: 35px; height: auto; overflow: visible; border: 1px solid var(--black); background-color: var(--white); display: flex; flex-direction: column;">
 
         <div id="move-display-${i}-${num}" 
              onclick="toggleDropdown(${i}, ${num})" 
@@ -672,7 +672,8 @@ function createSlot(num) {
         <select id="move${i}-${num}" onchange="updateMoveDisplay(this.value, '${i}-${num}')" style="display: none;">
             <option value="">Move ${i}</option>
         </select>
-        <div id="move-desc-${i}-${num}"></div>
+        
+        <div id="move-desc-${i}-${num}" style="padding: 0 8px 8px 8px;"></div>
     </div>
 `).join('')}
     </div>
