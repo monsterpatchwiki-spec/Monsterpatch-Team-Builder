@@ -745,8 +745,14 @@ function updateMoveDisplay(moveName, slotId) {
     const moveObj = findMoveObject(moveName);
 
     if (moveObj) {
+        // Logic to get the color, defaulting to Dragoon if Normal or undefined
+        let moveType = moveObj.type;
+        if (moveType === "Normal") moveType = "Dragoon";
+        
+        const borderColor = typeColors[moveType] || "#342420";
+
         descDiv.innerHTML = `
-            <div style="font-size: 0.8em; padding: 6px; background: rgba(0,0,0,0.05); margin-top: 5px; border-left: 3px solid #874185;">
+            <div style="font-size: 0.8em; padding: 6px; background: rgba(0,0,0,0.05); margin-top: 5px; border-left: 3px solid ${borderColor};">
                 ${moveObj.power} power | 
                 ${moveObj.trigger} trigger | 
                 ${moveObj.scale} scaling | 
