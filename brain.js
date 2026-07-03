@@ -668,22 +668,12 @@ function createSlot(num) {
         
         <div id="dropdown-list-${i}-${num}" class="custom-dropdown-list" style="display: none; position: absolute; top: 35px; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 200px; overflow-y: auto;">
         </div>
-    </div>
-`).join('')}
-    </div>
-</div>
-
-<div class="section-box moveset-box">
-    <div class="segment-title tab-moveset">MOVESET</div>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
-        ${[1,2,3,4].map(i => `
-            <div>
-                <select id="move${i}-${num}" onchange="updateMoveDisplay(this.value, '${i}-${num}')">
+        <select id="move${i}-${num}" onchange="updateMoveDisplay(this.value, '${i}-${num}')">
                     <option value="">Move ${i}</option>
                 </select>
                 <div id="move-desc-${i}-${num}"></div> 
-            </div>
-        `).join('')}
+    </div>
+`).join('')}
     </div>
 </div>
 
