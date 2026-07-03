@@ -437,12 +437,13 @@ function updateMoveStyle(i, num, moveName) {
     const wrap = document.getElementById(`move-wrap-${i}-${num}`);
     const textDiv = document.getElementById(`move-display-${i}-${num}`); 
     const icon = document.getElementById(`move-icon-${i}-${num}`);
-    const detailsDiv = document.getElementById(`move-details-${i}-${num}`);
     
-    if (!wrap || !textDiv || !detailsDiv) return;
+    // We removed detailsDiv from the check since we are handling the description separately
+    if (!wrap || !textDiv || !icon) return;
 
-    // UPDATE HEADER
-    textDiv.innerText = moveName || `Move ${i}`;
+    // UPDATE HEADER (We use a span if you followed the previous template update, 
+    // but innerText works if the span is the first child)
+    textDiv.querySelector('span').innerText = moveName || `Move ${i}`;
 
     // UPDATE COLORS/ICONS
     const moveType = findMoveType(moveName); 
