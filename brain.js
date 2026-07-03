@@ -419,18 +419,18 @@ function toggleDropdown(i, num) {
 }
 
 function selectMove(i, num, moveName) {
-    const display = document.getElementById(`move-display-${i}-${num}`);
-    
-    // 1. Update the visible text
-    if (display) {
-        display.innerText = moveName || `Move ${i}`;
-    }
+    // 1. We NO LONGER use display.innerText = ... 
+    // because that deletes the span and the icon.
+    // Instead, we let updateMoveStyle handle the update.
     
     // 2. Hide the list
     toggleDropdown(i, num);
     
-    // 3. Update the styling and the new details display
+    // 3. Update the styling (handles icon visibility and background colors)
     updateMoveStyle(i, num, moveName); 
+    
+    // 4. Update the description text
+    updateMoveDisplay(moveName, `${i}-${num}`);
 }
 
 function updateMoveStyle(i, num, moveName) {
@@ -438,14 +438,14 @@ function updateMoveStyle(i, num, moveName) {
     const textDiv = document.getElementById(`move-display-${i}-${num}`); 
     const icon = document.getElementById(`move-icon-${i}-${num}`);
     
-    // We removed detailsDiv from the check since we are handling the description separately
     if (!wrap || !textDiv || !icon) return;
 
-    // UPDATE HEADER (We use a span if you followed the previous template update, 
-    // but innerText works if the span is the first child)
-    textDiv.querySelector('span').innerText = moveName || `Move ${i}`;
+    // Safely update the span text without destroying the div's children
+    const textSpan = textDiv.querySelector('span');
+    if (textSpan) {
+        textSpan.innerText = moveName || `Move ${i}`;
+    }
 
-    // UPDATE COLORS/ICONS
     const moveType = findMoveType(moveName); 
     const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
     const isDark = darkTypes.includes(moveType);
@@ -454,10 +454,10 @@ function updateMoveStyle(i, num, moveName) {
         wrap.style.backgroundColor = typeColors[moveType] || "#eadfc1";
         icon.src = typeToIcon[moveType] || 'assets/house_default.png';
         icon.style.display = "block";
-        textDiv.style.color = isDark ? "#eadfc1" : "#342420";
+        textSpan.style.color = isDark ? "#eadfc1" : "#342420";
     } else {
         wrap.style.backgroundColor = "var(--white)";
-        textDiv.style.color = "var(--black)";
+        textSpan.style.color = "var(--black)";
         icon.style.display = "none";
     }
 }
