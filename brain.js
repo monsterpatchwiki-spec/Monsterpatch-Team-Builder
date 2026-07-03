@@ -657,21 +657,23 @@ function createSlot(num) {
     <div class="segment-title tab-moveset">MOVESET</div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
         ${[1,2,3,4].map(i => `
-    <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; min-height: 35px; overflow: visible; border: 1px solid var(--black); background-color: var(--white); display: flex; flex-direction: column;">
+    <div>
+        <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; height: 35px; overflow: visible; border: 1px solid var(--black); background-color: var(--white); display: flex; flex-direction: column;">
 
-        <div id="move-display-${i}-${num}" 
-             onclick="toggleDropdown(${i}, ${num})" 
-             style="height: 35px; display: flex; align-items: center; justify-content: space-between; padding: 0 8px; cursor: pointer; font-weight: bold; color: var(--black);">
-             <span>Move ${i}</span>
-             <img id="move-icon-${i}-${num}" class="move-type-icon" style="display:none; width: 20px; height: 20px; pointer-events: none;">
+            <div id="move-display-${i}-${num}" 
+                 onclick="toggleDropdown(${i}, ${num})" 
+                 style="height: 35px; display: flex; align-items: center; justify-content: space-between; padding: 0 8px; cursor: pointer; font-weight: bold; color: var(--black);">
+                 <span>Move ${i}</span>
+                 <img id="move-icon-${i}-${num}" class="move-type-icon" style="display:none; width: 20px; height: 20px; pointer-events: none;">
+            </div>
+
+            <div id="dropdown-list-${i}-${num}" class="custom-dropdown-list" style="display: none; position: absolute; top: 35px; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 200px; overflow-y: auto;">
+            </div>
+
+            <select id="move${i}-${num}" onchange="updateMoveDisplay(this.value, '${i}-${num}')" style="display: none;">
+                <option value="">Move ${i}</option>
+            </select>
         </div>
-
-        <div id="dropdown-list-${i}-${num}" class="custom-dropdown-list" style="display: none; position: absolute; top: 35px; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 200px; overflow-y: auto;">
-        </div>
-
-        <select id="move${i}-${num}" onchange="updateMoveDisplay(this.value, '${i}-${num}')" style="display: none;">
-            <option value="">Move ${i}</option>
-        </select>
         <div id="move-desc-${i}-${num}"></div>
     </div>
 `).join('')}
