@@ -742,13 +742,14 @@ function updateMoveDisplay(moveName, slotId) {
     const descDiv = document.getElementById(`move-desc-${slotId}`);
     if (!descDiv) return;
 
-    const moveObj = findMoveObject(moveName);
+    const moveObj = findMoveObject(moveName); // Your existing function
+    const moveTypeFromData = findMoveType(moveName); // Using your new function
 
     if (moveObj) {
-        // Logic to get the color, defaulting to Dragoon if Normal or undefined
-        let moveType = moveObj.type;
-        if (moveType === "Normal") moveType = "Dragoon";
+        // 1. Determine the house type (Use your helper, default to "Dragoon" if null or "Normal")
+        let moveType = (moveTypeFromData === "Normal" || !moveTypeFromData) ? "Dragoon" : moveTypeFromData;
         
+        // 2. Fetch the color from your typeColors dictionary
         const borderColor = typeColors[moveType] || "#342420";
 
         descDiv.innerHTML = `
@@ -756,7 +757,7 @@ function updateMoveDisplay(moveName, slotId) {
                 ${moveObj.power} power | 
                 ${moveObj.trigger} trigger | 
                 ${moveObj.scale} scaling | 
-                ${moveObj.type} ${moveObj.pm} 
+                ${moveTypeFromData || 'Unknown'} ${moveObj.pm} 
                 ${moveObj.tag ? `| ${moveObj.tag.replace(/[\[\]]/g, '')}` : ''}
                 <br>
                 ${moveObj.cd} CD | ${moveObj.effect || 'none'}
