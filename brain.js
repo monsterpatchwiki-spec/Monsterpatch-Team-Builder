@@ -657,7 +657,7 @@ function createSlot(num) {
     <div class="segment-title tab-moveset">MOVESET</div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
         ${[1,2,3,4].map(i => `
-    <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; height: 35px; overflow: visible; border: 1px solid var(--black); background-color: var(--white); display: flex; flex-direction: column;">
+    <div class="move-wrapper" id="move-wrap-${i}-${num}" style="position: relative; min-height: 35px; overflow: visible; border: 1px solid var(--black); background-color: var(--white); display: flex; flex-direction: column;">
 
         <div id="move-display-${i}-${num}" 
              onclick="toggleDropdown(${i}, ${num})" 
