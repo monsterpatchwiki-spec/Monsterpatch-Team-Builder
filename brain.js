@@ -572,8 +572,8 @@ function getMultiplier(attackType, defTypes) {
 // Returns an inline style attribute string for a matchup cell based on its score.
 // >1 = green (super effective), <1 = red (not very effective), ==1 = default (no color).
 function getScoreCellStyle(score) {
-    if (score > 1) return ' style="background-color: #b7d7a8;"';
-    if (score < 1) return ' style="background-color: #e6b8b8;"';
+    if (score > 1) return ' style="background-color: #A2BA9C;"';
+    if (score < 1) return ' style="background-color: #d15c62;"';
     return '';
 }
 
