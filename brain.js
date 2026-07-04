@@ -797,6 +797,104 @@ function updateMoveDisplay(moveName, slotId) {
     }
 }
 
+// --- IMPORT / EXPORT SQUAD ---
+
+function exportSquad() {
+    const squad = [];
+    for (let num = 1; num <= 4; num++) {
+        const monSelect = document.getElementById(`monSelect-${num}`);
+        if (!monSelect) continue;
+
+        const slot = {
+            nickname: document.querySelector(`.slot:nth-child(${num}) input[placeholder="NICKNAME"]`).value,
+            level: document.getElementById(`level-${num}`).value,
+            sparkle: document.querySelector(`.slot:nth-child(${num}) .sparkle-checkbox`).checked,
+            mon: monSelect.value,
+            item: document.getElementById(`itemSelect-${num}`).value,
+            vibe: document.getElementById(`vibe-${num}`).value,
+            moves: [1,2,3,4].map(i => document.getElementById(`move${i}-${num}`).value),
+            passives: [1,2,3,4].map(i => document.getElementById(`pass${i}-${num}`).value),
+            stats: {}
+        };
+
+        ['HP','ATK','MAG','DEF','RES','SPD'].forEach(s => {
+            slot.stats[s] = {
+                grade: document.getElementById(`${s}-grade-${num}`).value,
+                growth: document.getElementById(`${s}-growth-${num}`).value
+            };
+        });
+
+        squad.push(slot);
+    }
+
+    const blob = new Blob([JSON.stringify(squad, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "monsterpatch-squad.json";
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function importSquad() {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "application/json";
+    input.onchange = () => {
+        const file = input.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            let squad;
+            try {
+                squad = JSON.parse(reader.result);
+            } catch (e) {
+                alert("Invalid squad file.");
+                return;
+            }
+
+            squad.forEach((slot, idx) => {
+                const num = idx + 1;
+                const monSelect = document.getElementById(`monSelect-${num}`);
+                if (!monSelect) return;
+
+                document.querySelector(`.slot:nth-child(${num}) input[placeholder="NICKNAME"]`).value = slot.nickname || "";
+                document.getElementById(`level-${num}`).value = slot.level || 50;
+                document.querySelector(`.slot:nth-child(${num}) .sparkle-checkbox`).checked = !!slot.sparkle;
+                monSelect.value = slot.mon || "";
+                document.getElementById(`itemSelect-${num}`).value = slot.item || "";
+
+                // Repopulate move/passive dropdowns for this mon before setting values
+                updateSprite(num);
+
+                (slot.moves || []).forEach((m, i) => {
+                    const sel = document.getElementById(`move${i+1}-${num}`);
+                    if (sel) { sel.value = m; updateMoveStyle(i+1, num, m); updateMoveDisplay(m, `${i+1}-${num}`); }
+                });
+                (slot.passives || []).forEach((p, i) => {
+                    const sel = document.getElementById(`pass${i+1}-${num}`);
+                    if (sel) { sel.value = p; updatePassiveDisplay(p, `${i+1}-${num}`); }
+                });
+
+                if (slot.stats) {
+                    Object.entries(slot.stats).forEach(([s, v]) => {
+                        document.getElementById(`${s}-grade-${num}`).value = v.grade || 'S';
+                        document.getElementById(`${s}-growth-${num}`).value = v.growth || '0';
+                    });
+                }
+                document.getElementById(`vibe-${num}`).value = slot.vibe || vibes[0];
+
+                updateStats(num);
+            });
+
+            updateTeamEfficiencies();
+        };
+        reader.readAsText(file);
+    };
+    input.click();
+}
+
 function updateTeamEfficiencies() {
     // --- OFFENSIVE MATCHUPS ---
     // Rows = threat/defending type. Columns = each mon's 4 moves (16 total) + NET.
