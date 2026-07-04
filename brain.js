@@ -773,14 +773,41 @@ function updateMoveDisplay(moveName, slotId) {
 }
 
 function updateTeamEfficiencies() {
+    // 1. COLLECT TEAM MOVES
+    // We need to know what move types are available across your 4 slots
+    let teamMoveTypes = [];
+    for (let i = 1; i <= 4; i++) {
+        const moveName = document.getElementById(`move${i}-1`)?.value; // Adjust ID based on your slot logic
+        if (moveName) {
+            const type = findMoveType(moveName);
+            if (type && type !== "Normal") teamMoveTypes.push(type);
+        }
+    }
+
+    // 2. UPDATE OFFENSIVE TABLE
     const offTbody = document.querySelector('#off-table tbody');
     if (offTbody) {
         offTbody.innerHTML = "";
-        types.forEach(rowType => {
-            offTbody.innerHTML += `<tr><td class="row-header">${rowType}</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>`;
+        types.forEach(defendingHouse => {
+            let rowHTML = `<tr><td class="row-header">${defendingHouse}</td>`;
+            
+            // Calculate effectiveness for each of the 4 slots
+            for (let i = 1; i <= 4; i++) {
+                const moveName = document.getElementById(`move${i}-1`)?.value;
+                if (moveName) {
+                    const moveType = findMoveType(moveName);
+                    // Calculate multiplier of this move type vs the defending house
+                    const score = getMultiplier(moveType, [defendingHouse]); 
+                    rowHTML += `<td>${score}</td>`;
+                } else {
+                    rowHTML += `<td>1</td>`;
+                }
+            }
+            offTbody.innerHTML += rowHTML + `</tr>`;
         });
     }
 
+    // 3. UPDATE DEFENSIVE TABLE (Existing logic)
     const defTbody = document.querySelector('#def-table tbody');
     if (defTbody) {
         defTbody.innerHTML = "";
