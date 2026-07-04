@@ -577,6 +577,11 @@ function getScoreCellStyle(score) {
     return '';
 }
 
+function getScoreCellStyle2(score) {
+    if (score > 1) return ' style="background-color: #d15c62;"';
+    if (score < 1) return ' style="background-color: #A2BA9C;"';
+    return '';
+}
 function updateStats(num) {
     const level = parseInt(document.getElementById(`level-${num}`).value) || 50;
     const monName = document.getElementById(`monSelect-${num}`).value;
@@ -831,9 +836,9 @@ function updateTeamEfficiencies() {
                     score = getMultiplier(threatType, data.houses);
                 }
                 netMultiplier *= score;
-                rowHTML += `<td${getScoreCellStyle(score)}>${score}</td>`;
+                rowHTML += `<td${getScoreCellStyle2(score)}>${score}</td>`;
             }
-            rowHTML += `<td${getScoreCellStyle(netMultiplier)}>${netMultiplier}</td></tr>`;
+            rowHTML += `<td${getScoreCellStyle2(netMultiplier)}>${netMultiplier}</td></tr>`;
             defTbody.innerHTML += rowHTML;
         });
     }
