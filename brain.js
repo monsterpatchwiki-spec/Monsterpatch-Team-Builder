@@ -777,25 +777,7 @@ function updateTeamEfficiencies() {
     if (offTbody) {
         offTbody.innerHTML = "";
         types.forEach(rowType => {
-            let rowHTML = `<tr><td class="row-header">${rowType}</td>`;
-            for (let i = 1; i <= 4; i++) {
-                const moveSelect = document.getElementById(`moveSelect-${i}`);
-                const moveName = moveSelect ? moveSelect.value : null;
-
-                if (moveName) {
-                    const moveType = findMoveType(moveName);
-                    if (moveType) {
-                        const score = getMultiplier(rowType, [moveType]);
-                        rowHTML += `<td>${score}</td>`;
-                    } else {
-                        rowHTML += `<td>1</td>`;
-                    }
-                } else {
-                    rowHTML += `<td>1</td>`;
-                }
-            }
-            rowHTML += `</tr>`;
-            offTbody.innerHTML += rowHTML;
+            offTbody.innerHTML += `<tr><td class="row-header">${rowType}</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>`;
         });
     }
 
