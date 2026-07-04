@@ -47,7 +47,7 @@
         
         .stat-row { display: flex; align-items: center; gap: 5px; }
         .stat-bar { height: 10px; background: var(--white); border: 1px solid var(--black); flex-grow: 1; position: relative; overflow: hidden; }
-        .stat-bar-fill { height: 100%; width: 50%; background: var(--red); }
+        .stat-bar-fill { height: 100%; width: var(--fill, 0%); background: var(--red); transition: width 0.2s ease; }
         
         input, select { background: var(--white); border: 1px solid var(--black); color: var(--black); padding: 8px; font-family: 'MyConsolas', monospace; font-weight: bold; font-size: 14px; box-sizing: border-box; width: 100%; }
         
