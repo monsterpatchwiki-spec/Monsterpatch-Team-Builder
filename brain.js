@@ -1,4 +1,4 @@
- /* @language javascript */
+/* @language javascript */
 // This file contains the logic and data for Monsterpatch Squad Builder this is also a comment
 const effectivenessChart = {
     "Overgrowth": { "Atlantian": 2, "Whimsical": 2, "Fireborn": 0.5, "Nightwatch": 0.5 },
@@ -419,10 +419,11 @@ function toggleDropdown(i, num) {
 }
 
 function selectMove(i, num, moveName) {
-    // 1. We NO LONGER use display.innerText = ... 
-    // because that deletes the span and the icon.
-    // Instead, we let updateMoveStyle handle the update.
-    
+    // 1. Sync the hidden <select> so its value is the source of truth
+    // for anything that reads move selections (e.g. the offensive matchup table).
+    const sel = document.getElementById(`move${i}-${num}`);
+    if (sel) sel.value = moveName;
+
     // 2. Hide the list
     toggleDropdown(i, num);
     
@@ -431,6 +432,9 @@ function selectMove(i, num, moveName) {
     
     // 4. Update the description text
     updateMoveDisplay(moveName, `${i}-${num}`);
+
+    // 5. Recalculate the offensive matchup table now that a move changed
+    updateTeamEfficiencies();
 }
 
 function updateMoveStyle(i, num, moveName) {
@@ -563,6 +567,14 @@ function getMultiplier(attackType, defTypes) {
         multiplier *= base;
     });
     return multiplier;
+}
+
+// Returns an inline style attribute string for a matchup cell based on its score.
+// >1 = green (super effective), <1 = red (not very effective), ==1 = default (no color).
+function getScoreCellStyle(score) {
+    if (score > 1) return ' style="background-color: #b7d7a8;"';
+    if (score < 1) return ' style="background-color: #e6b8b8;"';
+    return '';
 }
 
 function updateStats(num) {
@@ -773,14 +785,37 @@ function updateMoveDisplay(moveName, slotId) {
 }
 
 function updateTeamEfficiencies() {
+    // --- OFFENSIVE MATCHUPS ---
+    // Rows = threat/defending type. Columns = each mon's 4 moves (16 total) + NET.
+    // Only DAMAGE moves contribute a real score; everything else defaults to 1 (uncolored).
     const offTbody = document.querySelector('#off-table tbody');
     if (offTbody) {
         offTbody.innerHTML = "";
         types.forEach(rowType => {
-            offTbody.innerHTML += `<tr><td class="row-header">${rowType}</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>`;
+            let netMultiplier = 1;
+            let rowHTML = `<tr><td class="row-header">${rowType}</td>`;
+            for (let i = 1; i <= 4; i++) {
+                for (let m = 1; m <= 4; m++) {
+                    const moveSel = document.getElementById(`move${m}-${i}`);
+                    const moveName = moveSel ? moveSel.value : "";
+                    let score = 1;
+                    if (moveName) {
+                        const moveObj = findMoveObject(moveName);
+                        const moveType = findMoveType(moveName);
+                        if (moveObj && moveObj.type === "Damage" && moveType) {
+                            score = getMultiplier(moveType, [rowType]);
+                        }
+                    }
+                    netMultiplier *= score;
+                    rowHTML += `<td${getScoreCellStyle(score)}>${score}</td>`;
+                }
+            }
+            rowHTML += `<td${getScoreCellStyle(netMultiplier)}>${netMultiplier}</td></tr>`;
+            offTbody.innerHTML += rowHTML;
         });
     }
 
+    // --- DEFENSIVE MATCHUPS ---
     const defTbody = document.querySelector('#def-table tbody');
     if (defTbody) {
         defTbody.innerHTML = "";
@@ -789,15 +824,16 @@ function updateTeamEfficiencies() {
             let rowHTML = `<tr><td class="row-header">${threatType}</td>`;
             for (let i = 1; i <= 4; i++) {
                 const name = document.getElementById(`monSelect-${i}`).value;
+                let score = 1;
                 if (name && monData[name]) {
                     const isSparkly = document.querySelector(`.slot:nth-child(${i}) .sparkle-checkbox`).checked;
                     const data = isSparkly ? monData[name].sparkly : monData[name].normal;
-                    let score = getMultiplier(threatType, data.houses);
-                    netMultiplier *= score;
-                    rowHTML += `<td>${score}</td>`;
-                } else { rowHTML += `<td>1</td>`; }
+                    score = getMultiplier(threatType, data.houses);
+                }
+                netMultiplier *= score;
+                rowHTML += `<td${getScoreCellStyle(score)}>${score}</td>`;
             }
-            rowHTML += `<td>${netMultiplier}</td></tr>`;
+            rowHTML += `<td${getScoreCellStyle(netMultiplier)}>${netMultiplier}</td></tr>`;
             defTbody.innerHTML += rowHTML;
         });
     }
