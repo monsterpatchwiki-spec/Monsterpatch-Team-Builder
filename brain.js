@@ -495,37 +495,42 @@ function populateSlotDropdowns(num) {
     }
 
     // Build the custom div-based dropdown lists
-    const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
+const darkTypes = ["Fireborn", "Nightwatch", "Atlantian", "Dragoon", "Brawler", "Ironclad"];
+
+for(let i = 1; i <= 4; i++) {
+    const list = document.getElementById(`dropdown-list-${i}-${num}`);
+    if (!list) continue;
     
-    for(let i = 1; i <= 4; i++) {
-        const list = document.getElementById(`dropdown-list-${i}-${num}`);
-        if (!list) continue;
+    const moves = data.moves || [];
+    
+    let html = `<div onclick="selectMove(${i}, ${num}, '')" style="padding: 5px; cursor: pointer; background: var(--white); color: var(--black); border-bottom: 1px solid #342420;">Clear</div>`;
+    
+    moves.forEach(m => {
+        const type = findMoveType(m);
+        const color = typeColors[type] || "#eadfc1";
+        const icon = typeToIcon[type] || 'assets/house_default.png';
+        const textColor = darkTypes.includes(type) ? "#eadfc1" : "#342420";
         
-        const moves = data.moves || [];
+        // --- NEW LOGIC: Only show icon if type is NOT Normal ---
+        const iconHtml = (type !== "Normal") 
+            ? `<img src="${icon}" style="width:16px; height:16px; pointer-events: none;">` 
+            : ""; 
         
-        let html = `<div onclick="selectMove(${i}, ${num}, '')" style="padding: 5px; cursor: pointer; background: var(--white); color: var(--black); border-bottom: 1px solid #342420;">Clear</div>`;
-        
-        moves.forEach(m => {
-            const type = findMoveType(m);
-            const color = typeColors[type] || "#eadfc1";
-            const icon = typeToIcon[type] || 'assets/house_default.png';
-            const textColor = darkTypes.includes(type) ? "#eadfc1" : "#342420";
-            
-            html += `<div onclick="selectMove(${i}, ${num}, '${m}')" 
-                          style="background-color: ${color}; 
-                                 color: ${textColor}; 
-                                 padding: 5px; 
-                                 cursor: pointer; 
-                                 display: flex; 
-                                 align-items: center; 
-                                 gap: 5px; 
-                                 border-bottom: 1px solid #342420;">
-                          <img src="${icon}" style="width:16px; height:16px; pointer-events: none;">
-                          <span>${m}</span>
-                     </div>`;
-        });
-        list.innerHTML = html;
-    }
+        html += `<div onclick="selectMove(${i}, ${num}, '${m}')" 
+                      style="background-color: ${color}; 
+                             color: ${textColor}; 
+                             padding: 5px; 
+                             cursor: pointer; 
+                             display: flex; 
+                             align-items: center; 
+                             gap: 5px; 
+                             border-bottom: 1px solid #342420;">
+                      ${iconHtml}
+                      <span>${m}</span>
+                  </div>`;
+    });
+    list.innerHTML = html;
+}
     
     for(let i = 1; i <= 4; i++) {
     const sel = document.getElementById(`pass${i}-${num}`);
