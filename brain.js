@@ -611,6 +611,14 @@ function updateStats(num) {
         
         const final = Math.round(base * levelM * gradeMod * growthMod * vibeMod);
         document.getElementById(`${s}-result-${num}`).innerText = final;
+
+        // Scale the stat bar fill on a 0-255 range and expose it via the
+        // --fill CSS custom property (see .stat-bar-fill in the stylesheet).
+        const barFill = document.getElementById(`${s}-bar-${num}`);
+        if (barFill) {
+            const pct = Math.max(0, Math.min(100, (final / 255) * 100));
+            barFill.style.setProperty('--fill', pct + '%');
+        }
     });
 }
 
@@ -738,7 +746,7 @@ function createSlot(num) {
                         <span style="width:30px; font-weight:bold; font-size:11px; color: var(--black);">${s}</span> 
                         <select id="${s}-grade-${num}" onchange="updateStats(${num})" style="width:45px; padding:2px;">${tierOpts}</select>
                         <select id="${s}-growth-${num}" onchange="updateStats(${num})" style="width:40px; padding:2px;">${invOpts}</select>
-                        <div class="stat-bar"><div class="stat-bar-fill"></div></div>
+                        <div class="stat-bar"><div class="stat-bar-fill" id="${s}-bar-${num}"></div></div>
                         <span id="${s}-result-${num}" style="font-size:11px; width:30px; text-align:right; color: var(--black);">40</span>
                     </div>`).join('')}
             </div>
