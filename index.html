@@ -55,6 +55,7 @@
         .sparkle-checkbox:checked { background: var(--yellow) !important; }
 
         .top-header { display: flex; justify-content: space-between; align-items: flex-end; color: var(--white); margin-bottom: 20px; border-bottom: 2px solid var(--white); padding-bottom: 10px; flex-wrap: wrap; gap: 10px; }
+        .top-header-buttons { display: flex; gap: 10px; }
         .btn { background: var(--pink); border: 2px solid var(--black); color: var(--black); padding: 8px 16px; font-weight: bold; cursor: pointer; font-family: 'MyConsolas', monospace; }
 
         @media (max-width: 500px) {
@@ -67,7 +68,10 @@
 <div class="page-wrapper">
     <div class="top-header">
         <div><h1>MONSTERPATCH SQUAD BUILDER</h1><p>ALPHA v1.0.0</p></div>
-        <button class="btn" onclick="importSquad()">IMPORT SQUAD</button> <button class="btn" onclick="exportSquad()">EXPORT SQUAD</button>
+        <div class="top-header-buttons">
+            <button class="btn" onclick="importSquad()">IMPORT SQUAD</button>
+            <button class="btn" onclick="exportSquad()">EXPORT SQUAD</button>
+        </div>
     </div>
     
     <div class="slot-grid" id="slot-area"></div>
