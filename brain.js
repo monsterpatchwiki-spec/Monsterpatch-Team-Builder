@@ -52,6 +52,17 @@ const moveData = {
             { name: "WINGS", pm: "P", type: "Damage", power: 30, trigger: 2, scale: "ATK", target: "Single Enemy", tag: null, cd: 0, effect: null },
             { name: "TAIL SLAM", pm: "P", type: "Damage", power: 70, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 1, effect: null },
             { name: "JUMP KICK", pm: "P", type: "Damage", power: 50, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 2, effect: "100% Chance to EVADE 3." }
+        ],
+        "T2": [
+            { name: "HORN", pm: "P", type: "Damage", power: 80, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 1, effect: null },
+            { name: "BARRAGE", pm: "P", type: "Damage", power: 20, trigger: 3, scale: "ATK", target: "Front Enemies", tag: null, cd: 1, effect: null },
+            { name: "TALONS", pm: "P", type: "Damage", power: 30, trigger: 3, scale: "ATK", target: "Single Enemy", tag: "[Talons]", cd: 1, effect: null },
+            { name: "NEEDLE LANCE", pm: "P", type: "Damage", power: 20, trigger: 4, scale: "ATK", target: "Random Enemy", tag: "[Lance]", cd: 1, effect: null },
+            { name: "LICK", pm: "P", type: "Damage", power: 65, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 1, effect: "50% Chance to remove all BUFFS. 50% Chance to remove all enemy tokens." }
+        ],
+        "T3": [
+            { name: "CLOBBER", pm: "P", type: "Damage", power: 100, trigger: 1, scale: "ATK", target: "Random Enemy", tag: null, cd: 3, effect: "25% Chance to STUN 1." },
+            { name: "EXPLODE", pm: "P", type: "Damage", power: 100, trigger: 1, scale: "ATK", target: "All Enemies", tag: null, cd: 3, effect: "User faints." }
         ]
     },
     "Fireborn": {
@@ -59,9 +70,226 @@ const moveData = {
             { name: "METEOR", pm: "M", type: "Damage", power: 15, trigger: 3, scale: "MAG", target: "Random Enemy", tag: null, cd: 1, effect: "25% Chance to BURN 2." },
             { name: "FIREBALL", pm: "M", type: "Damage", power: 30, trigger: 1, scale: "MAG", target: "Single Enemy", tag: null, cd: 1, effect: "100% Chance to spawn 1 SUNLIGHT." },
             { name: "SCORCH", pm: "P", type: "Damage", power: 40, trigger: 1, scale: "ATK", target: "Front Enemies", tag: null, cd: 1, effect: "50% Chance to BURN 2." }
+        ],
+        "T1": [
+            { name: "HEAT SHIELD", pm: "M", type: "Shield", power: 20, trigger: 1, scale: "MAG", target: "All Allies", tag: null, cd: 2, effect: "100% Chance to RES UP 2." },
+            { name: "BLAZE BLAST", pm: "P", type: "Damage", power: 60, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 2, effect: "100% Chance to BURN 5." },
+            { name: "WILDFIRE", pm: "M", type: "Damage", power: 20, trigger: 4, scale: "MAG", target: "Random Enemy", tag: null, cd: 2, effect: "25% Chance to BURN 2." },
+            { name: "FIRE BREATH", pm: "M", type: "Damage", power: 50, trigger: 1, scale: "MAG", target: "Single Enemy", tag: null, cd: 2, effect: "50% Chance to BURN 2. 50% Chance to RES BREAK 2." }
+        ],
+        "T2": [
+            { name: "ENFLAME", pm: "M", type: "Shield", power: 20, trigger: 2, scale: "MAG", target: "Self", tag: null, cd: 2, effect: "25% Chance to MAG UP 2. 25% Chance to HASTE 2." },
+            { name: "WISPS", pm: "M", type: "Heal", power: 40, trigger: 1, scale: "MAG", target: "All Allies", tag: null, cd: 2, effect: "100% Chance to remove 1 DEBUFF." },
+            { name: "FIERY HORNS", pm: "P", type: "Damage", power: 60, trigger: 2, scale: "ATK", target: "Random Enemy", tag: null, cd: 2, effect: "25% Chance to BURN 2." },
+            { name: "FIRE FLOWER", pm: "M", type: "Damage", power: 70, trigger: 1, scale: "MAG", target: "Single Enemy", tag: null, cd: 2, effect: "50% Chance to BURN 2. 50% Chance to POISON 2." },
+            { name: "INFERNO PUNCH", pm: "P", type: "Damage", power: 70, trigger: 1, scale: "ATK", target: "Single Enemy", tag: "[Punch]", cd: 2, effect: "100% Chance to BURN 10." },
+            { name: "FIRE TOWER", pm: "M", type: "Damage", power: 80, trigger: 1, scale: "MAG", target: "Single Enemy", tag: null, cd: 2, effect: "50% Chance to BURN 2. 50% Chance to RES BREAK 2." }
+        ],
+        "T3": [
+            { name: "VOLCANO", pm: "P", type: "Damage", power: 120, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 3, effect: null },
+            { name: "FIERY REIGN", pm: "M", type: "Damage", power: 30, trigger: 4, scale: "MAG", target: "Random Enemy", tag: null, cd: 3, effect: "75% Chance to BURN 3." },
+            { name: "FIRE BEAM", pm: "M", type: "Damage", power: 110, trigger: 1, scale: "MAG", target: "Single Enemy", tag: "[Beam]", cd: 3, effect: "CONSUME SUNLIGHT: Increase power by 50." }
+        ]
+    },
+    "Atlantian": {
+        "T0": [
+            { name: "DEWDROP", pm: "M", type: "Heal", power: 20, trigger: 3, scale: "MAG", target: "Random Ally", tag: null, cd: 1, effect: "25% Chance to REGEN 2." },
+            { name: "TORRENT", pm: "P", type: "Damage", power: 30, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 1, effect: "50% Chance to DEF BREAK 2." },
+            { name: "DOUBLE BUBBLE", pm: "M", type: "Damage", power: 20, trigger: 2, scale: "MAG", target: "Single Enemy", tag: null, cd: 1, effect: null },
+            { name: "WAVE SPLASH", pm: "M", type: "Damage", power: 40, trigger: 1, scale: "MAG", target: "Single Enemy", tag: null, cd: 1, effect: null }
+        ],
+        "T1": [
+            { name: "WHIRL", pm: "M", type: "Damage", power: 20, trigger: 3, scale: "MAG", target: "Random Enemy", tag: null, cd: 2, effect: "100% Chance to remove 1 BUFF." },
+            { name: "AQUALUNG", pm: "P", type: "Damage", power: 50, trigger: 1, scale: "ATK", target: "All Enemies", tag: null, cd: 2, effect: null },
+            { name: "SKY CANNON", pm: "P", type: "Damage", power: 30, trigger: 2, scale: "ATK", target: "Random Enemy", tag: "[Cannon]", cd: 2, effect: "100% Chance to SHUFFLE." },
+            { name: "LIGHT RAIN", pm: "M", type: "Heal", power: 20, trigger: 4, scale: "MAG", target: "Random Ally", tag: null, cd: 2, effect: "50% Chance to REGEN 2." }
+        ],
+        "T2": [
+            { name: "DELUGE", pm: "M", type: "Damage", power: 70, trigger: 1, scale: "MAG", target: "Single Enemy", tag: null, cd: 2, effect: "CONSUME SHELL: Target ALL ENEMIES." },
+            { name: "TIDAL WAVE", pm: "M", type: "Damage", power: 80, trigger: 1, scale: "MAG", target: "Front Enemies", tag: null, cd: 2, effect: "100% Chance to SHUFFLE." },
+            { name: "AQUA LANCE", pm: "P", type: "Damage", power: 40, trigger: 2, scale: "ATK", target: "Single Enemy", tag: "[Lance]", cd: 2, effect: "50% Chance to DEF BREAK 2." },
+            { name: "FROST PUNCH", pm: "P", type: "Damage", power: 80, trigger: 1, scale: "ATK", target: "Single Enemy", tag: "[Punch]", cd: 2, effect: "100% Chance to RES BREAK 2." },
+            { name: "GLACIAL ORBS", pm: "M", type: "Shield", power: 30, trigger: 1, scale: "MAG", target: "All Allies", tag: null, cd: 3, effect: "50% Chance to REGEN 3. 50% Chance to RES UP 3." }
+        ],
+        "T3": [
+            { name: "MAELSTROM", pm: "M", type: "Damage", power: 90, trigger: 1, scale: "MAG", target: "All Enemies", tag: null, cd: 3, effect: "50% Chance to spawn 1 SHELL." },
+            { name: "STEAM SHOOT", pm: "P", type: "Damage", power: 100, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 3, effect: "CONSUME SUNLIGHT: Increase power by 50." },
+            { name: "JUSTICE PUNCH", pm: "P", type: "Damage", power: 120, trigger: 1, scale: "ATK", target: "Single Enemy", tag: "[Punch]", cd: 3, effect: null },
+            { name: "BLIZZARD LANCE", pm: "P", type: "Damage", power: 60, trigger: 2, scale: "ATK", target: "Single Enemy", tag: "[Lance]", cd: 3, effect: "100% Chance to remove ALL BUFFS." },
+            { name: "BLIZZARD BEAM", pm: "M", type: "Damage", power: 120, trigger: 1, scale: "MAG", target: "Single Enemy", tag: "[Beam]", cd: 3, effect: null }
+        ]
+    },
+    "Overgrowth": {
+        "T0": [
+            { name: "ROOT", pm: "P", type: "Damage", power: 40, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 1, effect: null },
+            { name: "PETAL", pm: "M", type: "Damage", power: 20, trigger: 2, scale: "MAG", target: "Single Enemy", tag: null, cd: 1, effect: "50% Chance to spawn 1 LEAF." },
+            { name: "BRAMBLE", pm: "P", type: "Damage", power: 30, trigger: 2, scale: "ATK", target: "Random Enemy", tag: null, cd: 1, effect: null },
+            { name: "POISON PUNCH", pm: "P", type: "Damage", power: 30, trigger: 1, scale: "ATK", target: "Single Enemy", tag: "[Punch]", cd: 1, effect: "100% Chance to POISON 2." }
+        ],
+        "T1": [
+            { name: "SPORES", pm: "M", type: "Damage", power: 10, trigger: 2, scale: "HP", target: "All Enemies", tag: "[Spores]", cd: 2, effect: "25% Chance to DEF BREAK 2. 25% Chance to RES BREAK 2. 50% Chance to POISON 2." },
+            { name: "VINE SLASH", pm: "P", type: "Damage", power: 60, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 2, effect: null },
+            { name: "BLOSSOM", pm: "M", type: "Heal", power: 10, trigger: 1, scale: "MAG", target: "All Allies", tag: null, cd: 2, effect: "50% Chance to remove 1 DEBUFF." },
+            { name: "THWACK", pm: "P", type: "Damage", power: 70, trigger: 1, scale: "ATK", target: "Random Enemy", tag: null, cd: 1, effect: null }
+        ],
+        "T2": [
+            { name: "ENDLESS VINES", pm: "P", type: "Damage", power: 40, trigger: 2, scale: "ATK", target: "Random Enemy", tag: null, cd: 2, effect: "CONSUME LEAF: Increase trigger count by 2." },
+            { name: "WOODLAND STEP", pm: "M", type: "Shield", power: 50, trigger: 1, scale: "RES", target: "Single Ally", tag: null, cd: 2, effect: "100% Chance to SWAP." },
+            { name: "LEAF STORM", pm: "M", type: "Damage", power: 50, trigger: 1, scale: "MAG", target: "All Enemies", tag: null, cd: 2, effect: "25% Chance to spawn 1 LEAF." },
+            { name: "WILD WIND", pm: "M", type: "Damage", power: 80, trigger: 1, scale: "MAG", target: "Single Enemy", tag: null, cd: 2, effect: "50% Chance to SHUFFLE." }
+        ],
+        "T3": [
+            { name: "LEAF BEAM", pm: "M", type: "Damage", power: 110, trigger: 1, scale: "MAG", target: "Single Enemy", tag: "[Beam]", cd: 3, effect: "CONSUME LEAF: Increase power by 50." },
+            { name: "CACTUS BASH", pm: "P", type: "Damage", power: 100, trigger: 1, scale: "DEF", target: "Single Enemy", tag: null, cd: 3, effect: "100% Chance to remove all BUFFS." },
+            { name: "HEALING WIND", pm: "M", type: "Heal", power: 30, trigger: 1, scale: "MAG", target: "All Allies", tag: null, cd: 3, effect: "100% Chance to REGEN 3." },
+            { name: "WILDGROWTH", pm: "M", type: "Shield", power: 30, trigger: 1, scale: "MAG", target: "All Allies", tag: null, cd: 3, effect: "50% Chance to spawn 2 LEAF." }
+        ]
+    },
+    "Whimsical": {
+        "T0": [
+            { name: "ZAP", pm: "P", type: "Damage", power: 40, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 1, effect: null },
+            { name: "DANCE", pm: "M", type: "Shield", power: 30, trigger: 1, scale: "MAG", target: "Single Ally", tag: null, cd: 1, effect: "100% Chance to SWAP." },
+            { name: "BOLT", pm: "M", type: "Damage", power: 15, trigger: 1, scale: "MAG", target: "All Enemies", tag: "[Bolt]", cd: 1, effect: null },
+            { name: "STAR", pm: "P", type: "Damage", power: 35, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 1, effect: "50% Chance to STUN 1." }
+        ],
+        "T1": [
+            { name: "GLITTER", pm: "M", type: "Damage", power: 30, trigger: 3, scale: "SPD", target: "Random Enemy", tag: null, cd: 2, effect: "50% Chance to remove 1 BUFF." },
+            { name: "DAYDREAM", pm: "M", type: "Heal", power: 50, trigger: 1, scale: "MAG", target: "Single Ally", tag: null, cd: 2, effect: "100% Chance to HASTE 2." },
+            { name: "STARBOLT", pm: "M", type: "Damage", power: 40, trigger: 2, scale: "MAG", target: "Random Enemy", tag: null, cd: 2, effect: null },
+            { name: "DAZZLE", pm: "P", type: "Damage", power: 60, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 1, effect: null },
+            { name: "SHOCK PUNCH", pm: "P", type: "Damage", power: 50, trigger: 1, scale: "ATK", target: "Single Enemy", tag: "[Punch]", cd: 1, effect: "25% Chance to STUN 1." },
+            { name: "POCO SONG", pm: "M", type: "Shield", power: 30, trigger: 1, scale: "MAG", target: "All Allies", tag: "[Song]", cd: 2, effect: "100% Chance to ATK UP 3. 100% Chance to MAG UP 3." }
+        ],
+        "T2": [
+            { name: "THUNDERCLAP", pm: "M", type: "Damage", power: 40, trigger: 1, scale: "MAG", target: "All Enemies", tag: null, cd: 2, effect: "50% Chance to remove 1 BUFF." },
+            { name: "ZAP TACKLE", pm: "P", type: "Damage", power: 70, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 2, effect: "25% Chance to STUN 1." },
+            { name: "LIGHT SHIELD", pm: "P", type: "Shield", power: 70, trigger: 1, scale: "MAG", target: "Single Ally", tag: null, cd: 2, effect: "50% Chance to RES UP 2." }
+        ],
+        "T3": [
+            { name: "RADIANCE", pm: "M", type: "Shield", power: 40, trigger: 1, scale: "MAG", target: "All Allies", tag: null, cd: 3, effect: "100% Chance to reduce cooldowns by 1." },
+            { name: "STARLIGHT", pm: "M", type: "Damage", power: 120, trigger: 1, scale: "MAG", target: "Single Enemy", tag: null, cd: 3, effect: null },
+            { name: "LIGHT CANNON", pm: "P", type: "Damage", power: 70, trigger: 2, scale: "ATK", target: "Random Enemy", tag: "[Cannon]", cd: 3, effect: "100% Chance to remove all BUFFS." }
+        ]
+    },
+    "Nightwatch": {
+        "T0": [
+            { name: "SHADE", pm: "M", type: "Damage", power: 40, trigger: 1, scale: "MAG", target: "Single Enemy", tag: null, cd: 1, effect: null },
+            { name: "MURK", pm: "P", type: "Damage", power: 40, trigger: 1, scale: "SPD", target: "Single Enemy", tag: null, cd: 1, effect: null },
+            { name: "SHADOW", pm: "M", type: "Shield", power: 20, trigger: 1, scale: "SPD", target: "Self", tag: null, cd: 1, effect: "100% Chance to HASTE 2. 100% Chance to ATK UP 2." }
+        ],
+        "T1": [
+            { name: "GHOST BREATH", pm: "M", type: "Damage", power: 30, trigger: 1, scale: "MAG", target: "All Enemies", tag: "[GhostBreath]", cd: 2, effect: null },
+            { name: "POISON BITE", pm: "P", type: "Damage", power: 50, trigger: 1, scale: "ATK", target: "Single Enemy", tag: "[Bite]", cd: 2, effect: "100% Chance to POISON 2." },
+            { name: "REND", pm: "P", type: "Damage", power: 30, trigger: 2, scale: "ATK", target: "Single Enemy", tag: null, cd: 2, effect: null },
+            { name: "POISON CLOUD", pm: "P", type: "Damage", power: 10, trigger: 4, scale: "ATK", target: "Random Enemy", tag: null, cd: 2, effect: "100% Chance to POISON 3." }
+        ],
+        "T2": [
+            { name: "NIGHTMARE", pm: "P", type: "Damage", power: 40, trigger: 2, scale: "ATK", target: "Front Enemies", tag: null, cd: 2, effect: "50% Chance to spawn 1 DARKNESS." },
+            { name: "SHADOW AXE", pm: "P", type: "Damage", power: 80, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 2, effect: null },
+            { name: "DARK MATTER", pm: "M", type: "Damage", power: 30, trigger: 2, scale: "MAG", target: "All Enemies", tag: null, cd: 0, effect: "25% Chance to POISON 2. 25% Chance to BLIND 2." }
+        ],
+        "T3": [
+            { name: "OBLIVION", pm: "M", type: "Damage", power: 100, trigger: 1, scale: "MAG", target: "All Enemies", tag: null, cd: 3, effect: "CONSUME DARKNESS: Increase power by 50." },
+            { name: "DOOMSDAY", pm: "M", type: "Damage", power: 30, trigger: 3, scale: "MAG", target: "All Enemies", tag: null, cd: 5, effect: "100% Chance to remove 1 BUFF." },
+            { name: "DARK CHOMP", pm: "P", type: "Damage", power: 80, trigger: 2, scale: "ATK", target: "Random Enemy", tag: null, cd: 2, effect: "50% Chance to spawn 1 DARKNESS." }
+        ]
+    },
+    "Brawler": {
+        "T0": [
+            { name: "UPPERCUT", pm: "P", type: "Damage", power: 40, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 1, effect: null },
+            { name: "PUMMEL", pm: "P", type: "Damage", power: 20, trigger: 2, scale: "ATK", target: "Single Enemy", tag: null, cd: 1, effect: "25% Chance to DEF BREAK 2." }
+        ],
+        "T1": [
+            { name: "QUAKE", pm: "P", type: "Damage", power: 20, trigger: 2, scale: "ATK", target: "All Enemies", tag: null, cd: 2, effect: null },
+            { name: "BERSERK", pm: "P", type: "Shield", power: 50, trigger: 1, scale: "ATK", target: "Self", tag: null, cd: 2, effect: "100% Chance to ATK UP 3. 100% Chance to HASTE 3." },
+            { name: "BIG BRAWL", pm: "P", type: "Damage", power: 40, trigger: 2, scale: "ATK", target: "Front Enemies", tag: null, cd: 2, effect: null },
+            { name: "TANTRUM", pm: "P", type: "Damage", power: 40, trigger: 2, scale: "ATK", target: "Random Enemy", tag: null, cd: 2, effect: null }
+        ],
+        "T2": [
+            { name: "BOULDER BREAK", pm: "P", type: "Damage", power: 80, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 2, effect: "100% Chance to DEF BREAK 2." },
+            { name: "SOUL PUNCH", pm: "M", type: "Damage", power: 70, trigger: 1, scale: "MAG", target: "Single Enemy", tag: "[Punch]", cd: 2, effect: "100% Chance to remove 1 BUFF." },
+            { name: "JUGGERNAUT", pm: "P", type: "Shield", power: 50, trigger: 1, scale: "ATK", target: "Self", tag: null, cd: 2, effect: "100% Chance to INVINCIBLE 3." },
+            { name: "ROCK SPELL", pm: "M", type: "Damage", power: 60, trigger: 1, scale: "MAG", target: "All Enemies", tag: null, cd: 2, effect: "50% Chance to DEF BREAK 2. 50% Chance to RES BREAK 2." }
+        ],
+        "T3": [
+            { name: "SNEAKY STRIKES", pm: "P", type: "Damage", power: 30, trigger: 2, scale: "ATK", target: "Single Enemy", tag: null, cd: 3, effect: "CONSUME DARKNESS: Increase trigger count by 3." },
+            { name: "RECKLESS PUNCH", pm: "P", type: "Damage", power: 130, trigger: 1, scale: "ATK", target: "Random Enemy", tag: "[Punch]", cd: 3, effect: "100% Chance to DEF BREAK 2." },
+            { name: "TERRA CRUSH", pm: "P", type: "Damage", power: 120, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 3, effect: null },
+            { name: "SEISMIC PULSE", pm: "M", type: "Damage", power: 60, trigger: 2, scale: "MAG", target: "All Enemies", tag: null, cd: 3, effect: null }
+        ]
+    },
+    "Dragoon": {
+        "T0": [
+            { name: "FLARE", pm: "M", type: "Damage", power: 40, trigger: 1, scale: "MAG", target: "Single Enemy", tag: "[Flare]", cd: 1, effect: "50% Chance to RES BREAK 2." },
+            { name: "BITE", pm: "P", type: "Damage", power: 40, trigger: 1, scale: "ATK", target: "Single Enemy", tag: "[Bite]", cd: 1, effect: "50% Chance to DEF BREAK 2." }
+        ],
+        "T1": [
+            { name: "CRUSH", pm: "P", type: "Damage", power: 50, trigger: 1, scale: "ATK", target: "Front Enemies", tag: null, cd: 2, effect: "50% Chance to DEF BREAK 2." },
+            { name: "BREATH", pm: "M", type: "Damage", power: 50, trigger: 1, scale: "MAG", target: "All Enemies", tag: null, cd: 2, effect: null },
+            { name: "CHOMP", pm: "P", type: "Damage", power: 60, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 2, effect: null },
+            { name: "SCATHE", pm: "M", type: "Damage", power: 50, trigger: 1, scale: "MAG", target: "Single Enemy", tag: null, cd: 2, effect: "100% Chance to remove 2 enemy tokens." }
+        ],
+        "T2": [
+            { name: "WYVERN ASCENT", pm: "M", type: "Shield", power: 50, trigger: 1, scale: "ATK", target: "Self", tag: null, cd: 2, effect: "100% Chance to ATK UP 2. 100% Chance to MAG UP 2. 100% Chance to HASTE 2." },
+            { name: "SKYDIVE", pm: "P", type: "Damage", power: 80, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 2, effect: null },
+            { name: "WYRMFLARE", pm: "M", type: "Damage", power: 80, trigger: 1, scale: "MAG", target: "Single Enemy", tag: null, cd: 2, effect: null },
+            { name: "DRACO BITE", pm: "P", type: "Damage", power: 70, trigger: 1, scale: "ATK", target: "Single Enemy", tag: "[Bite]", cd: 2, effect: "100% Chance to remove all BUFFS." },
+            { name: "SPIKY TAIL", pm: "P", type: "Damage", power: 60, trigger: 2, scale: "ATK", target: "Random Enemy", tag: null, cd: 2, effect: "100% Chance to DEF BREAK 2." }
+        ],
+        "T3": [
+            { name: "DRAGON BEAM", pm: "M", type: "Damage", power: 120, trigger: 1, scale: "MAG", target: "Single Enemy", tag: "[Beam]", cd: 3, effect: null },
+            { name: "CRUSHING JAWS", pm: "P", type: "Damage", power: 40, trigger: 3, scale: "ATK", target: "Single Enemy", tag: null, cd: 3, effect: "100% Chance to remove 1 enemy token." }
+        ]
+    },
+    "Mystic": {
+        "T0": [
+            { name: "KISS", pm: "M", type: "Damage", power: 40, trigger: 1, scale: "MAG", target: "Single Enemy", tag: null, cd: 1, effect: null },
+            { name: "HEAL DANCE", pm: "M", type: "Heal", power: 30, trigger: 1, scale: "MAG", target: "Single Ally", tag: null, cd: 1, effect: "100% Chance to SWAP." },
+            { name: "PSIONIC", pm: "M", type: "Damage", power: 30, trigger: 1, scale: "MAG", target: "Single Enemy", tag: null, cd: 1, effect: "100% Chance to SHUFFLE." },
+            { name: "MAGIC SONG", pm: "M", type: "Heal", power: 20, trigger: 1, scale: "MAG", target: "All Allies", tag: "[Song]", cd: 1, effect: "100% Chance to remove 1 DEBUFF." }
+        ],
+        "T1": [
+            { name: "ENERGY WIPE", pm: "M", type: "Damage", power: 30, trigger: 1, scale: "MAG", target: "Single Enemy", tag: null, cd: 2, effect: "100% Chance to remove all enemy tokens." },
+            { name: "MAGIC BLAST", pm: "M", type: "Damage", power: 60, trigger: 1, scale: "MAG", target: "Single Enemy", tag: null, cd: 2, effect: null },
+            { name: "FAERIE FIRE", pm: "M", type: "Damage", power: 25, trigger: 3, scale: "MAG", target: "Random Enemy", tag: null, cd: 2, effect: "25% Chance to BURN 2." }
+        ],
+        "T2": [
+            { name: "HEX", pm: "M", type: "Damage", power: 70, trigger: 1, scale: "MAG", target: "Single Enemy", tag: null, cd: 2, effect: "100% Chance to remove all BUFFS." },
+            { name: "HARMONIZE", pm: "M", type: "Heal", power: 40, trigger: 1, scale: "RES", target: "Single Ally", tag: null, cd: 3, effect: "Double all ally tokens." },
+            { name: "TIME TRAVEL", pm: "M", type: "Heal", power: 30, trigger: 1, scale: "MAG", target: "Single Ally", tag: null, cd: 3, effect: "Increase target's TURN METER by 50." },
+            { name: "TIME BREAK", pm: "M", type: "Damage", power: 60, trigger: 1, scale: "MAG", target: "Single Enemy", tag: null, cd: 2, effect: "Reduce target's TURN METER by 50." },
+            { name: "AETHER HEAL", pm: "M", type: "Heal", power: 40, trigger: 1, scale: "MAG", target: "All Allies", tag: null, cd: 3, effect: "50% Chance to remove 1 DEBUFF." },
+            { name: "ARCANA", pm: "M", type: "Damage", power: 60, trigger: 1, scale: "MAG", target: "All Enemies", tag: null, cd: 2, effect: "50% Chance to apply RES BREAK 2." }
+        ],
+        "T3": [
+            { name: "LUSTER BEAM", pm: "M", type: "Damage", power: 120, trigger: 1, scale: "MAG", target: "Single Enemy", tag: "[Beam]", cd: 3, effect: null },
+            { name: "GRAND AURA", pm: "M", type: "Shield", power: 60, trigger: 1, scale: "MAG", target: "All Allies", tag: null, cd: 3, effect: "100% Chance to gain 1 random BUFF." },
+            { name: "LIGHT SONG", pm: "M", type: "Heal", power: 20, trigger: 1, scale: "MAG", target: "All Allies", tag: null, cd: 4, effect: "Reduce target's cooldowns by 1." },
+            { name: "DARK SONG", pm: "M", type: "Damage", power: 20, trigger: 1, scale: "MAG", target: "All Enemies", tag: null, cd: 4, effect: "Increase target's cooldowns by 1." }
+        ]
+    },
+    "Ironclad": {
+        "T0": [
+            { name: "GRIND", pm: "P", type: "Damage", power: 40, trigger: 1, scale: "DEF", target: "Single Enemy", tag: null, cd: 1, effect: null },
+            { name: "GUARD UP", pm: "P", type: "Shield", power: 20, trigger: 1, scale: "DEF", target: "Front Allies", tag: null, cd: 1, effect: "50% Chance to DEF UP 2." },
+            { name: "SHARDS", pm: "P", type: "Damage", power: 15, trigger: 3, scale: "ATK", target: "Random Enemy", tag: null, cd: 1, effect: null }
+        ],
+        "T1": [
+            { name: "HAMMER", pm: "P", type: "Damage", power: 50, trigger: 2, scale: "ATK", target: "Random Enemy", tag: "[Hammer]", cd: 2, effect: null },
+            { name: "FORTIFY", pm: "P", type: "Shield", power: 40, trigger: 1, scale: "DEF", target: "Front Allies", tag: null, cd: 2, effect: "50% Chance to DEF UP 2." },
+            { name: "RAZOR", pm: "P", type: "Damage", power: 50, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 1, effect: "100% Chance to remove 1 BUFF." },
+            { name: "QUADRA LANCE", pm: "P", type: "Damage", power: 15, trigger: 4, scale: "ATK", target: "Single Enemy", tag: null, cd: 2, effect: "25% Chance to DEF BREAK 2. 25% Chance to remove 1 BUFF." }
+        ],
+        "T2": [
+            { name: "BULWARK", pm: "P", type: "Shield", power: 50, trigger: 1, scale: "DEF", target: "Front Allies", tag: null, cd: 2, effect: "50% Chance to RES UP 2." },
+            { name: "SKEWER", pm: "P", type: "Damage", power: 70, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 2, effect: "100% Chance to remove 1 enemy token." },
+            { name: "METAL BALL", pm: "P", type: "Damage", power: 90, trigger: 1, scale: "DEF", target: "Single Enemy", tag: null, cd: 2, effect: null }
+        ],
+        "T3": [
+            { name: "TITAN BASH", pm: "P", type: "Damage", power: 100, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 3, effect: "100% Chance to DEF BREAK 5." },
+            { name: "STEEL BLADE", pm: "P", type: "Damage", power: 120, trigger: 1, scale: "ATK", target: "Single Enemy", tag: null, cd: 3, effect: null }
         ]
     }
-    // Continue this pattern for all tiers and types in "MoN_Moves.txt"
 };
 
 const passiveData = {
@@ -69,7 +297,7 @@ const passiveData = {
     "BIG HEART": "BATTLE START: Increase MAXHP by 20%.",
     "ANIMATED": "BATTLE START: Gain HASTE 2.",
     "SHORT REST": "TURN START: If HP is less than 75%, HEAL 10% MAX HP.",
-    "LONG REST": "TURN START: If HP is less than 50%, HEAL to full HP. [cite: 36] Once per battle. [cite: 37]",
+    "LONG REST": "TURN START: If HP is less than 50%, HEAL to full HP. Once per battle.",
     "STALWART": "ON DAMAGED: Gain SHIELD equal to 5% MAX HP.",
     "APOCALYPSE": "TURN START: If HP is less than 25%, refresh all cooldowns.",
     "CHUBBY": "While HP is greater than 50%: Reduce incoming damage by 15%.",
@@ -160,8 +388,9 @@ const passiveData = {
     "QUICK SHIELD": "BATTLE START: Gain SHIELD equal to 10% MAX HP.",
     "EXOSKELETON": "BATTLE START: Gain SHIELD equal to 25% DEF."
 };
+  
  const monData = {
-   "001 Birb": { normal: { houses: ["Fireborn"], moves: ["METEOR", "CLAWS", "PUNCH"], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_n.png" }, sparkly: { houses: ["Nightwatch"], moves: ["CLAWS"], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_s.png" } },
+   "001 Birb": { normal: { houses: ["Fireborn"], moves: ["METEOR", "CLAWS", "PUNCH"], passives: ["CRITICAL EYE"], stats: { hp: 104, atk: 51, mag: 56, def: 64, res: 61, spd: 49 }, sprite: "assets/001_n.png" }, sparkly: { houses: ["Nightwatch"], moves: ["CLAWS"], passives: ["CRITICAL EYE"], sprite: "assets/001_s.png" } },
    "002 Feenix": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 7, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_n.png" }, sparkly: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/002_s.png" } },
    "003 Hawkamere": { normal: { houses: ["Fireborn", "Whimsical"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/003_n.png" }, sparkly: { houses: ["Mystic", "Nightwatch"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/003_s.png" } },
    "004 Axolot": { normal: { houses: ["Atlantian", "Mystic"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/004_n.png" }, sparkly: { houses: ["Dragoon", "Fireborn"], moves: [], passives: [], stats: { hp: 0, atk: 0, mag: 0, def: 0, res: 0, spd: 0 }, sprite: "assets/004_s.png" } },
@@ -589,10 +818,9 @@ function updateStats(num) {
     const vibe = document.getElementById(`vibe-${num}`).value;
 
     let baseStats = { hp: 100, atk: 100, mag: 100, def: 100, res: 100, spd: 100 };
-    if (monName && monData[monName]) {
-        const data = isSparkly ? monData[monName].sparkly : monData[monName].normal;
-        baseStats = data.stats;
-    }
+if (monName && monData[monName]) {
+    baseStats = monData[monName].normal.stats;
+}
 
     const statKeys = { 'HP':'hp', 'ATK':'atk', 'MAG':'mag', 'DEF':'def', 'RES':'res', 'SPD':'spd' };
 
