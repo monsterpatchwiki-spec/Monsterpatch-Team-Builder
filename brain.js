@@ -1163,7 +1163,11 @@ function filterMonDropdown(num, query) {
 function createSlot(num) {
     let monOptions = Object.keys(monData).map(name => `<option value="${name}">${name}</option>`).join('');
 
-    let monDropdownOptions = Object.keys(monData).map(name => {
+    let monDropdownOptions = `<div onclick="selectMon(${num}, '')" 
+                                    style="padding:6px 8px; cursor:pointer; background: var(--white); color: var(--black); border-bottom:1px solid #342420; font-weight:bold;">
+                                   Clear
+                               </div>` +
+        Object.keys(monData).map(name => {
         const sprite = monData[name].normal.sprite;
         return `<div class="mon-option" data-name="${name}" onclick="selectMon(${num}, '${name}')"
                      style="display:flex; align-items:center; gap:8px; padding:5px 8px; cursor:pointer; border-bottom:1px solid #342420; background: var(--white); color: var(--black);">
