@@ -1050,7 +1050,7 @@ if (monName && monData[monName]) {
         // --fill CSS custom property (see .stat-bar-fill in the stylesheet).
         const barFill = document.getElementById(`${s}-bar-${num}`);
         if (barFill) {
-            const pct = Math.max(0, Math.min(100, (final / 255) * 100));
+            const pct = Math.max(0, Math.min(100, (final / 375) * 100));
             barFill.style.setProperty('--fill', pct + '%');
         }
     });
