@@ -814,6 +814,11 @@ const heldItemList = ["Item A", "Item B", "Item C"];
 const types = ["Fireborn","Atlantian","Overgrowth","Whimsical","Nightwatch","Mystic","Dragoon","Ironclad","Brawler","Normal"];
 const gradeMap = {'S': 1.0, 'A': 0.9, 'B': 0.85, 'C': 0.8, 'D': 0.75};
 
+// Growth point rules: total of 5 points may be spent across all six stats.
+// HP, DEF, and RES may each take at most 2 points; ATK, MAG, and SPD may each take at most 3.
+const GROWTH_CAP_TOTAL = 5;
+const GROWTH_CAP_PER_STAT = { HP: 2, ATK: 3, MAG: 3, DEF: 2, RES: 2, SPD: 3 };
+
 // --- 2. LOGIC FUNCTIONS ---
 
 function findMoveObject(moveName) {
@@ -1051,6 +1056,40 @@ if (monName && monData[monName]) {
     });
 }
 
+// Recomputes the total growth points spent for a slot, updates the "X/5"
+// readout, and returns the total.
+function recalcGrowthTotal(num) {
+    const stats = ['HP','ATK','MAG','DEF','RES','SPD'];
+    let total = 0;
+    stats.forEach(s => {
+        const el = document.getElementById(`${s}-growth-${num}`);
+        if (el) total += parseInt(el.value) || 0;
+    });
+    const totalDisplay = document.getElementById(`growth-total-${num}`);
+    if (totalDisplay) totalDisplay.innerText = total;
+    return total;
+}
+
+// Called on every growth-point dropdown change. Enforces the 5-point team
+// cap (per-stat caps are already enforced by each dropdown's own option list).
+function handleGrowthChange(num, stat) {
+    const sel = document.getElementById(`${stat}-growth-${num}`);
+    const prev = parseInt(sel.dataset.prev || "0");
+
+    const total = recalcGrowthTotal(num);
+
+    if (total > GROWTH_CAP_TOTAL) {
+        // Revert this dropdown to its previous value and re-total.
+        sel.value = prev;
+        recalcGrowthTotal(num);
+        alert(`Growth points are capped at ${GROWTH_CAP_TOTAL} total across all stats.`);
+    } else {
+        sel.dataset.prev = sel.value;
+    }
+
+    updateStats(num);
+}
+
 function updateSprite(num) {
     const selectedName = document.getElementById(`monSelect-${num}`).value;
     updateMonDisplay(num, selectedName);
@@ -1179,7 +1218,11 @@ function createSlot(num) {
     let vibeOptions = vibes.map(v => `<option>${v}</option>`).join('');
     let itemOptions = heldItemList.map(i => `<option>${i}</option>`).join('');
     let tierOpts = ['S','A','B','C','D'].map(t => `<option value="${t}">${t}</option>`).join('');
-    let invOpts = ['0','1','2','3'].map(i => `<option value="${i}">${i}</option>`).join('');
+    // Growth-point dropdown options are capped per stat: HP/DEF/RES max out
+    // at 2, ATK/MAG/SPD max out at 3. A separate team-wide 5-point cap is
+    // enforced in handleGrowthChange().
+    let invOptsStandard = ['0','1','2','3'].map(i => `<option value="${i}">${i}</option>`).join('');
+    let invOptsCapped = ['0','1','2'].map(i => `<option value="${i}">${i}</option>`).join('');
     
     return `<div class="slot"><div class="segment-title tab-slot">SLOT ${num}</div>
         <div style="display: flex; gap: 11px; margin-top: 11px; margin-bottom: 17px; align-items: center;">
@@ -1187,6 +1230,36 @@ function createSlot(num) {
             <label class="sparkle-label" style="display:flex; align-items:center; gap:4px; color: var(--black);">
                 <input type="checkbox" class="sparkle-checkbox" onchange="updateSprite(${num})"> SPARKLE
             </label>
+        </div>
+
+        <div class="sprite-section">
+            <div class="sprite-box" id="sprite-${num}" style="flex:1;"></div>
+            <div class="info-col" style="flex:1;">
+                <div class="mon-wrapper" id="mon-wrap-${num}" style="position: relative; margin-bottom: 5px;">
+                    <div id="mon-display-${num}"
+                         onclick="toggleMonDropdown(${num})"
+                         style="height: 35px; display: flex; align-items: center; gap: 8px; padding: 0 8px; cursor: pointer; font-weight: bold; color: var(--black); border: 1px solid var(--black); background: var(--white);">
+                        <img id="mon-display-icon-${num}" style="width:20px; height:20px; min-width:20px; object-fit:contain; display:none; pointer-events:none;">
+                        <span>Select Mon</span>
+                    </div>
+
+                    <div id="mon-dropdown-list-${num}" class="custom-dropdown-list"
+                         style="display: none; position: absolute; top: 35px; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 240px; overflow-y: auto;">
+                        <div style="position: sticky; top: 0; background: var(--white); padding: 5px; border-bottom: 1px solid #342420;">
+                            <input type="text" id="mon-search-${num}" placeholder="Search mon..."
+                                   oninput="filterMonDropdown(${num}, this.value)"
+                                   onclick="event.stopPropagation();"
+                                   style="width: 100%; box-sizing: border-box; padding: 4px 6px; border: 1px solid var(--black);">
+                        </div>
+                        ${monDropdownOptions}
+                    </div>
+
+                    <select id="monSelect-${num}" onchange="updateSprite(${num})" style="display:none;">
+                        <option value="">Select Mon</option>${monOptions}
+                    </select>
+                </div>
+                <select id="itemSelect-${num}"><option value="">Held Item</option>${itemOptions}</select>
+            </div>
         </div>
         
    <div class="section-box moveset-box">
@@ -1229,52 +1302,29 @@ function createSlot(num) {
                 `).join('')}
             </div>
         </div>
-        
-        <div class="sprite-section">
-            <div class="sprite-box" id="sprite-${num}" style="flex:1;"></div>
-            <div class="info-col" style="flex:1;">
-                <div class="mon-wrapper" id="mon-wrap-${num}" style="position: relative; margin-bottom: 5px;">
-                    <div id="mon-display-${num}"
-                         onclick="toggleMonDropdown(${num})"
-                         style="height: 35px; display: flex; align-items: center; gap: 8px; padding: 0 8px; cursor: pointer; font-weight: bold; color: var(--black); border: 1px solid var(--black); background: var(--white);">
-                        <img id="mon-display-icon-${num}" style="width:20px; height:20px; min-width:20px; object-fit:contain; display:none; pointer-events:none;">
-                        <span>Select Mon</span>
-                    </div>
 
-                    <div id="mon-dropdown-list-${num}" class="custom-dropdown-list"
-                         style="display: none; position: absolute; top: 35px; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 240px; overflow-y: auto;">
-                        <div style="position: sticky; top: 0; background: var(--white); padding: 5px; border-bottom: 1px solid #342420;">
-                            <input type="text" id="mon-search-${num}" placeholder="Search mon..."
-                                   oninput="filterMonDropdown(${num}, this.value)"
-                                   onclick="event.stopPropagation();"
-                                   style="width: 100%; box-sizing: border-box; padding: 4px 6px; border: 1px solid var(--black);">
-                        </div>
-                        ${monDropdownOptions}
-                    </div>
-
-                    <select id="monSelect-${num}" onchange="updateSprite(${num})" style="display:none;">
-                        <option value="">Select Mon</option>${monOptions}
-                    </select>
-                </div>
-                <select id="itemSelect-${num}"><option value="">Held Item</option>${itemOptions}</select>
-            </div>
-        </div>
-        
         <div style="display: flex; gap: 6px; margin-bottom: 10px;">
             <div id="house1-wrap-${num}" style="flex:1; display:none; align-items:center; gap:5px;"><img id="icon1-${num}" style="width:20px; height:20px;"><input type="text" id="house1-${num}" style="flex:1;" readonly></div>
             <div id="house2-wrap-${num}" style="flex:1; display:none; align-items:center; gap:5px;"><img id="icon2-${num}" style="width:20px; height:20px;"><input type="text" id="house2-${num}" style="flex:1;" readonly></div>
         </div>
 
         <div class="stats-panel"><div class="segment-title tab-stats">STATS</div>
+            <div style="display:flex; justify-content:flex-end; margin-bottom:6px; font-size:12px; font-weight:bold; color: var(--black);">
+                Growth Points: <span id="growth-total-${num}">0</span>/${GROWTH_CAP_TOTAL}
+            </div>
             <div style="display: flex; flex-direction: column; gap: 6px;">
-                ${['HP','ATK','MAG','DEF','RES','SPD'].map(s => `
+                ${['HP','ATK','MAG','DEF','RES','SPD'].map(s => {
+                    const capped = (GROWTH_CAP_PER_STAT[s] === 2);
+                    const opts = capped ? invOptsCapped : invOptsStandard;
+                    return `
                     <div class="stat-row">
                         <span style="width:30px; font-weight:bold; font-size:11px; color: var(--black);">${s}</span> 
                         <select id="${s}-grade-${num}" onchange="updateStats(${num})" style="width:45px; padding:2px;">${tierOpts}</select>
-                        <select id="${s}-growth-${num}" onchange="updateStats(${num})" style="width:40px; padding:2px;">${invOpts}</select>
+                        <select id="${s}-growth-${num}" data-prev="0" onchange="handleGrowthChange(${num}, '${s}')" style="width:40px; padding:2px;">${opts}</select>
                         <div class="stat-bar"><div class="stat-bar-fill" id="${s}-bar-${num}"></div></div>
                         <span id="${s}-result-${num}" style="font-size:11px; width:30px; text-align:right; color: var(--black);">40</span>
-                    </div>`).join('')}
+                    </div>`;
+                }).join('')}
             </div>
             <div style="margin-top:15px; border-top:1px solid var(--black); padding-top:10px;">
                 <label style="font-weight:bold; color: var(--black);">VIBE:</label> <select id="vibe-${num}" onchange="updateStats(${num})" style="margin-top:5px;">${vibeOptions}</select>
@@ -1407,11 +1457,16 @@ function importSquad() {
                 if (slot.stats) {
                     Object.entries(slot.stats).forEach(([s, v]) => {
                         document.getElementById(`${s}-grade-${num}`).value = v.grade || 'S';
-                        document.getElementById(`${s}-growth-${num}`).value = v.growth || '0';
+                        const growthSel = document.getElementById(`${s}-growth-${num}`);
+                        if (growthSel) {
+                            growthSel.value = v.growth || '0';
+                            growthSel.dataset.prev = growthSel.value;
+                        }
                     });
                 }
                 document.getElementById(`vibe-${num}`).value = slot.vibe || vibes[0];
 
+                recalcGrowthTotal(num);
                 updateStats(num);
             });
 
