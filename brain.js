@@ -1053,6 +1053,7 @@ if (monName && monData[monName]) {
 
 function updateSprite(num) {
     const selectedName = document.getElementById(`monSelect-${num}`).value;
+    updateMonDisplay(num, selectedName);
     const isSparkly = document.querySelector(`.slot:nth-child(${num}) .sparkle-checkbox`).checked;
     const spriteBox = document.getElementById(`sprite-${num}`);
     
@@ -1097,8 +1098,80 @@ function updateSprite(num) {
     }
 }
 
+// --- MON DROPDOWN (searchable, with small sprite thumbnails) ---
+
+function toggleMonDropdown(num) {
+    const list = document.getElementById(`mon-dropdown-list-${num}`);
+    if (!list) return;
+    const willOpen = list.style.display !== "block";
+
+    // Close all dropdowns (move lists + other mon lists) first
+    document.querySelectorAll('.custom-dropdown-list').forEach(d => {
+        d.style.display = "none";
+    });
+
+    if (willOpen) {
+        list.style.display = "block";
+        filterMonDropdown(num, ""); // reset filter to full list each time it's opened
+        const search = document.getElementById(`mon-search-${num}`);
+        if (search) {
+            search.value = "";
+            search.focus();
+        }
+    }
+}
+
+function selectMon(num, monName) {
+    const sel = document.getElementById(`monSelect-${num}`);
+    if (sel) sel.value = monName;
+
+    const list = document.getElementById(`mon-dropdown-list-${num}`);
+    if (list) list.style.display = "none";
+
+    updateSprite(num);
+}
+
+function updateMonDisplay(num, monName) {
+    const wrap = document.getElementById(`mon-display-${num}`);
+    if (!wrap) return;
+    const span = wrap.querySelector('span');
+    const icon = document.getElementById(`mon-display-icon-${num}`);
+
+    if (span) span.innerText = monName || "Select Mon";
+
+    if (icon) {
+        if (monName && monData[monName]) {
+            icon.src = monData[monName].normal.sprite;
+            icon.style.display = "inline-block";
+        } else {
+            icon.src = "";
+            icon.style.display = "none";
+        }
+    }
+}
+
+function filterMonDropdown(num, query) {
+    const list = document.getElementById(`mon-dropdown-list-${num}`);
+    if (!list) return;
+    const q = (query || "").trim().toLowerCase();
+    list.querySelectorAll('.mon-option').forEach(opt => {
+        const name = (opt.getAttribute('data-name') || "").toLowerCase();
+        opt.style.display = (q === "" || name.includes(q)) ? "flex" : "none";
+    });
+}
+
 function createSlot(num) {
     let monOptions = Object.keys(monData).map(name => `<option value="${name}">${name}</option>`).join('');
+
+    let monDropdownOptions = Object.keys(monData).map(name => {
+        const sprite = monData[name].normal.sprite;
+        return `<div class="mon-option" data-name="${name}" onclick="selectMon(${num}, '${name}')"
+                     style="display:flex; align-items:center; gap:8px; padding:5px 8px; cursor:pointer; border-bottom:1px solid #342420; background: var(--white); color: var(--black);">
+                    <img src="${sprite}" style="width:24px; height:24px; min-width:24px; object-fit:contain; pointer-events:none;">
+                    <span>${name}</span>
+                </div>`;
+    }).join('');
+
     let vibeOptions = vibes.map(v => `<option>${v}</option>`).join('');
     let itemOptions = heldItemList.map(i => `<option>${i}</option>`).join('');
     let tierOpts = ['S','A','B','C','D'].map(t => `<option value="${t}">${t}</option>`).join('');
@@ -1156,9 +1229,29 @@ function createSlot(num) {
         <div class="sprite-section">
             <div class="sprite-box" id="sprite-${num}" style="flex:1;"></div>
             <div class="info-col" style="flex:1;">
-                <select id="monSelect-${num}" onchange="updateSprite(${num})" style="margin-bottom: 5px;">
-                    <option value="">Select Mon</option>${monOptions}
-                </select>
+                <div class="mon-wrapper" id="mon-wrap-${num}" style="position: relative; margin-bottom: 5px;">
+                    <div id="mon-display-${num}"
+                         onclick="toggleMonDropdown(${num})"
+                         style="height: 35px; display: flex; align-items: center; gap: 8px; padding: 0 8px; cursor: pointer; font-weight: bold; color: var(--black); border: 1px solid var(--black); background: var(--white);">
+                        <img id="mon-display-icon-${num}" style="width:20px; height:20px; min-width:20px; object-fit:contain; display:none; pointer-events:none;">
+                        <span>Select Mon</span>
+                    </div>
+
+                    <div id="mon-dropdown-list-${num}" class="custom-dropdown-list"
+                         style="display: none; position: absolute; top: 35px; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 240px; overflow-y: auto;">
+                        <div style="position: sticky; top: 0; background: var(--white); padding: 5px; border-bottom: 1px solid #342420;">
+                            <input type="text" id="mon-search-${num}" placeholder="Search mon..."
+                                   oninput="filterMonDropdown(${num}, this.value)"
+                                   onclick="event.stopPropagation();"
+                                   style="width: 100%; box-sizing: border-box; padding: 4px 6px; border: 1px solid var(--black);">
+                        </div>
+                        ${monDropdownOptions}
+                    </div>
+
+                    <select id="monSelect-${num}" onchange="updateSprite(${num})" style="display:none;">
+                        <option value="">Select Mon</option>${monOptions}
+                    </select>
+                </div>
                 <select id="itemSelect-${num}"><option value="">Held Item</option>${itemOptions}</select>
             </div>
         </div>
@@ -1384,3 +1477,13 @@ function updateTeamEfficiencies() {
 const slotArea = document.getElementById('slot-area');
 for(let i=1; i<=4; i++) slotArea.innerHTML += createSlot(i);
 updateTeamEfficiencies();
+
+// Close the mon dropdown when clicking outside of it
+document.addEventListener('click', (e) => {
+    document.querySelectorAll('.mon-wrapper').forEach(wrap => {
+        if (!wrap.contains(e.target)) {
+            const list = wrap.querySelector('.custom-dropdown-list');
+            if (list) list.style.display = "none";
+        }
+    });
+});
