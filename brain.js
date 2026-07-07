@@ -1066,7 +1066,10 @@ function recalcGrowthTotal(num) {
         if (el) total += parseInt(el.value) || 0;
     });
     const totalDisplay = document.getElementById(`growth-total-${num}`);
-    if (totalDisplay) totalDisplay.innerText = total;
+    if (totalDisplay) {
+        totalDisplay.innerText = total;
+        totalDisplay.style.color = (total < GROWTH_CAP_TOTAL) ? "#3f7d4a" : "#b0413e";
+    }
     return total;
 }
 
@@ -1079,10 +1082,9 @@ function handleGrowthChange(num, stat) {
     const total = recalcGrowthTotal(num);
 
     if (total > GROWTH_CAP_TOTAL) {
-        // Revert this dropdown to its previous value and re-total.
+        // Silently revert this dropdown to its previous value and re-total.
         sel.value = prev;
         recalcGrowthTotal(num);
-        alert(`Growth points are capped at ${GROWTH_CAP_TOTAL} total across all stats.`);
     } else {
         sel.dataset.prev = sel.value;
     }
@@ -1309,8 +1311,8 @@ function createSlot(num) {
         </div>
 
         <div class="stats-panel"><div class="segment-title tab-stats">STATS</div>
-            <div style="display:flex; justify-content:flex-end; margin-bottom:6px; font-size:12px; font-weight:bold; color: var(--black);">
-                Growth Points: <span id="growth-total-${num}">0</span>/${GROWTH_CAP_TOTAL}
+            <div style="display:flex; justify-content:flex-end; align-items:baseline; margin-bottom:6px; font-size:16px; font-weight:bold; color: var(--black);">
+                Growth Points:&nbsp;<span id="growth-total-${num}" style="font-size:20px;">0</span>/${GROWTH_CAP_TOTAL}
             </div>
             <div style="display: flex; flex-direction: column; gap: 6px;">
                 ${['HP','ATK','MAG','DEF','RES','SPD'].map(s => {
@@ -1535,6 +1537,7 @@ function updateTeamEfficiencies() {
 // --- 3. INITIALIZATION ---
 const slotArea = document.getElementById('slot-area');
 for(let i=1; i<=4; i++) slotArea.innerHTML += createSlot(i);
+for(let i=1; i<=4; i++) recalcGrowthTotal(i);
 updateTeamEfficiencies();
 
 // Close the mon dropdown when clicking outside of it
