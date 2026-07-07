@@ -1215,6 +1215,7 @@ function updateMoveDisplay(moveName, slotId) {
             <div style="font-size: 0.8em; padding: 6px; background: rgba(0,0,0,0.05); margin-top: 5px; border-left: 3px solid ${borderColor};">
                 ${moveObj.power} power | 
                 ${moveObj.trigger} trigger | 
+                ${moveObj.target} target|
                 ${moveObj.scale} scaling | 
                 ${moveTypeFromData || 'Unknown'} ${moveObj.pm} 
                 ${moveObj.tag ? `| ${moveObj.tag.replace(/[\[\]]/g, '')}` : ''}
