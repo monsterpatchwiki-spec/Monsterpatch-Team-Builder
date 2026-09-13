@@ -26,23 +26,25 @@
         .section-header {
             display: flex; justify-content: space-between; align-items: flex-end;
             color: var(--white); margin: 0 auto 20px auto; max-width: 1020px;
-            border-bottom: 2px solid var(--white); padding-bottom: 10px;
+            padding-bottom: 10px;
             flex-wrap: wrap; gap: 10px;
         }
         .section-header-input {
-            background: transparent; border: none; border-bottom: 2px dashed var(--white);
+            background: transparent; border: none;
             color: var(--white); font-family: 'MyConsolas', monospace; font-weight: bold;
             font-size: 22px; padding: 4px 2px; width: auto; min-width: 260px;
         }
-        .section-header-input:focus { outline: none; border-bottom: 2px solid var(--pink); }
-        .section-header-input:hover { border-bottom: 2px solid var(--pink); }
+        .section-header-input:focus { outline: none; color: var(--pink); }
+        .section-header-input:hover { color: var(--pink); }
 
         .matchup-container { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; }
-        .sidebar-offense, .sidebar-defense { width: 100%; max-width: 1020px; }
+        .sidebar-defense { width: 100%; max-width: 1020px; }
+        .sidebar-offense { width: fit-content; max-width: 100%; margin: 0 auto; }
 
         .sidebar { background: var(--white); border: 4px solid var(--black); padding: 15px; border-radius: 12px; overflow-x: auto; }
         
         .matrix-table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: center; color: var(--black); margin-top: 10px; table-layout: auto; }
+        #off-table { width: auto; margin-left: auto; margin-right: auto; }
         .matrix-table th, .matrix-table td { border: 1px solid var(--black); padding: 8px 10px; white-space: nowrap; }
         .row-header { text-align: left; padding-left: 8px !important; }
 
