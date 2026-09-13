@@ -22,9 +22,13 @@
 
         .page-wrapper { width: 100%; max-width: 1450px; }
         .slot-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 40px; max-width: 1020px; margin-left: auto; margin-right: auto; }
-        .matchup-container { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; }
-        .sidebar-offense { width: 100%; }
+  .matchup-container { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; min-width: 0; }
+        .sidebar-offense { width: 100%; max-width: 100%; min-width: 0; overflow-x: auto; }
         .sidebar-defense { width: 100%; max-width: 700px; }
+
+.matrix-table {
+    min-width: max-content;
+}
 
         .sidebar { background: var(--white); border: 4px solid var(--black); padding: 15px; border-radius: 12px; overflow-x: auto; }
         
