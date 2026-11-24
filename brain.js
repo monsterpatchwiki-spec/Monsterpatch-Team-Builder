@@ -674,6 +674,39 @@ function selectMove(i, num, moveName) {
     updateTeamEfficiencies();
 }
 
+function togglePassiveDropdown(i, num) {
+    const id = `pass-dropdown-list-${i}-${num}`;
+    const list = document.getElementById(id);
+    document.querySelectorAll('.custom-dropdown-list').forEach(d => {
+        if (d.id !== id) d.style.display = "none";
+    });
+    list.style.display = (list.style.display === "block") ? "none" : "block";
+}
+
+function selectPassive(i, num, passiveName) {
+    // The hidden <select> stays the source of truth (export/import read it).
+    const sel = document.getElementById(`pass${i}-${num}`);
+    if (sel) sel.value = passiveName;
+    togglePassiveDropdown(i, num);
+    updatePassiveLabel(i, num, passiveName);
+    updatePassiveDisplay(passiveName, `${i}-${num}`);
+}
+
+function updatePassiveLabel(i, num, passiveName) {
+    const span = document.querySelector(`#pass-display-${i}-${num} span`);
+    if (span) span.innerText = passiveName || `Passive ${i}`;
+}
+
+function buildPassiveListHtml(i, num, passives) {
+    const bars = groupBarPositions(passives, 2);
+    let html = `<div onclick="selectPassive(${i}, ${num}, '')" style="padding: 5px; cursor: pointer; background: var(--white); color: var(--black); border-bottom: 1px solid #342420;">Clear</div>`;
+    passives.forEach((p, idx) => {
+        if (bars.has(idx)) html += GROUP_BAR_HTML;
+        html += `<div onclick="selectPassive(${i}, ${num}, '${p}')" style="padding: 5px; cursor: pointer; background: var(--white); color: var(--black); border-bottom: 1px solid #342420;">${p}</div>`;
+    });
+    return html;
+}
+
 function updateMoveStyle(i, num, moveName) {
     const wrap = document.getElementById(`move-wrap-${i}-${num}`);
     const textDiv = document.getElementById(`move-display-${i}-${num}`); 
@@ -729,9 +762,8 @@ function populateSlotDropdowns(num) {
 
     for(let i = 1; i <= 4; i++) {
         const sel = document.getElementById(`pass${i}-${num}`);
-        if (!sel) continue; 
-        sel.innerHTML = `<option value="">Passive ${i}</option>` + 
-            (data.passives || []).map(p => `<option value="${p}">${p}</option>`).join('');
+        if (!sel) continue;
+        sel.innerHTML = buildPassiveOptions(i, data.passives || []);
         sel.value = "";
         updatePassiveDisplay("", `${i}-${num}`);
     }
@@ -747,7 +779,12 @@ for(let i = 1; i <= 4; i++) {
     
     let html = `<div onclick="selectMove(${i}, ${num}, '')" style="padding: 5px; cursor: pointer; background: var(--white); color: var(--black); border-bottom: 1px solid #342420;">Clear</div>`;
     
-    moves.forEach(m => {
+    const moveBars = groupBarPositions(moves, 1);
+
+    moves.forEach((m, idx) => {
+        if (moveBars.has(idx)) {
+            html += GROUP_BAR_HTML;
+        }
         const type = findMoveType(m);
         const color = typeColors[type] || "#eadfc1";
         const icon = typeToIcon[type] || 'assets/house_default.png';
@@ -781,9 +818,8 @@ for(let i = 1; i <= 4; i++) {
     const currentSelection = sel.value;
     const availablePassives = data.passives || [];
     
-    sel.innerHTML = `<option value="">Passive ${i}</option>` + 
-        availablePassives.map(p => `<option value="${p}">${p}</option>`).join('');
-    
+    sel.innerHTML = buildPassiveOptions(i, availablePassives);
+
     // SYNC: If the old passive isn't in the new list, clear the selection AND the description
     if (availablePassives.includes(currentSelection)) {
         sel.value = currentSelection;
@@ -791,7 +827,32 @@ for(let i = 1; i <= 4; i++) {
         sel.value = "";
         document.getElementById(`passive-desc-${i}-${num}`).innerHTML = ""; // <--- THIS IS CRITICAL
     }
+
+    // Build the custom scrolling passive list (same look as the move list)
+    const list = document.getElementById(`pass-dropdown-list-${i}-${num}`);
+    if (list) list.innerHTML = buildPassiveListHtml(i, num, availablePassives);
+    updatePassiveLabel(i, num, sel.value);
 }
+}
+
+// Moves/passives are stored as: starting entries (1 move / 2 passives),
+// then sets of 4 where only 1 of each set can be taken. Returns the list
+// indexes that should have an unselectable bar drawn ABOVE them. If the
+// list doesn't fit that shape (e.g. a duplicate got deduped away), no bars
+// are drawn rather than drawing them in the wrong place.
+const GROUP_BAR_HTML = `<div class="dropdown-group-bar" style="height: 6px; background: #342420; cursor: default; pointer-events: none;"></div>`;
+
+function groupBarPositions(list, headCount) {
+    const bars = new Set();
+    if (list.length <= headCount || (list.length - headCount) % 4 !== 0) return bars;
+    for (let idx = headCount; idx < list.length; idx += 4) bars.add(idx);
+    return bars;
+}
+
+// Options for the hidden passive <select> (the visible list is built by buildPassiveListHtml)
+function buildPassiveOptions(i, passives) {
+    return `<option value="">Passive ${i}</option>` +
+        passives.map(p => `<option value="${p}">${p}</option>`).join('');
 }
 
 function getMultiplier(attackType, defTypes) {
@@ -1099,10 +1160,19 @@ function createSlot(num) {
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 11px;">
                 ${[1,2,3,4].map(i => `
                     <div>
-                        <select id="pass${i}-${num}" onchange="updatePassiveDisplay(this.value, '${i}-${num}')">
-                            <option value="">Passive ${i}</option>
-                        </select>
-                        <div id="passive-desc-${i}-${num}"></div> 
+                        <div class="move-wrapper" id="pass-wrap-${i}-${num}" style="position: relative; height: 35px; overflow: visible; border: 1px solid var(--black); background-color: var(--white); display: flex; flex-direction: column;">
+                            <div id="pass-display-${i}-${num}"
+                                 onclick="togglePassiveDropdown(${i}, ${num})"
+                                 style="height: 35px; display: flex; align-items: center; justify-content: space-between; padding: 0 8px; cursor: pointer; font-weight: bold; color: var(--black);">
+                                 <span>Passive ${i}</span>
+                            </div>
+                            <div id="pass-dropdown-list-${i}-${num}" class="custom-dropdown-list" style="display: none; position: absolute; top: 35px; left: 0; width: 100%; z-index: 999; border: 1px solid var(--black); background: var(--white); max-height: 200px; overflow-y: auto;">
+                            </div>
+                            <select id="pass${i}-${num}" onchange="updatePassiveDisplay(this.value, '${i}-${num}')" style="display: none;">
+                                <option value="">Passive ${i}</option>
+                            </select>
+                        </div>
+                        <div id="passive-desc-${i}-${num}"></div>
                     </div>
                 `).join('')}
             </div>
@@ -1256,7 +1326,7 @@ function importSquad() {
                 });
                 (slot.passives || []).forEach((p, i) => {
                     const sel = document.getElementById(`pass${i+1}-${num}`);
-                    if (sel) { sel.value = p; updatePassiveDisplay(p, `${i+1}-${num}`); }
+                    if (sel) { sel.value = p; updatePassiveLabel(i+1, num, p); updatePassiveDisplay(p, `${i+1}-${num}`); }
                 });
 
                 if (slot.stats) {
